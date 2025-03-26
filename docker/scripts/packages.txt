@@ -1,0 +1,17 @@
+scipy
+joblib
+pydotplus
+pandas
+xgboost
+matplotlib
+torch
+numpy
+category_encoders
+scikit_learn
+packaging
+jsonschema
+scapy
+seaborn
+wget
+ipython
+tqdm
