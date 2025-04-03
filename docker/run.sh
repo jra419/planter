@@ -47,7 +47,7 @@ run() {
 		-v $HOME/.gitconfig:/home/docker/.gitconfig:ro \
 		-v $HOME/.ssh:/home/docker/.ssh:ro \
 		-v /var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket \
-		-v ~/.Xauthority:/home/user/.Xauthority \
+		-v ~/.Xauthority:/home/docker/.Xauthority \
 		-it \
 		$CONTAINER_NAME
 }
