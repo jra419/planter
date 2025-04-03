@@ -15,16 +15,22 @@
 from sklearn.preprocessing import LabelEncoder
 from sklearn.tree import _tree
 from sklearn.ensemble import RandomForestClassifier
+from datetime import datetime
 import time
 # from create_files import *
 import math
 import re
 import json
+from src.eval.eval_metrics import eval_metrics
 from sklearn.metrics import *
 from src.functions.Range_to_TCAM_Top_Down import *
 from src.functions.json_encoder import *
 import copy
 import os
+from datetime import datetime
+from pathlib import Path
+
+ts_datetime = datetime.now().strftime('%Y-%m-%d-%H-%M-%S-%f')[:-3]
 
 def get_lineage(tree, feature_names, file):
     left = tree.tree_.children_left
@@ -72,7 +78,6 @@ def get_lineage(tree, feature_names, file):
         file.write(clause)
         file.write(";\n")
 
-
 def print_tree(tree, feature_names):
     tree_ = tree.tree_
     feature_name = [
@@ -96,18 +101,12 @@ def print_tree(tree, feature_names):
             print("{}return {}".format(indent, tree_.value[node]))
     recurse(0, 1, share)
 
-
-
-
 def ten_to_bin(num, count):
     num = bin(int(num)).lstrip('0b')
     if len(num) != count:
         cont = count - len(num)
         num = cont * '0' + num
     return num
-
-
-
 
 def find_feature_split(model, tree_index, num_features):
     feature_names = []
@@ -158,7 +157,6 @@ def generate_feature_tables(split, num_features,feature_max, table):
                         count_code+=1
             table["feature " + str(i)][j] = count_code
     return table
-
 
 def find_classification(textfile, feature_split, num_features):
     fea = []
@@ -214,7 +212,6 @@ def find_classification(textfile, feature_split, num_features):
 
     return feature_n, classfication
 
-
 def find_path_for_leaf_nodes(feature_n, classfication, num_features):
     path_to_leaf = {}
     for i in range(len(classfication)):
@@ -223,9 +220,6 @@ def find_path_for_leaf_nodes(feature_n, classfication, num_features):
         for j in range(num_features):
             path_to_leaf["path " + str(i)]["feature "+str(j)] = feature_n[j][i]
     return path_to_leaf
-
-
-
 
 def generate_code_table_for_path(table, leaf_path, code_dict, feature_num, num_features, count):
     if feature_num == num_features:
@@ -251,16 +245,21 @@ def generate_code_table(table, path_to_leaf, num_features):
     return table
 
 def generate_table(model, tree_index, num_features, g_table, feature_max):
+    print('generate_table: find feature split')
     textfile, feature_split = find_feature_split(model, tree_index, num_features)
     
     g_table[tree_index] = {}
+    print('generate_table: generate feature tables')
     g_table[tree_index] = generate_feature_tables(feature_split, num_features, feature_max, g_table[tree_index])
     
+    print('generate_table: find classification')
     feature_n, classfication = find_classification(textfile, feature_split , num_features)
+    print('generate_table: find path for leaf nodes')
     path_to_leaf = find_path_for_leaf_nodes(feature_n, classfication, num_features)
     code_width_for_feature = np.zeros(num_features)
     for i in range(num_features):
         code_width_for_feature[i] = int(np.ceil(math.log(g_table[tree_index]['feature ' + str(i)][np.max(list(g_table[tree_index]['feature ' + str(i)].keys()))]+1,2))) or 1
+    print('generate_table: generate code table')
     g_table[tree_index] = generate_code_table(g_table[tree_index], path_to_leaf, num_features)
     
     print('\rThe table for Tree: {} is generated'.format(tree_index), end="")
@@ -285,14 +284,17 @@ def votes_to_class(tree_num, vote_list, num_trees, num_classes, g_table, num):
             tree_num -= 1
     return g_table, num
 
-def run_model(train_X, train_y, test_X, test_y, used_features):
-    config_file = 'src/configs/Planter_config.json'
+def run_model(train_X, train_y, test_X, test_y, used_features, cur_dataset, cur_trace, config=None):
+    if config:
+        print(f'Config: {config}')
+        Planter_config = json.load(open(config, 'r'))
+    else:
+        Planter_config = json.load(open('src/configs/Planter_config.json', 'r'))
 
-    Planter_config = json.load(open(config_file, 'r'))
 
-    Planter_config['model config']['number of trees'] = int(input('- Number of trees? (default = 5) ') or '5')
-    Planter_config['model config']['number of depth'] = int(input('- Number of depth? (default = 4) ') or '4')
-    Planter_config['model config']['max number of leaf nodes'] = int(input('- Number of leaf nodes? (default = 1000) ') or '1000')
+    # Planter_config['model config']['number of trees'] = int(input('- Number of trees? (default = 5) ') or '5')
+    # Planter_config['model config']['number of depth'] = int(input('- Number of depth? (default = 4) ') or '4')
+    # Planter_config['model config']['max number of leaf nodes'] = int(input('- Number of leaf nodes? (default = 1000) ') or '1000')
     Planter_config['model config']['number of classes'] = int(np.max(train_y) + 1)
 
     num_features = Planter_config['data config']['number of features']
@@ -324,8 +326,14 @@ def run_model(train_X, train_y, test_X, test_y, used_features):
 
     sklearn_y_predict = rfc.predict(test_X)
 
+    eval_metrics(test_y,
+                 sklearn_y_predict,
+                 f'rf-eb-{num_trees}-{num_depth}-{max_leaf_nodes}-sklearn',
+                 cur_dataset,
+                 cur_trace)
+
     result = classification_report(test_y, sklearn_y_predict, digits= 4)
-    print('\n',result)
+    # print('\n',result)
 
     # =================== train model timer ===================
     Planter_config['timer log']['train model']['end'] = time.time()
@@ -354,8 +362,6 @@ def run_model(train_X, train_y, test_X, test_y, used_features):
     json.dump(log_dict, open(log_file, 'w'), indent=4)
     print ('Classification results are downloaded to log as', log_file)
 
-
-
     g_table = {}
     for idx, estimator in enumerate(rfc.estimators_):
         g_table = generate_table(estimator, idx,  num_features ,g_table, feature_max)
@@ -364,7 +370,6 @@ def run_model(train_X, train_y, test_X, test_y, used_features):
     g_table['votes to class'] = {}
     g_table, _ = votes_to_class(0, np.zeros(num_trees).tolist(), num_trees, num_classes, g_table, 0)
     print('Done')
-
 
     feature_width = []
     for max_f in feature_max:
@@ -378,7 +383,6 @@ def run_model(train_X, train_y, test_X, test_y, used_features):
             code_width_tree_feature[tree, i] = int(np.ceil(math.log(g_table[tree]['feature ' + str(i)][np.max(list(g_table[tree]['feature ' + str(i)].keys()))]+1,2)+1)) or 1
             # print(code_width_tree_feature[tree, i] , g_table[tree]['feature ' + str(i)][feature_max[i]])
             # print('stop')
-
 
     Ternary_Table = {}
     Ternary_Table['decision'] = g_table['votes to class']
@@ -396,7 +400,7 @@ def run_model(train_X, train_y, test_X, test_y, used_features):
     for i in range(num_features):
         if i!=0:
             print('')
-        print('Begine transfer: Feature table ' +str (i))
+        print('Begin transfer: Feature table ' +str (i))
         Ternary_Table['feature '+str(i)]= Table_to_TCAM(Ternary_Table['feature '+str(i)], feature_width[i])
         
 
@@ -435,11 +439,12 @@ def run_model(train_X, train_y, test_X, test_y, used_features):
     Planter_config['timer log']['convert model']['end'] = time.time()
     # =================== convert model timer ===================
 
-    table_name = 'Ternary_Table.json'
-    json.dump(Ternary_Table, open('Tables/'+table_name, 'w'), indent=4)
+    table_name = 'ternary_table.json'
+    json.dump(Ternary_Table, open(f'Tables/rf-eb-{num_trees}-{num_depth}-{max_leaf_nodes}-{table_name}', 'w'), indent=4)
     print('\nTernary_Table is generated')
-    json.dump(Exact_Table, open('Tables/Exact_Table.json', 'w'), indent=4)
-    print('Exact_Table is generated')
+    table_name = 'exact_table.json'
+    json.dump(Exact_Table, open(f'Tables/rf-eb-{num_trees}-{num_depth}-{max_leaf_nodes}-{table_name}', 'w'), indent=4)
+    print('exact_table is generated')
 
     Planter_config['p4 config'] = {}
     Planter_config['p4 config']["model"] = "RF"
@@ -464,26 +469,27 @@ def run_model(train_X, train_y, test_X, test_y, used_features):
     Planter_config['test config'] = {}
     Planter_config['test config']['type of test'] = 'classification'
 
-    json.dump(Planter_config , open(Planter_config['directory config']['work']+'/src/configs/Planter_config.json', 'w'), indent=4, cls=NpEncoder)
-    print(Planter_config['directory config']['work']+'/src/configs/Planter_config.json is generated')
+    # json.dump(Planter_config , open(Planter_config['directory config']['work']+'/src/configs/Planter_config.json', 'w'), indent=4, cls=NpEncoder)
+    json.dump(Planter_config , open(Planter_config['directory config']['work']+"/"+config, 'w'), indent=4, cls=NpEncoder)
+    # print(Planter_config['directory config']['work']+'/src/configs/Planter_config.json is generated')
 
     # main()
     return sklearn_y_predict.tolist()
 
-def test_tables(sklearn_test_y, test_X, test_y):
+def test_tables(sklearn_test_y, test_X, test_y, cur_dataset, cur_trace, config=None):
+    if config:
+        print(config)
+        Planter_config = json.load(open(config, 'r'))
+    else:
+        Planter_config = json.load(open('src/configs/Planter_config.json', 'r'))
 
-
-
-    config_file = 'src/configs/Planter_config.json'
-    Planter_config = json.load(open(config_file, 'r'))
     num_features = Planter_config['data config']['number of features']
     num_classes = Planter_config['model config']['number of classes']
     num_trees = Planter_config['model config']['number of trees']
     num_depth = Planter_config['model config']['number of depth']
     max_leaf_nodes = Planter_config['model config']['max number of leaf nodes']
-    Ternary_Table = json.load(open('Tables/Ternary_Table.json', 'r'))
-    Exact_Table = json.load(open('Tables/Exact_Table.json', 'r'))
-
+    Ternary_Table = json.load(open(f'Tables/rf-eb-{num_trees}-{num_depth}-{max_leaf_nodes}-ternary_table.json', 'r'))
+    Exact_Table = json.load(open(f'Tables/rf-eb-{num_trees}-{num_depth}-{max_leaf_nodes}-exact_table.json', 'r'))
 
     print('Test the exact feature table, extact code and decision table (feel free if the acc to sklearn is slightly lower than 1)')
     same = 0
@@ -491,6 +497,8 @@ def test_tables(sklearn_test_y, test_X, test_y):
     error = 0
     switch_test_y = []
     for i in range(np.shape(test_X.values)[0]):
+        if i % 10000 == 0:
+            print(f'Test: processed {i} packets.')
         vote_list = np.zeros(num_trees).astype(dtype=int).tolist()
         for tree in range(num_trees):
             code_list = np.zeros(num_features)
@@ -505,7 +513,7 @@ def test_tables(sklearn_test_y, test_X, test_y):
                 keys = list(TCAM_table.keys())
 
                 for count in keys:
-                    
+
                     if input_feature_value[f] & TCAM_table[count][0] == TCAM_table[count][0] & TCAM_table[count][1]:
                         ternary_code_list[f] = TCAM_table[count][2][tree]
                         match_or_not = True
@@ -558,18 +566,25 @@ def test_tables(sklearn_test_y, test_X, test_y):
             same += 1
         else:
             error += 1
-            
-        if i % 1 == 0 and i!=0:
-            print(
-                '\rswitch_prediction: {}, test_y: {}, with acc: {:.3}, with acc to sklearn: {:.4}, with error: {:.3}, M/A format macro f1: {:.3}, macro f1: {:.3}'.format(
-                    switch_prediction, test_y[i], correct / (i + 1), same / (i + 1), error / (i + 1),
-                    accuracy_score(switch_test_y[:i], test_y[:i] ),accuracy_score(sklearn_test_y[:i], test_y[:i] )), end=" ")
 
+        # if i % 1 == 0 and i!=0:
+        #     print(
+        #         '\rswitch_prediction: {}, test_y: {}, with acc: {:.3}, with acc to sklearn: {:.4}, with error: {:.3}, M/A format macro f1: {:.3}, macro f1: {:.3}'.format(
+        #             switch_prediction, test_y[i], correct / (i + 1), same / (i + 1), error / (i + 1),
+        #             accuracy_score(switch_test_y[:i], test_y[:i] ),accuracy_score(sklearn_test_y[:i], test_y[:i] )), end=" ")
 
-    print('\nThe accuracy of the match action format of Random Forest is', correct / np.shape(test_X.values)[0])
-    result = classification_report(switch_test_y, test_y, digits=4)
-    print('\n', result)
+    eval_metrics(test_y,
+                 switch_test_y,
+                 f'rf-eb-{num_trees}-{num_depth}-{max_leaf_nodes}-switch',
+                 cur_dataset,
+                 cur_trace)
 
+    outdir = str(Path(__file__).parents[0])
+    print(outdir)
+    f = open(f'{outdir}/{cur_dataset}-{cur_trace}-rf-eb-{num_trees}-{num_depth}-{max_leaf_nodes}-switch-acc-{ts_datetime}.txt', 'a+')
+    f.write(f'The accuracy of the match action format of Random Forest is {correct / np.shape(test_X.values)[0]}')
+    # result = classification_report(switch_test_y, test_y, digits=4)
+    # print('\n', result)
 
 def resource_prediction():
 
@@ -578,9 +593,6 @@ def resource_prediction():
 
     print('Exact match entries: ',np.sum(Planter_config['p4 config']["code table size"])+ Planter_config['p4 config']["decision table size"] )
     print('Ternary match entries: ', np.sum(Planter_config['p4 config']["used columns"]))
-
-
-
 
 if __name__ == '__main__':
     print('there are many dependencies, directly run is not currently supported')

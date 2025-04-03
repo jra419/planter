@@ -13,28 +13,27 @@
 
 # =================== import needed pkgs ===================
 
+from src.functions.figure_to_ASCII import print_logo
+from src.functions.project_tree_graph import draw_project_tree_graph
+from src.functions.json_encoder import NpEncoder
+from src.functions.config_modification import reload_config, dump_config
+from src.functions.input_CLI import take_CLI_input
+from src.functions.timer_printer import print_timer
+
 import os
 import json
 import sys
 import importlib.util
-import platform
 import argparse
 import warnings
 import time
-import subprocess as sub
 from multiprocessing import *
-import signal
+
 warnings.filterwarnings('ignore')
 
 # =================== import Planter src ===================
 # funtions
-from src.functions.figure_to_ASCII import *
-from src.functions.json_encoder import *
-from src.functions.project_tree_graph import *
 from src.functions.directory_management import *
-from src.functions.timer_printer import *
-from src.functions.config_modification import *
-from src.functions.input_CLI import *
 
 
 def Planter(iteration = 0):
@@ -45,15 +44,17 @@ def Planter(iteration = 0):
 
     # =================== set argparse for Planter ===================
 
-    parser = argparse.ArgumentParser(prog="Please use commend '-h' or '--help' for further information",
-                                usage='Planter can embed several ML algorithms to programmable network devices',
-                                description='It is a on going work, if you find any bugs, please feel free to contact changgang.zheng@eng.ox.ac.uk, it is really important to us. Thank you.',
-                                epilog='Play happy with Planter ~')
+    parser = argparse.ArgumentParser(
+            prog="Please use commend '-h' or '--help' for further information",
+            usage='Planter can embed several ML algorithms to programmable network devices',
+            description='It is a on going work, if you find any bugs, please feel free to contact changgang.zheng@eng.ox.ac.uk, it is really important to us. Thank you.',
+            epilog='Play happy with Planter ~')
     parser.add_argument("-m", "--manually_config", help="Manually config Planter or not? If not set, please config the following file <src/config/Planter_config.json>. If set, the Planter will ask you to input all the necessary configs.", action="store_true")
     parser.add_argument("-o", "--auto_optimisation", help="Use auto hyperparameters tunning or not? If set, the Planter will trigger auto optimisation process. Please do not use this mode with other modes, Planter will handle everything.", action="store_true")
     parser.add_argument("-t", "--testing_mode", help="Use testing mode or not? If set, the testing mode will only use at most 20000 input data and 5000 testing data.", action="store_true")
     parser.add_argument("-d", "--draw_project_tree", help="Draw the project tree or not? If set, this mode will output a tree graph of the Planter project.", action="store_true")
     parser.add_argument("-f", "--draw_function_call_graph", help="Draw function calling dependency graph or not, if set, after running Planter, a function calling dependency graph will be generated under <src/logs>.", action="store_true")
+    parser.add_argument("-c", "--config", help="Config file path.", type=str)
     args = parser.parse_args()
 
     # =================== draw project tree graph ===================
@@ -73,12 +74,12 @@ def Planter(iteration = 0):
         if time_gap > 1:
             call_graph = True
     except Exception as e:
+        print(e)
         call_graph = True
     if args.draw_function_call_graph and call_graph:
         from pycallgraph import PyCallGraph
         from pycallgraph.output import GraphvizOutput
         from pycallgraph import Config
-        from pycallgraph import GlobbingFilter
         print('Draw function calling dependency graph when running Planter:')
         graphviz = GraphvizOutput()
         graphviz.output_file = 'src/logs/function_calling_dependency_graph.png'
@@ -95,21 +96,25 @@ def Planter(iteration = 0):
     if args.manually_config and iteration == 0:
         Planter_config = {}
     else:
-        Planter_config = reload_config('src/configs/Planter_config.json')
+        if args.config:
+            Planter_config = reload_config(args.config)
+        else:
+            Planter_config = reload_config('src/configs/Planter_config.json')
+
 
     if iteration == 0:
         print('Please set the following configurations:')
         # ====================== set data directory in config ======================
         question = 'Where is your data folder?'
         default = os.path.abspath(os.path.join(os.getcwd(), "..")) + '/Data'
-        Planter_config = take_CLI_input(Planter_config, 'directory config', 'data', question, default,
-                                        args.manually_config, check_dir_existance=True)
+        Planter_config = take_CLI_input(Planter_config, 'directory config', 'data', question,
+                                        default, args.manually_config, check_dir_existance=True)
 
         # ====================== set working directory in config ======================
         question = 'Where is your Planter folder?'
         default = os.getcwd()
-        Planter_config = take_CLI_input(Planter_config, 'directory config', 'work', question, default,
-                                        args.manually_config, check_dir_existance=True)
+        Planter_config = take_CLI_input(Planter_config, 'directory config', 'work', question,
+                                        default, args.manually_config, check_dir_existance=True)
     else:
         args.manually_config = False
     # =================== set auto opt mode config ===================
@@ -117,8 +122,8 @@ def Planter(iteration = 0):
         # ====================== set optimisation mode in config ======================
         question = 'Which optimiser do you use?'
         default = 'Bayesian'
-        Planter_config = take_CLI_input(Planter_config, 'optimisation config', 'model', question, default,
-                                        args.manually_config, check_dir_existance=True, check_available_options=True,
+        Planter_config = take_CLI_input(Planter_config, 'optimisation config', 'model', question, 
+                                        default, args.manually_config, check_dir_existance=True, check_available_options=True,
                                         option_address='/src/optimiser/')
         # ====================== set optimisation mode/type in config ======================
         question = 'Which optimisation model do you use?'
@@ -182,19 +187,24 @@ def Planter(iteration = 0):
     question = 'Which dataset do you want to use?'
     default = 'UNSW_5_tuple'
     Planter_config = take_CLI_input(Planter_config, 'data config', 'dataset', question, default,
-                                    args.manually_config, check_dir_existance=True, check_available_options=True,
-                                    option_address='/src/load_data', option_suffix='_dataset.py')
+                                    args.manually_config, check_dir_existance=True, 
+                                    check_available_options=True, option_address='/src/load_data', 
+                                    option_suffix='_dataset.py')
 
     # =================== set data feature numbers in config ===================
     question = 'Where is the number of features?'
     default = 4
-    Planter_config = take_CLI_input(Planter_config, 'data config', 'number of features', question, default,
-                                 args.manually_config, numeric=True)
+    Planter_config = take_CLI_input(Planter_config, 'data config', 'number of features', question, 
+                                    default, args.manually_config, numeric=True)
 
     # prepare the log dict
     Planter_config['timer log'] = {}
     # dump the config file
-    dump_config(Planter_config, 'src/configs/Planter_config.json')
+    if args.config:
+        dump_config(Planter_config, args.config)
+    else:
+        dump_config(Planter_config, 'src/configs/Planter_config.json')
+
 
     # =================== include model folder and files ===================
     load_data_file = importlib.util.spec_from_file_location("*", Planter_config['directory config']['work']+"/src/load_data/"+Planter_config['data config']['dataset']+"_dataset.py")
@@ -202,21 +212,34 @@ def Planter(iteration = 0):
     load_data_file.loader.exec_module(load_data_functions)
     global test_X, test_y
     # reload the config file
-    Planter_config = reload_config('src/configs/Planter_config.json')
+    if args.config:
+        Planter_config = reload_config(args.config)
+    else:
+        Planter_config = reload_config('src/configs/Planter_config.json')
     # =================== load data timer ===================
     Planter_config['timer log']['load data'] = {}
     Planter_config['timer log']['load data']['start'] = time.time()
     # =================== load data timer ===================
     # dump the planter config
-    dump_config(Planter_config, 'src/configs/Planter_config.json')
-    train_X, train_y, test_X, test_y, used_features = load_data_functions.load_data(Planter_config['data config']['number of features'], Planter_config['directory config']['data'])
+    if args.config:
+        dump_config(Planter_config, args.config)
+    else:
+        dump_config(Planter_config, 'src/configs/Planter_config.json')
+    # train_X, train_y, test_X, test_y, used_features = load_data_functions.load_data(Planter_config['data config']['number of features'], Planter_config['directory config']['data'])
+    train_X, train_y, test_X, test_y, used_features = load_data_functions.load_data(Planter_config['data config']['number of features'], Planter_config['directory config']['data'], Planter_config['directory config']['labels'])
     # reload the config file
-    Planter_config = reload_config('src/configs/Planter_config.json')
+    if args.config:
+        Planter_config = reload_config(args.config)
+    else:
+        Planter_config = reload_config('src/configs/Planter_config.json')
     # =================== load data timer ===================
     Planter_config['timer log']['load data']['end'] = time.time()
     # =================== load data timer ===================
     # dump the planter config
-    dump_config(Planter_config, 'src/configs/Planter_config.json')
+    if args.config:
+        dump_config(Planter_config, args.config)
+    else:
+        dump_config(Planter_config, 'src/configs/Planter_config.json')
     print('= src/configs/Planter_config.json is generated')
     test_mode = 'n'
     if not args.testing_mode:
@@ -236,7 +259,10 @@ def Planter(iteration = 0):
             test_y = test_y[:5000]
     print('= The shape of the dataset - ', 'train x: ',train_X.shape,  'train y: ',train_y.shape, 'test x: ', test_X.shape, 'test y: ', test_y.shape)
     # dump the planter config
-    dump_config(Planter_config, 'src/configs/Planter_config.json')
+    if args.config:
+        dump_config(Planter_config, args.config)
+    else:
+        dump_config(Planter_config, 'src/configs/Planter_config.json')
     print('= src/configs/Planter_config.json is generated')
     # =================== include model folder and files - table generator and table tester ===================
     model_path = Planter_config['directory config']['work']+ '/src/models/' + Planter_config['model config']['model'] + '/Type_' + Planter_config['model config']['type']
@@ -245,9 +271,16 @@ def Planter(iteration = 0):
     model_main = importlib.util.spec_from_file_location("*", model_path+"/table_generator.py")
     main_functions = importlib.util.module_from_spec(model_main)
     model_main.loader.exec_module(main_functions)
-    sklearn_test_y = main_functions.run_model(train_X, train_y, test_X, test_y, used_features)
+    print("Running model")
+    sklearn_test_y = main_functions.run_model(train_X, train_y, test_X, test_y, used_features,
+                                              Planter_config['data config']['dataset'],
+                                              Planter_config['data config']['cur_trace'],
+                                              config=args.config)
     # reload the config file
-    Planter_config = reload_config('src/configs/Planter_config.json')
+    if args.config:
+        Planter_config = reload_config(args.config)
+    else:
+        Planter_config = reload_config('src/configs/Planter_config.json')
     # =================== set testing table or not in config ===================
     question = 'Test the table or not?'
     default = 'y'
@@ -258,22 +291,31 @@ def Planter(iteration = 0):
         Planter_config['timer log']['python-based test'] = {}
         Planter_config['timer log']['python-based test']['start'] = time.time()
         # =================== python-based test timer ===================
-        main_functions.test_tables(sklearn_test_y, test_X, test_y)
+        main_functions.test_tables(sklearn_test_y, test_X, test_y,
+                                   Planter_config['data config']['dataset'],
+                                   Planter_config['data config']['cur_trace'],
+                                   config=args.config)
         # =================== python-based test timer ===================
         Planter_config['timer log']['python-based test']['end'] = time.time()
         # =================== python-based test timer ===================
 
     # dump the planter config
-    dump_config(Planter_config, 'src/configs/Planter_config.json')
-    print('= src/configs/Planter_config.json is generated')
+    if args.config:
+        dump_config(Planter_config, args.config)
+    else:
+        dump_config(Planter_config, 'src/configs/Planter_config.json')
     try:
         main_functions.resource_prediction()
     except Exception as e:
+        print(f'Error: {e}')
         pass
 
     # =================== select the target device ===================
     # reload the config file
-    Planter_config = reload_config('src/configs/Planter_config.json')
+    if args.config:
+        Planter_config = reload_config(args.config)
+    else:
+        Planter_config = reload_config('src/configs/Planter_config.json')
 
     # ====================== set architecture type in config ======================
     question = 'Which architecture do you use?'
@@ -289,7 +331,10 @@ def Planter(iteration = 0):
                                     args.manually_config, check_dir_existance=True, check_available_options=True,
                                     option_address='/src/use_cases/')
 
-    dump_config(Planter_config, 'src/configs/Planter_config.json')
+    if args.config:
+        dump_config(Planter_config, args.config)
+    else:
+        dump_config(Planter_config, 'src/configs/Planter_config.json')
 
     # =================== include model generate p4 file ===================
     # ===================
@@ -303,57 +348,58 @@ def Planter(iteration = 0):
     p4_generator_main = importlib.util.spec_from_file_location("*", Planter_config['directory config']['work']+"/src/architectures/"+Planter_config['target config']['architecture']+"/p4_generator.py")
     p4_generator_functions = importlib.util.module_from_spec(p4_generator_main)
     p4_generator_main.loader.exec_module(p4_generator_functions)
-    p4_generator_functions.main()
+    p4_generator_functions.main(args.config)
 
     # =================== select the target device ===================
     # reload the config file
-    Planter_config = reload_config('src/configs/Planter_config.json')
+    if args.config:
+        Planter_config = reload_config(args.config)
+    else:
+        Planter_config = reload_config('src/configs/Planter_config.json')
 
     # ====================== set target device in config ======================
-    question = 'What is the target device?'
-    default = 'Tofino'
-    Planter_config = take_CLI_input(Planter_config, 'target config', 'device', question, default,
-                                    args.manually_config, check_dir_existance=True, check_available_options=True,
-                                    option_address='/src/targets/')
+    # question = 'What is the target device?'
+    # default = 'Tofino'
+    # Planter_config = take_CLI_input(Planter_config, 'target config', 'device', question, default,
+    #                                 args.manually_config, check_dir_existance=True, check_available_options=True,
+    #                                 option_address='/src/targets/')
 
     # ====================== set target testing mode in config ======================
-    question = 'Which type of mode do you want to choose?'
-    default = 'software'
-    Planter_config = take_CLI_input(Planter_config, 'target config', 'type', question, default,
-                                    args.manually_config, check_dir_existance=True, check_available_options=True,
-                                    option_address='/src/targets/'+Planter_config['target config']['device'])
+    # question = 'Which type of mode do you want to choose?'
+    # default = 'software'
+    # Planter_config = take_CLI_input(Planter_config, 'target config', 'type', question, default,
+    #                                 args.manually_config, check_dir_existance=True, check_available_options=True,
+    #                                 option_address='/src/targets/'+Planter_config['target config']['device'])
 
-    dump_config(Planter_config, 'src/configs/Planter_config.json')
-    print('= Dump the targets info to src/configs/Planter_config.json')
+    # if args.config:
+    #     dump_config(Planter_config, args.config)
+    # else:
+    #     dump_config(Planter_config, 'src/configs/Planter_config.json')
 
     # =================== include model compile load and test module ===================
-    if_using_subprocess = False
-    test_model_path = Planter_config['directory config']['work']+'/src/targets/'+Planter_config['target config']['device'] +'/'+Planter_config['target config']['type']
-    print('= Add the following path: '+test_model_path)
-    sys.path.append(test_model_path)
-    run_model_main = importlib.util.spec_from_file_location("*", test_model_path+"/run_model.py")
-    run_model_functions = importlib.util.module_from_spec(run_model_main)
-    run_model_main.loader.exec_module(run_model_functions)
-    processes, if_using_subprocess = run_model_functions.main(if_using_subprocess)
+    # if_using_subprocess = False
+    # test_model_path = Planter_config['directory config']['work']+'/src/targets/'+Planter_config['target config']['device'] +'/'+Planter_config['target config']['type']
+    # print('= Add the following path: '+test_model_path)
+    # sys.path.append(test_model_path)
+    # run_model_main = importlib.util.spec_from_file_location("*", test_model_path+"/run_model.py")
+    # run_model_functions = importlib.util.module_from_spec(run_model_main)
+    # run_model_main.loader.exec_module(run_model_functions)
+    # processes, if_using_subprocess = run_model_functions.main(if_using_subprocess)
 
-    test_model_main = importlib.util.spec_from_file_location("*", test_model_path+"/test_model.py")
-    test_model_functions = importlib.util.module_from_spec(test_model_main)
-    test_model_main.loader.exec_module(test_model_functions)
-    processes, if_using_subprocess = test_model_functions.main(sklearn_test_y, test_X, test_y, processes, if_using_subprocess)
+    # test_model_main = importlib.util.spec_from_file_location("*", test_model_path+"/test_model.py")
+    # test_model_functions = importlib.util.module_from_spec(test_model_main)
+    # test_model_main.loader.exec_module(test_model_functions)
+    # processes, if_using_subprocess = test_model_functions.main(sklearn_test_y, test_X, test_y, processes, if_using_subprocess)
 
-    if if_using_subprocess:
-        print('Join all subprocess together ...')
-        try:
-            for p in processes:
-                p.join()
-        except Exception as e:
-            print(str(e))
+    # if if_using_subprocess:
+    #     print('Join all subprocess together ...')
+    #     try:
+    #         for p in processes:
+    #             p.join()
+    #     except Exception as e:
+    #         print(str(e))
 
-    print_timer()
-
-
-
-
+    # print_timer()
 
 if __name__ == "__main__":
     try:

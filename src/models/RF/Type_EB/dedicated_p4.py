@@ -16,7 +16,7 @@ import json
 
 
 def load_config(fname):
-    Planter_config = json.load(open('src/configs/' + fname, 'r'))
+    Planter_config = json.load(open(fname, 'r'))
     config_file = Planter_config['p4 config']
     config = {}
     config['num_features'] = config_file["number of features"]
@@ -181,7 +181,9 @@ def create_tables_Commend(fname, config):
     num_features = config['data config']['number of features']
     num_classes = config['model config']['number of classes']
     num_trees = config['model config']['number of trees']
-    Ternary_Table = json.load(open('Tables/Ternary_Table.json', 'r'))
+    num_depth = config['model config']['number of depth']
+    max_leaf_nodes = config['model config']['max number of leaf nodes']
+    Ternary_Table = json.load(open(f'Tables/rf-eb-{num_trees}-{num_depth}-{max_leaf_nodes}-ternary_table.json', 'r'))
     with open(fname, 'w') as file:
 
         for f in range(num_features):
@@ -224,7 +226,15 @@ def create_load_tables(fname, fjson, config, Planter_config, file_name):
     commend_file = work_root + "/src/targets/bmv2/software/model_test/test_environment/s1-commands.txt"
     create_tables_Commend(commend_file, Planter_config)
 
-    commend_file = work_root + "/Tables/s1-commands.txt"
+    cur_dataset = Planter_config['data config']['dataset']
+    cur_trace   = Planter_config['data config']['cur_trace']
+    cur_model   = Planter_config['model config']['model']
+    cur_type    = Planter_config['model config']['type']
+    num_trees   = Planter_config['model config']['number of trees']
+    depth       = Planter_config['model config']['number of depth']
+    leaf_nodes  = Planter_config['model config']['max number of leaf nodes']
+
+    commend_file = work_root + f'/Tables/{cur_dataset}-{cur_trace}-{cur_model}-{cur_type}-{num_trees}-{depth}-{leaf_nodes}-s1-commands.txt'
     create_tables_Commend(commend_file, Planter_config)
 
 

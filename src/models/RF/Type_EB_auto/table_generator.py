@@ -505,6 +505,8 @@ def test_tables(sklearn_test_y, test_X, test_y):
     error = 0
     switch_test_y = []
     for i in range(np.shape(test_X.values)[0]):
+        if i % 10000 == 0:
+            print(f'Test: processed {i} packets.')
         vote_list = np.zeros(num_trees).astype(dtype=int).tolist()
         for tree in range(num_trees):
             code_list = np.zeros(num_features)
@@ -573,11 +575,11 @@ def test_tables(sklearn_test_y, test_X, test_y):
         else:
             error += 1
             
-        if i % 1 == 0 and i!=0:
-            print(
-                '\rswitch_prediction: {}, test_y: {}, with acc: {:.3}, with acc to sklearn: {:.4}, with error: {:.3}, M/A format macro f1: {:.3}, macro f1: {:.3}'.format(
-                    switch_prediction, test_y[i], correct / (i + 1), same / (i + 1), error / (i + 1),
-                    accuracy_score(switch_test_y[:i], test_y[:i] ),accuracy_score(sklearn_test_y[:i], test_y[:i] )), end=" ")
+        # if i % 1 == 0 and i!=0:
+        #     print(
+        #         '\rswitch_prediction: {}, test_y: {}, with acc: {:.3}, with acc to sklearn: {:.4}, with error: {:.3}, M/A format macro f1: {:.3}, macro f1: {:.3}'.format(
+        #             switch_prediction, test_y[i], correct / (i + 1), same / (i + 1), error / (i + 1),
+        #             accuracy_score(switch_test_y[:i], test_y[:i] ),accuracy_score(sklearn_test_y[:i], test_y[:i] )), end=" ")
 
 
     print('\nThe accuracy of the match action format of Random Forest is', correct / np.shape(test_X.values)[0])

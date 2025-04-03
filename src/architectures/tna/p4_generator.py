@@ -252,16 +252,33 @@ def create_include(fname, config):
 # Parse input, set file name and call functions
 ##################################################
 
-def main():
+def main(config_path):
     # The list of files being manipulated
-    config_file = 'Planter_config.json'
+    if config_path:
+        config_file = config_path
+    else:
+        config_file = 'Planter_config.json'
     # print('Config file is ', config_file)
     # load configuration from file
     config, Planter_config = load_config(config_file)
 
     ##################################################
     # print('Generate p4 files')
-    file_name = Planter_config['model config']['model']+'_'+Planter_config['target config']['use case']+'_'+Planter_config['data config']['dataset']
+    cur_dataset = Planter_config['data config']['dataset']
+    cur_trace   = Planter_config['data config']['cur_trace']
+    if Planter_config['model config']['model'] == 'RF':
+        cur_type    = Planter_config['model config']['type']
+        num_trees   = Planter_config['model config']['number of trees']
+        depth       = Planter_config['model config']['number of depth']
+        leaf_nodes  = Planter_config['model config']['max number of leaf nodes']
+        model       = Planter_config['model config']['model']
+        cur_model   = f'{model}-{cur_type}-{num_trees}-{depth}-{leaf_nodes}'
+    else:
+        cur_model   = Planter_config['model config']['model']
+
+    file_name = f'{cur_dataset}-{cur_trace}-{cur_model}'
+    # file_name = Planter_config['model config']['model']+'_'+Planter_config['target config']['use case']+'_'+Planter_config['data config']['dataset']
+
     p4_file = Planter_config['directory config']['work'] + '/P4/' + file_name+'.p4'
     tables_json = Planter_config['p4 config']['table name']
 

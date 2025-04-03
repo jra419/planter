@@ -416,7 +416,7 @@ def run_model(train_X, train_y, test_X, test_y, used_features):
 
     LPM_Table['decision'] = {}
     print('')
-    print('Begine transfer decision table ')
+    print('Begin transfer decision table ')
     key_name = []
     for t in range(num_trees):
         key_name += ['t' + str(t) + ' vote']
