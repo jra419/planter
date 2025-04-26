@@ -1,0 +1,130 @@
+{
+    "directory config": {
+        "data": "/home/docker/datasets/cic-ids-2018/ssh-bruteforce/ssh-bruteforce.csv",
+        "labels": "/home/docker/datasets/cic-ids-2018/ssh-bruteforce/ssh-bruteforce-labels.csv",
+        "work": "/home/docker/planter"
+    },
+    "model config": {
+        "model": "RF",
+        "type": "3",
+        "number of trees": 6,
+        "number of depth": 4,
+        "max number of leaf nodes": 1000,
+        "number of classes": 2,
+        "test table": "y"
+    },
+    "data config": {
+        "dataset": "cic-ids-2018",
+        "cur_trace": "ssh-bruteforce",
+        "number of features": 5,
+        "testing mode": "n"
+    },
+    "timer log": {
+        "load data": {
+            "start": 1745375909.252407,
+            "end": 1745376328.1383479
+        },
+        "train model": {
+            "start": 1745376330.6131938,
+            "end": 1745376347.954535
+        },
+        "convert model": {
+            "start": 1745376347.9545476,
+            "end": 1745376582.1228592
+        }
+    },
+    "p4 config": {
+        "model": "RF",
+        "number of features": 5,
+        "number of classes": 2,
+        "number of trees": 6,
+        "table name": "ternary_table.json",
+        "decision table size": 22,
+        "code table size": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+        ],
+        "default vote": 0,
+        "default label": 0,
+        "width of feature": [
+            17,
+            17,
+            6,
+            9,
+            9
+        ],
+        "width of code": [
+            [
+                2.0,
+                2.0,
+                1.0,
+                1.0,
+                3.0
+            ],
+            [
+                2.0,
+                2.0,
+                1.0,
+                1.0,
+                3.0
+            ],
+            [
+                1.0,
+                2.0,
+                1.0,
+                3.0,
+                1.0
+            ],
+            [
+                1.0,
+                2.0,
+                1.0,
+                3.0,
+                2.0
+            ],
+            [
+                1.0,
+                2.0,
+                1.0,
+                2.0,
+                3.0
+            ],
+            [
+                2.0,
+                2.0,
+                1.0,
+                2.0,
+                2.0
+            ]
+        ],
+        "used columns": [
+            40,
+            19,
+            6,
+            17,
+            17
+        ],
+        "width of probability": 7,
+        "width of result": 8,
+        "standard headers": [
+            "ethernet",
+            "Planter",
+            "arp",
+            "ipv4",
+            "tcp",
+            "udp",
+            "vlan_tag"
+        ]
+    },
+    "test config": {
+        "type of test": "classification"
+    },
+    "target config": {
+        "architecture": "tna",
+        "use case": "anomaly_detection"
+    }
+}

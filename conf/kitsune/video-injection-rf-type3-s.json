@@ -1,0 +1,134 @@
+{
+    "directory config": {
+        "data": "/home/docker/datasets/kitsune/video-injection/video-injection.csv",
+        "labels": "/home/docker/datasets/kitsune/video-injection/video-injection-labels.csv",
+        "work": "/home/docker/planter"
+    },
+    "model config": {
+        "model": "RF",
+        "type": "3",
+        "number of trees": 6,
+        "number of depth": 4,
+        "max number of leaf nodes": 1000,
+        "number of classes": 2,
+        "test table": "y"
+    },
+    "data config": {
+        "dataset": "kitsune",
+        "cur_trace": "video-injection",
+        "number of features": 5,
+        "testing mode": "n"
+    },
+    "timer log": {
+        "load data": {
+            "start": 1743831790.0554662,
+            "end": 1743831842.0382147
+        },
+        "train model": {
+            "start": 1743831842.1642067,
+            "end": 1743831845.2162971
+        },
+        "convert model": {
+            "start": 1743831845.216299,
+            "end": 1743832043.9410057
+        },
+        "python-based test": {
+            "start": 1743832044.9427545,
+            "end": 1743834188.1844893
+        }
+    },
+    "p4 config": {
+        "model": "RF",
+        "number of features": 5,
+        "number of classes": 2,
+        "number of trees": 6,
+        "table name": "Ternary_Table.json",
+        "decision table size": 22,
+        "code table size": [
+            2,
+            0,
+            2,
+            0,
+            0,
+            0
+        ],
+        "default vote": 0,
+        "default label": 0,
+        "width of feature": [
+            17,
+            17,
+            6,
+            9,
+            9
+        ],
+        "width of code": [
+            [
+                4.0,
+                2.0,
+                2.0,
+                1.0,
+                2.0
+            ],
+            [
+                3.0,
+                2.0,
+                3.0,
+                2.0,
+                2.0
+            ],
+            [
+                3.0,
+                2.0,
+                2.0,
+                1.0,
+                3.0
+            ],
+            [
+                1.0,
+                3.0,
+                2.0,
+                2.0,
+                1.0
+            ],
+            [
+                4.0,
+                3.0,
+                2.0,
+                1.0,
+                2.0
+            ],
+            [
+                3.0,
+                4.0,
+                2.0,
+                1.0,
+                2.0
+            ]
+        ],
+        "used columns": [
+            62,
+            68,
+            8,
+            14,
+            26
+        ],
+        "width of probability": 7,
+        "width of result": 8,
+        "standard headers": [
+            "ethernet",
+            "Planter",
+            "arp",
+            "ipv4",
+            "tcp",
+            "udp",
+            "vlan_tag"
+        ]
+    },
+    "test config": {
+        "type of test": "classification"
+    },
+    "target config": {
+        "architecture": "tna",
+        "use case": "anomaly_detection"
+    }
+}

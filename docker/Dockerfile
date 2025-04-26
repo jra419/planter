@@ -8,9 +8,12 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 RUN apt update
 RUN apt install -y sudo
 
-RUN adduser --disabled-password --gecos '' docker
-RUN adduser docker sudo
-RUN echo '%docker ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+ARG UID
+ARG GID
+
+RUN adduser --disabled-password --gecos '' --uid $UID docker && \
+	adduser docker sudo && \
+    echo 'docker ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers
 
 USER docker
 WORKDIR /home/docker
@@ -90,31 +93,31 @@ RUN echo "source ~/.profile" >> /home/docker/.bash_profile
 #  SDE env	#
 #############
 
-ENV SDE=/home/docker/bf-sde-9.13.4
-ENV SDE_INSTALL=/home/docker/bf-sde-9.13.4/install
+# ENV SDE=/home/docker/bf-sde-9.13.4
+# ENV SDE_INSTALL=/home/docker/bf-sde-9.13.4/install
 
-COPY --chown=docker:docker resources/bf-sde-9.13.4.tgz .
-COPY --chown=docker:docker resources/bf-reference-bsp-9.13.4.tgz .
+# COPY --chown=docker:docker resources/bf-sde-9.13.4.tgz .
+# COPY --chown=docker:docker resources/bf-reference-bsp-9.13.4.tgz .
 
-RUN tar xvzf bf-sde-9.13.4.tgz
+# RUN tar xvzf bf-sde-9.13.4.tgz
 
-WORKDIR $SDE
+# WORKDIR $SDE
 
-RUN cd p4studio/dependencies && \
-	awk 'NR==278 {$0="        attributes: {flags: --with-thread --with-test --with-filesystem --with-system install --with-graph --with-iostreams, url: 'https://archives.boost.io/release/1.67.0/source/boost_1_67_0.tar.bz2', version: 1.67.0}"} 1' dependencies.yaml > dependencies.yaml.tmp && \
-	rm dependencies.yaml && \
-	mv dependencies.yaml.tmp dependencies.yaml
+# RUN cd p4studio/dependencies && \
+# 	awk 'NR==278 {$0="        attributes: {flags: --with-thread --with-test --with-filesystem --with-system install --with-graph --with-iostreams, url: 'https://archives.boost.io/release/1.67.0/source/boost_1_67_0.tar.bz2', version: 1.67.0}"} 1' dependencies.yaml > dependencies.yaml.tmp && \
+# 	rm dependencies.yaml && \
+# 	mv dependencies.yaml.tmp dependencies.yaml
 
-RUN yes | ./p4studio/p4studio dependencies install
+# RUN yes | ./p4studio/p4studio dependencies install
 
-COPY --chown=docker:docker ./resources/profile.yaml .
-RUN ./p4studio/p4studio profile apply profile.yaml
+# COPY --chown=docker:docker ./resources/profile.yaml .
+# RUN ./p4studio/p4studio profile apply profile.yaml
 
-WORKDIR /home/docker
+# WORKDIR /home/docker
 
-RUN echo "export SDE=/home/docker/bf-sde-9.13.4" >> ~/.profile
-RUN echo "export SDE_INSTALL=/home/docker/bf-sde-9.13.4/install" >> ~/.profile
-RUN echo "export PATH=/home/docker/bf-sde-9.13.4/install/bin:\$PATH" >> ~/.bash_profile
+# RUN echo "export SDE=/home/docker/bf-sde-9.13.4" >> ~/.profile
+# RUN echo "export SDE_INSTALL=/home/docker/bf-sde-9.13.4/install" >> ~/.profile
+# RUN echo "export PATH=/home/docker/bf-sde-9.13.4/install/bin:\$PATH" >> ~/.bash_profile
 
 ###################
 #  Planter setup  #

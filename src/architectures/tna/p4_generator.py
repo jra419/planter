@@ -20,10 +20,6 @@ from dedicated_p4 import *
 from common_p4 import *
 from src.functions.add_license import *
 
-
-
-
-
 def create_headers(fname, config):
     with open(fname, 'a') as headers:
         headers.write("/*************************************************************************\n"
@@ -42,8 +38,6 @@ def create_headers(fname, config):
     with open(fname, 'a') as headers:
         headers.write("}\n\n")
 
-
-
 ###################################################
 # Create a parser file to be used
 # input: parser file name, configuration
@@ -52,14 +46,11 @@ def create_headers(fname, config):
 
 # This code currently does not support skipping columns. This is to be added once the basic functionality is tested
 def create_parser(fname, config):
-
     with open(fname, 'a') as parser:
 
         parser.write("/*************************************************************************\n"
                      "*********************** Ingress Parser ***********************************\n"
                      "*************************************************************************/\n\n")
-
-
 
         parser.write(
             "parser SwitchIngressParser(\n"
@@ -67,7 +58,6 @@ def create_parser(fname, config):
             "    out header_t hdr,\n"
             "    out metadata_t meta,\n"
             "    out ingress_intrinsic_metadata_t ig_intr_md) {\n\n")
-
 
         parser.write("    state start {\n"
                      "        pkt.extract(ig_intr_md);\n"
@@ -92,8 +82,7 @@ def create_parser(fname, config):
 
         parser.write("        pkt.emit(hdr);\n    }\n}\n\n")
 
-
-        # ==============================================================================================
+        # =========================================================================================
 
         parser.write("/*************************************************************************\n"
                      "*********************** Egress Parser ***********************************\n"
@@ -135,9 +124,7 @@ def create_parser(fname, config):
 
 # This code currently does not support skipping columns. This is to be added once the basic functionality is tested
 def create_ingress_control(fname, config):
-
     with open(fname, 'a') as ingress:
-
         ingress.write("/*************************************************************************\n"
                       "*********************** Ingress Processing********************************\n"
                       "**************************************************************************/\n\n")
@@ -163,7 +150,6 @@ def create_ingress_control(fname, config):
         pass
     separate_tables(fname, config)
 
-
     with open(fname, 'a') as ingress:
         ingress.write("    apply{\n")
 
@@ -175,7 +161,6 @@ def create_ingress_control(fname, config):
         ingress.write("    }\n" )
         ingress.write("}\n")
 
-
 ###################################################
 # Create an egress control file
 # input: egress_control file name, configuration
@@ -184,7 +169,6 @@ def create_ingress_control(fname, config):
 
 # This code currently does not support skipping columns. This is to be added once the basic functionality is tested
 def create_egress_control(fname, config):
-
     with open(fname, 'a') as egress:
         egress.write("/*************************************************************************\n"
                      "*********************** egress Processing********************************\n"
@@ -206,7 +190,6 @@ def create_egress_control(fname, config):
 
         egress.write("    }\n}\n")
 
-
 ###################################################
 # Create main function in p4 code
 # input: table script file name, tables data json file name, configuration
@@ -225,7 +208,6 @@ def create_main(fname, config):
                      "    SwitchEgressDeparser()) pipe;\n\n"
                      "Switch(pipe) main;")
 
-
 ###################################################
 # Create includes in code
 # input: table script file name, tables data json file name, configuration
@@ -243,10 +225,6 @@ def create_include(fname, config):
 # output: structure of config parameters
 ###################################################
 
-
-
-
-
 ##################################################
 # Main function
 # Parse input, set file name and call functions
@@ -257,30 +235,38 @@ def main(config_path):
     if config_path:
         config_file = config_path
     else:
-        config_file = 'Planter_config.json'
+        config_file = 'planter_config.json'
     # print('Config file is ', config_file)
     # load configuration from file
-    config, Planter_config = load_config(config_file)
+    config, planter_config = load_config(config_file)
 
     ##################################################
     # print('Generate p4 files')
-    cur_dataset = Planter_config['data config']['dataset']
-    cur_trace   = Planter_config['data config']['cur_trace']
-    if Planter_config['model config']['model'] == 'RF':
-        cur_type    = Planter_config['model config']['type']
-        num_trees   = Planter_config['model config']['number of trees']
-        depth       = Planter_config['model config']['number of depth']
-        leaf_nodes  = Planter_config['model config']['max number of leaf nodes']
-        model       = Planter_config['model config']['model']
+    cur_dataset = planter_config['data config']['dataset']
+    cur_trace   = planter_config['data config']['cur_trace']
+    if planter_config['model config']['model'] == 'RF':
+        cur_type    = planter_config['model config']['type']
+        num_trees   = planter_config['model config']['number of trees']
+        depth       = planter_config['model config']['number of depth']
+        leaf_nodes  = planter_config['model config']['max number of leaf nodes']
+        model       = 'rf'
         cur_model   = f'{model}-{cur_type}-{num_trees}-{depth}-{leaf_nodes}'
+    elif planter_config['model config']['model'] == 'Autoencoder':
+        cur_type        = planter_config['model config']['type']
+        num_bits        = planter_config['model config']['number of bits']
+        learning_rate   = planter_config['model config']['learning rate']
+        batch_size      = planter_config['model config']['batch size']
+        num_epoch       = planter_config['model config']['num epoch']
+        model           = 'ae'
+        cur_model       = f'{model}-{cur_type}-{num_bits}-{learning_rate}-{batch_size}-{num_epoch}'
     else:
-        cur_model   = Planter_config['model config']['model']
+        cur_model   = planter_config['model config']['model']
 
     file_name = f'{cur_dataset}-{cur_trace}-{cur_model}'
     # file_name = Planter_config['model config']['model']+'_'+Planter_config['target config']['use case']+'_'+Planter_config['data config']['dataset']
 
-    p4_file = Planter_config['directory config']['work'] + '/P4/' + file_name+'.p4'
-    tables_json = Planter_config['p4 config']['table name']
+    p4_file     = planter_config['directory config']['work'] + '/p4/' + file_name+'.p4'
+    tables_json = planter_config['p4 config']['table name']
 
     ##################################################
     print('Generating p4 files and load data file...',end=" ")
@@ -302,10 +288,10 @@ def main(config_path):
     create_main(p4_file, config)
 
     ##################################################
-    load_data_file = Planter_config['directory config']['work'] + '/Tables/load_table.py'
+    load_data_file = planter_config['directory config']['work'] + '/tables/load_table.py'
     # create load tables script
     add_license(load_data_file)
-    create_load_tables(load_data_file, tables_json, config, Planter_config, file_name)
+    create_load_tables(load_data_file, tables_json, config, planter_config, file_name)
     print("Done")
 
 

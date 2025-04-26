@@ -116,10 +116,13 @@ cython_debug/
 .DS_Store
 .idea/
 .ide
-P4/
-Tables/
 src/configs/
 src/eval/*.txt
 src/models/**/*.txt
 docker/resources/
-src/temp/
+src/tmp/
+run*.sh
+tables/*.json
+tables/*.txt
+p4/
+eval/*.txt

@@ -1,1 +1,0 @@
-This folder contains all Planter-generated P4 files. Please refer to ```./Docs/Planter_User_Document.pdf```for further information.

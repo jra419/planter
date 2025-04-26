@@ -1,0 +1,64 @@
+{
+	"directory config": {
+		"data": "/home/docker/datasets/kitsune/active-wiretap/active-wiretap.csv",
+		"labels": "/home/docker/datasets/kitsune/active-wiretap/active-wiretap-labels.csv",
+		"work": "/home/docker/planter"
+	},
+	"model config": {
+		"model": "Autoencoder",
+		"type": "1",
+		"num components": 2,
+		"learning rate": 0.01,
+		"batch size": 100,
+		"num epoch": 50,
+		"number of bits": 8,
+		"test table": "y",
+		"number of classes": 2
+	},
+	"data config": {
+		"dataset": "kitsune",
+		"cur_trace": "active-wiretap",
+		"number of features": 5,
+		"testing mode": "y"
+	},
+	"timer log": {
+		"load data": {
+			"start": 1745250912.814828,
+			"end": 1745250960.5012696
+		},
+		"train model": {
+			"start": 1745250964.8098102,
+			"end": 1745250984.9383242
+		},
+		"convert model": {
+			"start": 1745250984.9383318,
+			"end": 1745250987.7382114
+		},
+		"python-based test": {
+			"start": 1745250991.374487,
+			"end": 1745250991.6193316
+		}
+	},
+	"p4 config": {
+		"model": "Autoencoder",
+		"number of features": 5,
+		"number of classes": 2,
+		"action data bits": 8,
+		"table name": "Exact_Table.json",
+		"feature tbl len": [
+			61719,
+			61721,
+			18,
+			193,
+			16
+		],
+		"num components": 2
+	},
+	"test config": {
+		"type of test": "dimension_reduction"
+	},
+	"target config": {
+		"architecture": "tna",
+		"use case": "anomaly_detection"
+	}
+}

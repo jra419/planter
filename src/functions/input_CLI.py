@@ -15,13 +15,14 @@ import copy
 import numpy as np
 from src.functions.directory_management import *
 
-def CLI_loop(question, default, check_dir_existance, check_available_options, option_address, option_prefix, option_suffix):
+def CLI_loop(question, default, check_dir_existence, check_available_options, option_address,
+             option_prefix, option_suffix):
     while True:
         if check_available_options:
             CLI_input = input('+ ' + question + ' (default = ' + str(default) + ' | options = -h) ') or default
         else:
             CLI_input = input('+ ' + question + ' (default = ' + str(default) + ') ') or default
-        if check_dir_existance:
+        if check_dir_existence:
             if not check_available_options: 
                 if not os.path.exists(CLI_input):
                     print('  Warning! The input does not exist, please input again.')
@@ -40,7 +41,7 @@ def CLI_loop(question, default, check_dir_existance, check_available_options, op
     return CLI_input
 
 
-def take_CLI_input(DINC_config, config_type, config_name, question, default, manually_input = False, check_dir_existance = False, check_available_options = False, option_address = '', numeric = False, option_prefix= '', option_suffix = ''):
+def take_CLI_input(DINC_config, config_type, config_name, question, default, manually_input = False, check_dir_existence = False, check_available_options = False, option_address = '', numeric = False, option_prefix= '', option_suffix = ''):
     if not manually_input:
         try:
             CLI_input = DINC_config[config_type][config_name]
@@ -50,13 +51,13 @@ def take_CLI_input(DINC_config, config_type, config_name, question, default, man
                 _ = DINC_config[config_type]
             except Exception as e:
                 DINC_config[config_type] = {}
-            CLI_input = CLI_loop(question, default, check_dir_existance, check_available_options, option_address, option_prefix, option_suffix)
+            CLI_input = CLI_loop(question, default, check_dir_existence, check_available_options, option_address, option_prefix, option_suffix)
     else:
         try:
             _ = DINC_config[config_type]
         except Exception as e:
             DINC_config[config_type] = {}
-        CLI_input = CLI_loop(question, default, check_dir_existance, check_available_options, option_address, option_prefix, option_suffix)
+        CLI_input = CLI_loop(question, default, check_dir_existence, check_available_options, option_address, option_prefix, option_suffix)
     if numeric:
         CLI_input = int(CLI_input)
     DINC_config[config_type][config_name] = CLI_input

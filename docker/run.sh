@@ -5,29 +5,13 @@ set -euo pipefail
 SCRIPT_DIR=$(cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd)
 
 PLANTER=$SCRIPT_DIR/../
-DATASETS=/mnt/data/datasets
-
-SDE_VERSION="9.13.4"
+DATASETS=/home/jra/datasets
 
 CONTAINER_NAME="planter"
-SDE="$SCRIPT_DIR/resources/bf-sde-$SDE_VERSION.tgz"
-BSP="$SCRIPT_DIR/resources/bf-reference-bsp-$SDE_VERSION.tgz"
-
-check_files() {
-	if [ ! -f $SDE ]; then
-		echo "Error: Missing SDE ($SDE). Exiting."
-		exit 1
-	fi
-
-	if [ ! -f $BSP ]; then
-		echo "Error: Missing bsp ($BSP). Exiting."
-		exit 1
-	fi
-}
 
 build() {
 	pushd $SCRIPT_DIR >/dev/null
-		docker build --build-arg USER_UID=$(id -u) . -t $CONTAINER_NAME
+		docker build --build-arg UID=$(id -u) --build-arg GID=$(id -g) . -t $CONTAINER_NAME
 	popd >/dev/null
 }
 
@@ -52,6 +36,5 @@ run() {
 		$CONTAINER_NAME
 }
 
-check_files
 build
 run

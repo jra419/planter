@@ -1,0 +1,154 @@
+{
+    "directory config": {
+        "data": "/home/docker/datasets/cic-ids-2018/ddos-loic-http/ddos-loic-http.csv",
+        "labels": "/home/docker/datasets/cic-ids-2018/ddos-loic-http/ddos-loic-http-labels.csv",
+        "work": "/home/docker/planter"
+    },
+    "model config": {
+        "model": "RF",
+        "type": "3",
+        "number of trees": 9,
+        "number of depth": 5,
+        "max number of leaf nodes": 1000,
+        "number of classes": 2,
+        "test table": "y"
+    },
+    "data config": {
+        "dataset": "cic-ids-2018",
+        "cur_trace": "ddos-loic-http",
+        "number of features": 5,
+        "testing mode": "n"
+    },
+    "timer log": {
+        "load data": {
+            "start": 1745366691.641238,
+            "end": 1745367070.7060585
+        },
+        "train model": {
+            "start": 1745367072.860716,
+            "end": 1745367093.5399818
+        },
+        "convert model": {
+            "start": 1745367093.5399842,
+            "end": 1745367379.1131032
+        }
+    },
+    "p4 config": {
+        "model": "RF",
+        "number of features": 5,
+        "number of classes": 2,
+        "number of trees": 9,
+        "table name": "ternary_table.json",
+        "decision table size": 256,
+        "code table size": [
+            7,
+            3,
+            8,
+            15,
+            7,
+            1,
+            3,
+            16,
+            15
+        ],
+        "default vote": 0,
+        "default label": 0,
+        "width of feature": [
+            17,
+            17,
+            6,
+            9,
+            9
+        ],
+        "width of code": [
+            [
+                2.0,
+                4.0,
+                1.0,
+                3.0,
+                1.0
+            ],
+            [
+                2.0,
+                3.0,
+                1.0,
+                3.0,
+                2.0
+            ],
+            [
+                1.0,
+                3.0,
+                1.0,
+                3.0,
+                3.0
+            ],
+            [
+                2.0,
+                3.0,
+                1.0,
+                4.0,
+                3.0
+            ],
+            [
+                3.0,
+                3.0,
+                1.0,
+                3.0,
+                1.0
+            ],
+            [
+                1.0,
+                3.0,
+                1.0,
+                2.0,
+                2.0
+            ],
+            [
+                1.0,
+                3.0,
+                1.0,
+                4.0,
+                1.0
+            ],
+            [
+                2.0,
+                4.0,
+                1.0,
+                3.0,
+                2.0
+            ],
+            [
+                2.0,
+                3.0,
+                1.0,
+                4.0,
+                3.0
+            ]
+        ],
+        "used columns": [
+            45,
+            39,
+            6,
+            27,
+            18
+        ],
+        "width of probability": 7,
+        "width of result": 8,
+        "standard headers": [
+            "ethernet",
+            "Planter",
+            "arp",
+            "ipv4",
+            "tcp",
+            "udp",
+            "vlan_tag"
+        ]
+    },
+    "test config": {
+        "type of test": "classification"
+    },
+    "target config": {
+        "architecture": "tna",
+        "use case": "anomaly_detection"
+    }
+}

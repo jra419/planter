@@ -1,0 +1,178 @@
+{
+    "directory config": {
+        "data": "/home/docker/datasets/cic-ids-2018/dos-goldeneye/dos-goldeneye.csv",
+        "labels": "/home/docker/datasets/cic-ids-2018/dos-goldeneye/dos-goldeneye-labels.csv",
+        "work": "/home/docker/planter"
+    },
+    "model config": {
+        "model": "RF",
+        "type": "3",
+        "number of trees": 12,
+        "number of depth": 6,
+        "max number of leaf nodes": 1000,
+        "number of classes": 2,
+        "test table": "y"
+    },
+    "data config": {
+        "dataset": "cic-ids-2018",
+        "cur_trace": "dos-goldeneye",
+        "number of features": 5,
+        "testing mode": "n"
+    },
+    "timer log": {
+        "load data": {
+            "start": 1745368978.744962,
+            "end": 1745369134.859119
+        },
+        "train model": {
+            "start": 1745369136.8907814,
+            "end": 1745369147.5948758
+        },
+        "convert model": {
+            "start": 1745369147.5948887,
+            "end": 1745369439.439447
+        }
+    },
+    "p4 config": {
+        "model": "RF",
+        "number of features": 5,
+        "number of classes": 2,
+        "number of trees": 12,
+        "table name": "ternary_table.json",
+        "decision table size": 1586,
+        "code table size": [
+            1,
+            2,
+            1,
+            1,
+            1,
+            1,
+            1,
+            2,
+            29,
+            1,
+            1,
+            1
+        ],
+        "default vote": 0,
+        "default label": 0,
+        "width of feature": [
+            17,
+            17,
+            6,
+            9,
+            9
+        ],
+        "width of code": [
+            [
+                1.0,
+                2.0,
+                1.0,
+                3.0,
+                3.0
+            ],
+            [
+                3.0,
+                3.0,
+                1.0,
+                1.0,
+                3.0
+            ],
+            [
+                1.0,
+                2.0,
+                1.0,
+                2.0,
+                3.0
+            ],
+            [
+                3.0,
+                2.0,
+                1.0,
+                3.0,
+                2.0
+            ],
+            [
+                2.0,
+                1.0,
+                1.0,
+                3.0,
+                3.0
+            ],
+            [
+                1.0,
+                2.0,
+                1.0,
+                3.0,
+                2.0
+            ],
+            [
+                3.0,
+                1.0,
+                1.0,
+                3.0,
+                3.0
+            ],
+            [
+                3.0,
+                1.0,
+                1.0,
+                2.0,
+                3.0
+            ],
+            [
+                4.0,
+                3.0,
+                1.0,
+                3.0,
+                3.0
+            ],
+            [
+                1.0,
+                3.0,
+                1.0,
+                2.0,
+                2.0
+            ],
+            [
+                1.0,
+                3.0,
+                1.0,
+                2.0,
+                3.0
+            ],
+            [
+                1.0,
+                2.0,
+                1.0,
+                2.0,
+                3.0
+            ]
+        ],
+        "used columns": [
+            70,
+            46,
+            6,
+            26,
+            14
+        ],
+        "width of probability": 7,
+        "width of result": 8,
+        "standard headers": [
+            "ethernet",
+            "Planter",
+            "arp",
+            "ipv4",
+            "tcp",
+            "udp",
+            "vlan_tag"
+        ]
+    },
+    "test config": {
+        "type of test": "classification"
+    },
+    "target config": {
+        "architecture": "tna",
+        "use case": "anomaly_detection"
+    }
+}

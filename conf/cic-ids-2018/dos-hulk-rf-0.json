@@ -1,0 +1,130 @@
+{
+    "directory config": {
+        "data": "/home/docker/datasets/cic-ids-2018/dos-hulk/dos-hulk.csv",
+        "labels": "/home/docker/datasets/cic-ids-2018/dos-hulk/dos-hulk-labels.csv",
+        "work": "/home/docker/planter"
+    },
+    "model config": {
+        "model": "RF",
+        "type": "3",
+        "number of trees": 6,
+        "number of depth": 4,
+        "max number of leaf nodes": 1000,
+        "number of classes": 2,
+        "test table": "y"
+    },
+    "data config": {
+        "dataset": "cic-ids-2018",
+        "cur_trace": "dos-hulk",
+        "number of features": 5,
+        "testing mode": "n"
+    },
+    "timer log": {
+        "load data": {
+            "start": 1745369444.0793023,
+            "end": 1745370238.0977325
+        },
+        "train model": {
+            "start": 1745370245.8094242,
+            "end": 1745370272.1948495
+        },
+        "convert model": {
+            "start": 1745370272.1948617,
+            "end": 1745370518.4908466
+        }
+    },
+    "p4 config": {
+        "model": "RF",
+        "number of features": 5,
+        "number of classes": 2,
+        "number of trees": 6,
+        "table name": "ternary_table.json",
+        "decision table size": 22,
+        "code table size": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+        ],
+        "default vote": 0,
+        "default label": 0,
+        "width of feature": [
+            17,
+            17,
+            6,
+            9,
+            9
+        ],
+        "width of code": [
+            [
+                1.0,
+                2.0,
+                1.0,
+                3.0,
+                1.0
+            ],
+            [
+                1.0,
+                3.0,
+                1.0,
+                2.0,
+                2.0
+            ],
+            [
+                1.0,
+                3.0,
+                1.0,
+                1.0,
+                3.0
+            ],
+            [
+                1.0,
+                2.0,
+                2.0,
+                2.0,
+                2.0
+            ],
+            [
+                3.0,
+                2.0,
+                1.0,
+                2.0,
+                1.0
+            ],
+            [
+                2.0,
+                3.0,
+                1.0,
+                2.0,
+                1.0
+            ]
+        ],
+        "used columns": [
+            26,
+            33,
+            7,
+            25,
+            12
+        ],
+        "width of probability": 7,
+        "width of result": 8,
+        "standard headers": [
+            "ethernet",
+            "Planter",
+            "arp",
+            "ipv4",
+            "tcp",
+            "udp",
+            "vlan_tag"
+        ]
+    },
+    "test config": {
+        "type of test": "classification"
+    },
+    "target config": {
+        "architecture": "tna",
+        "use case": "anomaly_detection"
+    }
+}
