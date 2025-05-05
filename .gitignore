@@ -121,8 +121,8 @@ src/eval/*.txt
 src/models/**/*.txt
 docker/resources/
 src/tmp/
-run*.sh
 tables/*.json
 tables/*.txt
+tables/load_table.py
 p4/
 eval/*.txt
