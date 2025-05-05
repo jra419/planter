@@ -226,9 +226,9 @@ def create_tables_command(fname, config):
 
 def create_load_tables(fname, fjson, config, planter_config, file_name):
     work_root       = planter_config['directory config']['work']
-    command_file    = work_root \
-                      + "/src/targets/bmv2/software/model_test/test_environment/s1-commands.txt"
-    create_tables_command(command_file, planter_config)
+    # command_file    = work_root \
+    #                   + "/src/targets/bmv2/software/model_test/test_environment/s1-commands.txt"
+    # create_tables_command(command_file, planter_config)
 
     cur_dataset = planter_config['data config']['dataset']
     cur_trace   = planter_config['data config']['cur_trace']

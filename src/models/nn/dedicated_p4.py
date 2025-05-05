@@ -35,7 +35,6 @@ def write_compare(c_n, con_list, num_class, txt):
 
     return
 
-
 def do_compare(c_n, con_list, num_class, txt, label, config):
     if c_n == num_class-1:
         txt.write("         "+c_n*"    "+"meta.result = "+str(int(label))+";\n"
@@ -65,7 +64,6 @@ def do_compare(c_n, con_list, num_class, txt, label, config):
                 txt.write("        " + (c_n-1) * "    " + "}\n")
     return
 
-
 def load_config(fname):
     planter_config              = json.load(open(fname, 'r'))
     config_path                 = planter_config['p4 config']
@@ -77,7 +75,6 @@ def load_config(fname):
     config['model'] = config_path['model']
     config['width'] = config_path["width of inputs"]
     return config, planter_config
-
 
 def add_model_intro(fname, config):
     with open(fname, 'a') as intro:
@@ -111,7 +108,6 @@ def add_model_intro(fname, config):
                      " * If an unknown operation is specified or the header is not valid, the packet\n"
                      " * is dropped\n"
                      " */\n\n")
-
 
 def separate_metadata(fname, config):
     with open(fname, 'a') as headers:
@@ -154,7 +150,6 @@ def separate_logics(fname, config):
         ingress.write("        compare();\n")
         do_compare(0, (np.ones(config['num_classes'])).tolist(), config['num_classes'], ingress, 0, config)
 
-
 def separate_tables(fname, config):
     with open(fname, 'a') as ingress:
 
@@ -170,8 +165,6 @@ def separate_tables(fname, config):
                       "    bit<128> m16= 0x0000ffff0000ffff0000ffff0000ffff;\n"
                       "    bit<128> m32= 0x00000000ffffffff00000000ffffffff;\n"
                       "    bit<128> m64= 0x0000000000000000ffffffffffffffff;\n\n")
-
-
 
         ingress.write("    action XNOR(bit<64> weight){\n"
                       "        meta.XNOROutput = weight^meta.bnnInput;\n"
@@ -266,12 +259,11 @@ def separate_tables(fname, config):
 
         ingress.write("    }\n\n")
 
-    ###################################################
+###################################################
 # Create a tables load script
 # input: table script file name, tables data json file name, configuration
 # output: none
 ###################################################
-
 
 def ten_to_bin(num,count):
     num = bin(num).lstrip('0b')
@@ -300,8 +292,8 @@ def create_tables_command(fname, config):
 def create_load_tables(fname, fjson, config, planter_config, file_name):
     work_root = planter_config['directory config']['work']
 
-    command_file = work_root + "/src/targets/bmv2/software/model_test/test_environment/s1-commands.txt"
-    create_tables_command(command_file, planter_config)
+    # command_file = work_root + "/src/targets/bmv2/software/model_test/test_environment/s1-commands.txt"
+    # create_tables_command(command_file, planter_config)
 
     cur_dataset         = planter_config['data config']['dataset']
     cur_trace           = planter_config['data config']['cur_trace']

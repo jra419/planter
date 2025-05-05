@@ -121,10 +121,8 @@ src/eval/*.txt
 src/models/**/*.txt
 docker/resources/
 src/tmp/
-tables/*.json
-tables/*.txt
-tables/load_table.py
+tables/
+tables/
 p4/
 eval/*.txt
 src/tmp/*.tar
-src/targets/bmv2/software/model_test/test_environment/*

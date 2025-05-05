@@ -294,7 +294,7 @@ def main(config_path):
     create_main(p4_file, config)
 
     ##################################################
-    load_data_file = planter_config['directory config']['work'] + '/tables/load_table.py'
+    load_data_file = f'{planter_config["directory config"]["work"]}/tables/{file_name}-load_table.py'
     # create load tables script
     add_license(load_data_file)
     create_load_tables(load_data_file, tables_json, config, planter_config, file_name)
