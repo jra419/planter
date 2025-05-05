@@ -6,6 +6,7 @@
     },
     "model config": {
         "model": "nn",
+        "model size": "1",
         "number of classes": 2,
         "learning rate": 0.01,
         "batch size": 100,

@@ -6,6 +6,7 @@
     },
     "model config": {
         "model": "rf",
+        "model size": "1",
         "number of trees": 9,
         "number of depth": 5,
         "max number of leaf nodes": 1000,
