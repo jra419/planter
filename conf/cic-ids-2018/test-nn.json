@@ -6,6 +6,7 @@
     },
     "model config": {
         "model": "nn",
+        "model size": "test",
         "number of classes": 2,
         "learning rate": 0.01,
         "batch size": 10,
@@ -26,20 +27,20 @@
     },
     "timer log": {
         "load data": {
-            "start": 1746452555.9569907,
-            "end": 1746452556.030054
+            "start": 1746457453.0460832,
+            "end": 1746457453.1214523
         },
         "train model": {
-            "start": 1746452557.7010353,
-            "end": 1746452559.4137285
+            "start": 1746457454.7770774,
+            "end": 1746457456.506359
         },
         "convert model": {
-            "start": 1746452559.4137301,
-            "end": 1746452559.414934
+            "start": 1746457456.5063603,
+            "end": 1746457456.5075452
         },
         "python-based test": {
-            "start": 1746452559.4153593,
-            "end": 1746452560.5421135
+            "start": 1746457456.5079496,
+            "end": 1746457457.622625
         }
     },
     "p4 config": {
@@ -59,7 +60,7 @@
             8.0,
             8.0
         ],
-        "table name": "cic-test-test-nn-3-56-0.01-10-15-exact_table.json"
+        "table name": "test-nn-test-exact_table.json"
     },
     "test config": {
         "type of test": "classification"

@@ -278,18 +278,19 @@ def create_tables_command(fname, config):
     cur_trace           = config['data config']['cur_trace']
     num_hidden_nodes    = config['p4 config']["num hidden nodes"]
     num_layers          = config['p4 config']["number of layers"]
+    cur_model           = config['model config']['model']
+    model_size          = config['model config']['model size']
     learning_rate       = config['model config']['learning rate']
     batch_size          = config['model config']['batch size']
     num_epoch           = config['model config']['num epoch']
 
-    Exact_Table = json.load(open(f'tables/{cur_dataset}-{cur_trace}-nn-'
-                                 f'{num_layers}-{num_hidden_nodes[0]}-{learning_rate}-'
-                                 f'{batch_size}-{num_epoch}-exact_table.json', 'r'))
+    Exact_Table = json.load(open(f'eval/tables/{cur_dataset}/{cur_model}/{cur_trace}-{cur_model}-'
+                                 f'{model_size}-exact_table.json', 'r'))
     with open(fname, 'w') as file:
         for idx in range(len(Exact_Table['weights'])):
             file.write("register_write SwitchIngress.weights "+str(idx)+" "+str(Exact_Table['weights'][idx])+"\n")
 
-def create_load_tables(fname, fjson, config, planter_config, file_name):
+def create_load_tables(fname, fjson, config, planter_config):
     work_root = planter_config['directory config']['work']
 
     # command_file = work_root + "/src/targets/bmv2/software/model_test/test_environment/s1-commands.txt"
@@ -299,10 +300,12 @@ def create_load_tables(fname, fjson, config, planter_config, file_name):
     cur_trace           = planter_config['data config']['cur_trace']
     num_hidden_nodes    = planter_config['p4 config']["num hidden nodes"]
     num_layers          = planter_config['p4 config']["number of layers"]
+    cur_model           = planter_config['model config']['model']
+    model_size          = planter_config['model config']['model size']
     learning_rate       = planter_config['model config']['learning rate']
     batch_size          = planter_config['model config']['batch size']
     num_epoch           = planter_config['model config']['num epoch']
 
-    command_file = work_root + f'/tables/{cur_dataset}-{cur_trace}-nn-{num_layers}-{num_hidden_nodes[0]}-{learning_rate}-{batch_size}-{num_epoch}-s1-commands.txt'
+    command_file = work_root + f'/eval/tables/{cur_dataset}/{cur_model}/{cur_trace}-{cur_model}-{model_size}-s1-commands.txt'
 
     create_tables_command(command_file, planter_config)

@@ -179,11 +179,15 @@ def create_tables_command(fname, config):
     cur_dataset     = config['data config']['dataset']
     cur_trace       = config['data config']['cur_trace']
     num_features    = config['data config']['number of features']
+    cur_model           = config['model config']['model']
+    model_size          = config['model config']['model size']
     num_classes     = config['model config']['number of classes']
     num_trees       = config['model config']['number of trees']
     num_depth       = config['model config']['number of depth']
     max_leaf_nodes  = config['model config']['max number of leaf nodes']
-    table_ternary   = json.load(open(f'tables/{cur_dataset}-{cur_trace}-rf-{num_trees}-{num_depth}-{max_leaf_nodes}-ternary_table.json', 'r'))
+
+    table_ternary   = json.load(open(f'eval/tables/{cur_dataset}/{cur_model}/{cur_trace}-'
+                                     f'{cur_model}-{model_size}-ternary_table.json', 'r'))
 
     with open(fname, 'w') as file:
         for f in range(num_features):
@@ -224,7 +228,7 @@ def create_tables_command(fname, config):
                 file.write(str(table_ternary['decision'][idx]['t' + str(t) + ' vote'])+" ")
             file.write("=> "+str(table_ternary['decision'][idx]['class'])+"\n")
 
-def create_load_tables(fname, fjson, config, planter_config, file_name):
+def create_load_tables(fname, fjson, config, planter_config):
     work_root       = planter_config['directory config']['work']
     # command_file    = work_root \
     #                   + "/src/targets/bmv2/software/model_test/test_environment/s1-commands.txt"
@@ -233,11 +237,12 @@ def create_load_tables(fname, fjson, config, planter_config, file_name):
     cur_dataset = planter_config['data config']['dataset']
     cur_trace   = planter_config['data config']['cur_trace']
     cur_model   = planter_config['model config']['model']
+    model_size  = planter_config['model config']['model size']
     num_trees   = planter_config['model config']['number of trees']
     depth       = planter_config['model config']['number of depth']
     leaf_nodes  = planter_config['model config']['max number of leaf nodes']
 
-    command_file = work_root + f'/tables/{cur_dataset}-{cur_trace}-{cur_model}-{num_trees}-{depth}-{leaf_nodes}-s1-commands.txt'
+    command_file = work_root + f'/eval/tables/{cur_dataset}/{cur_model}/{cur_trace}-{cur_model}-{model_size}-s1-commands.txt'
     create_tables_command(command_file, planter_config)
 
     config['debug_load_table'] = False
@@ -254,7 +259,7 @@ def create_load_tables(fname, fjson, config, planter_config, file_name):
                     "planter_config = json.load(open('./conf/planter_config.json','r'))\n"\
                     "config = planter_config['p4 config']\n\n")
         tload.write((config['debug_load_table']) * ('# ')                       \
-                    + "Ingress = bfrt."+ file_name + ".pipe.SwitchIngress\n")
+                    + "Ingress = bfrt."+ cur_trace + "-" + cur_model + "- " + model_size + ".pipe.SwitchIngress\n")
         tload.write((config['debug_load_table']) * ('# ') + "Ingress.clear()" + "\n\n")
 
         tload.write("def ten_to_bin(num, count):\n")

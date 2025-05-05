@@ -20,24 +20,7 @@
         "number of features": 5,
         "testing mode": "n"
     },
-    "timer log": {
-        "load data": {
-            "start": 1746437072.3431559,
-            "end": 1746437094.623415
-        },
-        "train model": {
-            "start": 1746437150.805519,
-            "end": 1746437244.5834332
-        },
-        "convert model": {
-            "start": 1746437244.5834348,
-            "end": 1746437244.5836675
-        },
-        "python-based test": {
-            "start": 1746437244.5939002,
-            "end": 1746437332.7139294
-        }
-    },
+    "timer log": {},
     "p4 config": {
         "model": "nn",
         "num hidden nodes": [
@@ -53,7 +36,7 @@
             8.0,
             8.0
         ],
-        "table name": "kitsune-active-wiretap-nn-1-16-0.01-100-1-exact_table.json"
+        "table name": "kitsune-active-wiretap-nn-1-16-0.01-100-50-exact_table.json"
     },
     "test config": {
         "type of test": "classification"

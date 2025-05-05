@@ -6,6 +6,7 @@
     },
     "model config": {
         "model": "rf",
+        "model size": "test",
         "number of trees": 2,
         "number of depth": 3,
         "max number of leaf nodes": 100,
@@ -20,20 +21,20 @@
     },
     "timer log": {
         "load data": {
-            "start": 1746452363.804438,
-            "end": 1746452363.880632
+            "start": 1746458642.026009,
+            "end": 1746458642.1030302
         },
         "train model": {
-            "start": 1746452365.5682733,
-            "end": 1746452365.5870285
+            "start": 1746458643.7942588,
+            "end": 1746458643.8131309
         },
         "convert model": {
-            "start": 1746452365.5870297,
-            "end": 1746452439.1913378
+            "start": 1746458643.8131328,
+            "end": 1746458717.0595567
         },
         "python-based test": {
-            "start": 1746452439.4441288,
-            "end": 1746452439.7098806
+            "start": 1746458717.3178825,
+            "end": 1746458717.6096635
         }
     },
     "p4 config": {
@@ -41,7 +42,7 @@
         "number of features": 5,
         "number of classes": 2,
         "number of trees": 2,
-        "table name": "ternary_table.json",
+        "table name": "test-rf-test-exact_table.json",
         "decision table size": 1,
         "code table size": [
             0,
@@ -65,19 +66,19 @@
                 1.0
             ],
             [
-                3.0,
                 2.0,
                 1.0,
-                3.0,
-                1.0
+                2.0,
+                2.0,
+                3.0
             ]
         ],
         "used columns": [
-            28,
+            25,
             33,
-            6,
-            17,
-            9
+            7,
+            11,
+            12
         ],
         "width of probability": 7,
         "width of result": 8,

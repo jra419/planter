@@ -244,34 +244,36 @@ def main(config_path):
     # print('Generate p4 files')
     cur_dataset = planter_config['data config']['dataset']
     cur_trace   = planter_config['data config']['cur_trace']
-    if planter_config['model config']['model'] == 'rf':
-        num_trees   = planter_config['model config']['number of trees']
-        depth       = planter_config['model config']['number of depth']
-        leaf_nodes  = planter_config['model config']['max number of leaf nodes']
-        model       = 'rf'
-        cur_model   = f'{model}-{num_trees}-{depth}-{leaf_nodes}'
-    elif planter_config['model config']['model'] == 'ae':
-        num_bits        = planter_config['model config']['number of bits']
-        learning_rate   = planter_config['model config']['learning rate']
-        batch_size      = planter_config['model config']['batch size']
-        num_epoch       = planter_config['model config']['num epoch']
-        model           = 'ae'
-        cur_model       = f'{model}-{num_bits}-{learning_rate}-{batch_size}-{num_epoch}'
-    elif planter_config['model config']['model'] == 'nn':
-        num_hidden_nodes    = planter_config['p4 config']["num hidden nodes"]
-        num_layers          = planter_config['p4 config']["number of layers"]
-        learning_rate       = planter_config['model config']['learning rate']
-        batch_size          = planter_config['model config']['batch size']
-        num_epoch           = planter_config['model config']['num epoch']
-        model           = 'nn'
-        cur_model       = f'{model}-{num_layers}-{num_hidden_nodes[0]}-{learning_rate}-{batch_size}-{num_epoch}'
-    else:
-        cur_model   = planter_config['model config']['model']
+    cur_model   = planter_config['model config']['model']
+    model_size  = planter_config['model config']['model size']
+    # if planter_config['model config']['model'] == 'rf':
+    #     num_trees   = planter_config['model config']['number of trees']
+    #     depth       = planter_config['model config']['number of depth']
+    #     leaf_nodes  = planter_config['model config']['max number of leaf nodes']
+    #     model       = 'rf'
+    #     cur_model   = f'{model}-{num_trees}-{depth}-{leaf_nodes}'
+    # elif planter_config['model config']['model'] == 'ae':
+    #     num_bits        = planter_config['model config']['number of bits']
+    #     learning_rate   = planter_config['model config']['learning rate']
+    #     batch_size      = planter_config['model config']['batch size']
+    #     num_epoch       = planter_config['model config']['num epoch']
+    #     model           = 'ae'
+    #     cur_model       = f'{model}-{num_bits}-{learning_rate}-{batch_size}-{num_epoch}'
+    # elif planter_config['model config']['model'] == 'nn':
+    #     num_hidden_nodes    = planter_config['p4 config']["num hidden nodes"]
+    #     num_layers          = planter_config['p4 config']["number of layers"]
+    #     learning_rate       = planter_config['model config']['learning rate']
+    #     batch_size          = planter_config['model config']['batch size']
+    #     num_epoch           = planter_config['model config']['num epoch']
+    #     model           = 'nn'
+    #     cur_model       = f'{model}-{num_layers}-{num_hidden_nodes[0]}-{learning_rate}-{batch_size}-{num_epoch}'
+    # else:
+    #     cur_model   = planter_config['model config']['model']
 
-    file_name = f'{cur_dataset}-{cur_trace}-{cur_model}'
+    # file_name = f'{cur_dataset}-{cur_trace}-{cur_model}'
     # file_name = Planter_config['model config']['model']+'_'+Planter_config['target config']['use case']+'_'+Planter_config['data config']['dataset']
 
-    p4_file     = planter_config['directory config']['work'] + '/p4/' + file_name+'.p4'
+    p4_file     = f'{planter_config["directory config"]["work"]}/eval/p4/{cur_dataset}/{cur_model}/{cur_trace}-{cur_model}-{model_size}.p4'
     tables_json = planter_config['p4 config']['table name']
 
     ##################################################
@@ -294,10 +296,10 @@ def main(config_path):
     create_main(p4_file, config)
 
     ##################################################
-    load_data_file = f'{planter_config["directory config"]["work"]}/tables/{file_name}-load_table.py'
+    load_data_file = f'{planter_config["directory config"]["work"]}/eval/tables/{cur_dataset}/{cur_model}/{cur_trace}-{cur_model}-{model_size}-load_table.py'
     # create load tables script
     add_license(load_data_file)
-    create_load_tables(load_data_file, tables_json, config, planter_config, file_name)
+    create_load_tables(load_data_file, tables_json, config, planter_config)
     print("Done")
 
 

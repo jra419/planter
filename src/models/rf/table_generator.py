@@ -289,6 +289,8 @@ def run_model(train_X, train_y, test_X, test_y, used_features, cur_dataset,
     config['model config']['number of classes'] = int(np.max(train_y) + 1)
 
     num_features    = config['data config']['number of features']
+    cur_model       = config['model config']['model']
+    model_size      = config['model config']['model size']
     num_classes     = config['model config']['number of classes']
     num_depth       = config['model config']['number of depth']
     num_trees       = config['model config']['number of trees']
@@ -324,9 +326,11 @@ def run_model(train_X, train_y, test_X, test_y, used_features, cur_dataset,
     eval_metrics(test_y,
                  sklearn_y_predict,
                  sklearn_y_predict_proba,
-                 f'rf-{num_trees}-{num_depth}-{max_leaf_nodes}-sklearn',
                  cur_dataset,
-                 cur_trace)
+                 cur_trace,
+                 cur_model,
+                 model_size,
+                 'sklearn')
 
     # result = classification_report(test_y, sklearn_y_predict, digits= 4)
 
@@ -431,10 +435,12 @@ def run_model(train_X, train_y, test_X, test_y, used_features, cur_dataset,
     # ===========================================================
 
     table_name = 'ternary_table.json'
-    json.dump(table_ternary, open(f'tables/{cur_dataset}-{cur_trace}-rf-{num_trees}-{num_depth}-{max_leaf_nodes}-{table_name}', 'w'), indent=4)
+    json.dump(table_ternary, open(f'eval/tables/{cur_dataset}/{cur_model}/{cur_trace}-{cur_model}-'
+                                  f'{model_size}-{table_name}', 'w'), indent=4)
     print('\ntable_ternary is generated')
     table_name = 'exact_table.json'
-    json.dump(table_exact, open(f'tables/{cur_dataset}-{cur_trace}-rf-{num_trees}-{num_depth}-{max_leaf_nodes}-{table_name}', 'w'), indent=4)
+    json.dump(table_exact, open(f'eval/tables/{cur_dataset}/{cur_model}/{cur_trace}-{cur_model}-'
+                                f'{model_size}-{table_name}', 'w'), indent=4)
     print('table_exact is generated')
 
     config['p4 config']                         = {}
@@ -442,7 +448,7 @@ def run_model(train_X, train_y, test_X, test_y, used_features, cur_dataset,
     config['p4 config']["number of features"]   = num_features
     config['p4 config']["number of classes"]    = num_classes
     config['p4 config']["number of trees"]      = num_trees
-    config['p4 config']['table name']           = 'ternary_table.json'
+    config['p4 config']['table name']           = f'{cur_trace}-{cur_model}-{model_size}-exact_table.json'
     config['p4 config']["decision table size"]  = len(table_ternary['decision'].keys())
     config['p4 config']["code table size"]      = []
     for tree in range(num_trees):
@@ -477,13 +483,16 @@ def test_tables(sklearn_test_y, test_X, test_y, cur_dataset, cur_trace,
         config = json.load(open('conf/planter_config.json', 'r'))
 
     num_features    = config['data config']['number of features']
+    cur_model       = config['model config']['model']
+    model_size      = config['model config']['model size']
     num_trees       = config['model config']['number of trees']
     num_depth       = config['model config']['number of depth']
     max_leaf_nodes  = config['model config']['max number of leaf nodes']
-    table_ternary   = json.load(open(f'tables/{cur_dataset}-{cur_trace}-rf-{num_trees}-'
-                                     f'{num_depth}-{max_leaf_nodes}-ternary_table.json', 'r'))
-    table_exact     = json.load(open(f'tables/{cur_dataset}-{cur_trace}-rf-{num_trees}-'
-                                     f'{num_depth}-{max_leaf_nodes}-exact_table.json', 'r'))
+
+    table_ternary   = json.load(open(f'eval/tables/{cur_dataset}/{cur_model}/{cur_trace}-'
+                                     f'{cur_model}-{model_size}-ternary_table.json', 'r'))
+    table_exact     = json.load(open(f'eval/tables/{cur_dataset}/{cur_model}/{cur_trace}-'
+                                     f'{cur_model}-{model_size}-exact_table.json', 'r'))
 
     print('Test the exact feature table, exact code and decision table (feel free if the acc to sklearn is slightly lower than 1)')
 
@@ -566,9 +575,11 @@ def test_tables(sklearn_test_y, test_X, test_y, cur_dataset, cur_trace,
     eval_metrics(test_y,
                  switch_test_y,
                  switch_test_y_proba,
-                 f'rf-{num_trees}-{num_depth}-{max_leaf_nodes}-switch',
                  cur_dataset,
-                 cur_trace)
+                 cur_trace,
+                 cur_model,
+                 model_size,
+                 'switch')
 
 def resource_prediction(config_path):
     config = json.load(open(config_path, 'r'))

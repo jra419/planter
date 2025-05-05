@@ -59,6 +59,8 @@ def run_model(train_X, train_y, test_X, test_y, used_features, cur_dataset,
         config = json.load(open('conf/planter_config.json', 'r'))
 
     num_features        = config['data config']['number of features']
+    cur_model           = config['model config']['model']
+    model_size          = config['model config']['model size']
     num_layers          = config['model config']['number of layers']
     num_hidden_nodes    = config['model config']['num hidden nodes']
     num_classes         = config['model config']['number of classes']
@@ -181,9 +183,11 @@ def run_model(train_X, train_y, test_X, test_y, used_features, cur_dataset,
     eval_metrics(test_y,
                  nn_pred_bin,
                  nn_prob,
-                 f'nn-{num_layers}-{num_hidden_nodes[0]}-{learning_rate}-{batch_size}-{num_epoch}-pytorch',
                  cur_dataset,
-                 cur_trace)
+                 cur_trace,
+                 cur_model,
+                 model_size,
+                 'pytorch')
 
     # =================== train model timer ===================
     config['timer log']['train model']['end'] = time.time()
@@ -204,9 +208,8 @@ def run_model(train_X, train_y, test_X, test_y, used_features, cur_dataset,
     config['timer log']['convert model']['end'] = time.time()
     # =================== convert model timer ===================
 
-    json.dump(Exact_Table, open(f'tables/{cur_dataset}-{cur_trace}-nn-'
-                                f'{num_layers}-{num_hidden_nodes[0]}-{learning_rate}-'
-                                f'{batch_size}-{num_epoch}-exact_table.json', 'w'), indent=4)
+    json.dump(Exact_Table, open(f'eval/tables/{cur_dataset}/{cur_model}/{cur_trace}-{cur_model}-'
+                                f'{model_size}-exact_table.json', 'w'), indent=4)
 
     print('table_exact is generated')
 
@@ -217,7 +220,7 @@ def run_model(train_X, train_y, test_X, test_y, used_features, cur_dataset,
     config['p4 config']["number of layers"]     = num_layers
     config['p4 config']["number of classes"]    = num_classes
     config['p4 config']["width of inputs"]      = width
-    config['p4 config']['table name']           = f'{cur_dataset}-{cur_trace}-nn-{num_layers}-{num_hidden_nodes[0]}-{learning_rate}-{batch_size}-{num_epoch}-exact_table.json'
+    config['p4 config']['table name']           = f'{cur_trace}-{cur_model}-{model_size}-exact_table.json'
     config['test config']                       = {}
     config['test config']['type of test']       = 'classification'
 
@@ -239,6 +242,8 @@ def test_tables(sklearn_test_y, test_X, test_y, cur_dataset, cur_trace,
     else:
         config = json.load(open('conf/planter_config.json', 'r'))
 
+    cur_model           = config['model config']['model']
+    model_size          = config['model config']['model size']
     num_features        = config['data config']['number of features']
     num_classes         = config['model config']['number of classes']
     num_hidden_nodes    = config['p4 config']["num hidden nodes"]
@@ -248,9 +253,8 @@ def test_tables(sklearn_test_y, test_X, test_y, cur_dataset, cur_trace,
     batch_size          = config['model config']['batch size']
     num_epoch           = config['model config']['num epoch']
 
-    Exact_Table = json.load(open(f'tables/{cur_dataset}-{cur_trace}-nn-'
-                                 f'{num_layers}-{num_hidden_nodes[0]}-{learning_rate}-'
-                                 f'{batch_size}-{num_epoch}-exact_table.json', 'r'))
+    Exact_Table = json.load(open(f'eval/tables/{cur_dataset}/{cur_model}/{cur_trace}-{cur_model}-'
+                                 f'{model_size}-exact_table.json', 'r'))
 
     print('Test the exact feature table, extact code and decision table (feel free if the acc to sklearn is slightly lower than 1)')
 
@@ -315,6 +319,8 @@ def test_tables(sklearn_test_y, test_X, test_y, cur_dataset, cur_trace,
     eval_metrics(test_y,
                  switch_test_y,
                  switch_prob,
-                 f'nn-{num_layers}-{num_hidden_nodes[0]}-{learning_rate}-{batch_size}-{num_epoch}-switch',
                  cur_dataset,
-                 cur_trace)
+                 cur_trace,
+                 cur_model,
+                 model_size,
+                 'switch')

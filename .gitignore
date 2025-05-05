@@ -124,5 +124,5 @@ src/tmp/
 tables/
 tables/
 p4/
-eval/*.txt
+eval/metrics/
 src/tmp/*.tar
