@@ -1,24 +1,24 @@
-sudo python3 Planter.py -c conf/kitsune/active-wiretap-nn-0.json
-sudo python3 Planter.py -c conf/kitsune/active-wiretap-nn-1.json
-sudo python3 Planter.py -c conf/kitsune/active-wiretap-nn-2.json
-sudo python3 Planter.py -c conf/kitsune/arp-mitm-nn-0.json
-sudo python3 Planter.py -c conf/kitsune/arp-mitm-nn-1.json
-sudo python3 Planter.py -c conf/kitsune/arp-mitm-nn-2.json
-sudo python3 Planter.py -c conf/kitsune/dos-syn-nn-0.json
-sudo python3 Planter.py -c conf/kitsune/dos-syn-nn-1.json
-sudo python3 Planter.py -c conf/kitsune/dos-syn-nn-2.json
-sudo python3 Planter.py -c conf/kitsune/fuzzing-nn-0.json
-sudo python3 Planter.py -c conf/kitsune/fuzzing-nn-1.json
-sudo python3 Planter.py -c conf/kitsune/fuzzing-nn-2.json
-sudo python3 Planter.py -c conf/kitsune/os-scan-nn-0.json
-sudo python3 Planter.py -c conf/kitsune/os-scan-nn-1.json
-sudo python3 Planter.py -c conf/kitsune/os-scan-nn-2.json
-sudo python3 Planter.py -c conf/kitsune/ssdp-flood-nn-0.json
-sudo python3 Planter.py -c conf/kitsune/ssdp-flood-nn-1.json
-sudo python3 Planter.py -c conf/kitsune/ssdp-flood-nn-0.json
-sudo python3 Planter.py -c conf/kitsune/ssl-renegotiation-nn-0.json
-sudo python3 Planter.py -c conf/kitsune/ssl-renegotiation-nn-1.json
-sudo python3 Planter.py -c conf/kitsune/ssl-renegotiation-nn-2.json
-sudo python3 Planter.py -c conf/kitsune/video-injection-nn-0.json
-sudo python3 Planter.py -c conf/kitsune/video-injection-nn-1.json
-sudo python3 Planter.py -c conf/kitsune/video-injection-nn-2.json
+cd .. && sudo python3 Planter.py -c conf/kitsune/active-wiretap-nn-0.json
+# cd .. && sudo python3 Planter.py -c conf/kitsune/active-wiretap-nn-1.json
+# cd .. && sudo python3 Planter.py -c conf/kitsune/active-wiretap-nn-2.json
+# cd .. && sudo python3 Planter.py -c conf/kitsune/arp-mitm-nn-0.json
+# cd .. && sudo python3 Planter.py -c conf/kitsune/arp-mitm-nn-1.json
+# cd .. && sudo python3 Planter.py -c conf/kitsune/arp-mitm-nn-2.json
+# cd .. && sudo python3 Planter.py -c conf/kitsune/dos-syn-nn-0.json
+# cd .. && sudo python3 Planter.py -c conf/kitsune/dos-syn-nn-1.json
+# cd .. && sudo python3 Planter.py -c conf/kitsune/dos-syn-nn-2.json
+# cd .. && sudo python3 Planter.py -c conf/kitsune/fuzzing-nn-0.json
+# cd .. && sudo python3 Planter.py -c conf/kitsune/fuzzing-nn-1.json
+# cd .. && sudo python3 Planter.py -c conf/kitsune/fuzzing-nn-2.json
+# cd .. && sudo python3 Planter.py -c conf/kitsune/os-scan-nn-0.json
+# cd .. && sudo python3 Planter.py -c conf/kitsune/os-scan-nn-1.json
+# cd .. && sudo python3 Planter.py -c conf/kitsune/os-scan-nn-2.json
+# cd .. && sudo python3 Planter.py -c conf/kitsune/ssdp-flood-nn-0.json
+# cd .. && sudo python3 Planter.py -c conf/kitsune/ssdp-flood-nn-1.json
+# cd .. && sudo python3 Planter.py -c conf/kitsune/ssdp-flood-nn-0.json
+# cd .. && sudo python3 Planter.py -c conf/kitsune/ssl-renegotiation-nn-0.json
+# cd .. && sudo python3 Planter.py -c conf/kitsune/ssl-renegotiation-nn-1.json
+# cd .. && sudo python3 Planter.py -c conf/kitsune/ssl-renegotiation-nn-2.json
+# cd .. && sudo python3 Planter.py -c conf/kitsune/video-injection-nn-0.json
+# cd .. && sudo python3 Planter.py -c conf/kitsune/video-injection-nn-1.json
+# cd .. && sudo python3 Planter.py -c conf/kitsune/video-injection-nn-2.json

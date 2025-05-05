@@ -126,3 +126,5 @@ tables/*.txt
 tables/load_table.py
 p4/
 eval/*.txt
+src/tmp/*.tar
+src/targets/bmv2/software/model_test/test_environment/*

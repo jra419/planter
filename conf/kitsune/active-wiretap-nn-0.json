@@ -9,11 +9,9 @@
         "number of classes": 2,
         "learning rate": 0.01,
         "batch size": 100,
-        "num epoch": 1,
+        "num epoch": 50,
         "number of layers": 1,
-        "num hidden nodes": [
-            16
-        ],
+        "num hidden nodes": [16],
         "test table": "y"
     },
     "data config": {
