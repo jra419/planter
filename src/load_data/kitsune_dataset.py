@@ -120,7 +120,8 @@ def load_data(num_features, data, labels):
     # del data
     # gc.collect()
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=1000000)
+    # X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=1000000)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=0.2, stratify=y, random_state=42, shuffle=True)
 
     print('dataset is loaded')
 
