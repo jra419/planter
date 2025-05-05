@@ -1,0 +1,181 @@
+{
+    "directory config": {
+        "data": "/home/docker/datasets/kitsune/ssl-renegotiation/ssl-renegotiation.csv",
+        "labels": "/home/docker/datasets/kitsune/ssl-renegotiation/ssl-renegotiation-labels.csv",
+        "work": "/home/docker/planter"
+    },
+    "model config": {
+        "model": "rf",
+        "number of trees": 200,
+        "number of depth": 30,
+        "max number of leaf nodes": 100000,
+        "number of classes": 2,
+        "test table": "y"
+    },
+    "data config": {
+        "dataset": "kitsune",
+        "cur_trace": "ssl-renegotiation",
+        "number of features": 5,
+        "testing mode": "n"
+    },
+    "timer log": {
+        "load data": {
+            "start": 1743829002.4493258,
+            "end": 1743829047.6701908
+        },
+        "train model": {
+            "start": 1743829047.7829168,
+            "end": 1743829051.7062032
+        },
+        "convert model": {
+            "start": 1743829051.706205,
+            "end": 1743829311.4924736
+        },
+        "python-based test": {
+            "start": 1743829313.1437864,
+            "end": 1743831788.4237854
+        }
+    },
+    "p4 config": {
+        "model": "RF",
+        "number of features": 5,
+        "number of classes": 2,
+        "number of trees": 12,
+        "table name": "Ternary_Table.json",
+        "decision table size": 1586,
+        "code table size": [
+            132,
+            410,
+            178,
+            74,
+            206,
+            52,
+            124,
+            133,
+            152,
+            57,
+            52,
+            168
+        ],
+        "default vote": 1,
+        "default label": 0,
+        "width of feature": [
+            17,
+            17,
+            6,
+            9,
+            9
+        ],
+        "width of code": [
+            [
+                4.0,
+                4.0,
+                2.0,
+                1.0,
+                3.0
+            ],
+            [
+                4.0,
+                4.0,
+                2.0,
+                2.0,
+                4.0
+            ],
+            [
+                4.0,
+                3.0,
+                3.0,
+                2.0,
+                3.0
+            ],
+            [
+                3.0,
+                3.0,
+                2.0,
+                1.0,
+                4.0
+            ],
+            [
+                3.0,
+                4.0,
+                3.0,
+                1.0,
+                3.0
+            ],
+            [
+                3.0,
+                5.0,
+                2.0,
+                1.0,
+                2.0
+            ],
+            [
+                3.0,
+                3.0,
+                3.0,
+                2.0,
+                3.0
+            ],
+            [
+                4.0,
+                3.0,
+                2.0,
+                1.0,
+                4.0
+            ],
+            [
+                4.0,
+                3.0,
+                2.0,
+                2.0,
+                3.0
+            ],
+            [
+                4.0,
+                3.0,
+                2.0,
+                1.0,
+                3.0
+            ],
+            [
+                3.0,
+                4.0,
+                2.0,
+                1.0,
+                3.0
+            ],
+            [
+                4.0,
+                3.0,
+                2.0,
+                2.0,
+                3.0
+            ]
+        ],
+        "used columns": [
+            93,
+            101,
+            8,
+            14,
+            29
+        ],
+        "width of probability": 7,
+        "width of result": 8,
+        "standard headers": [
+            "ethernet",
+            "Planter",
+            "arp",
+            "ipv4",
+            "tcp",
+            "udp",
+            "vlan_tag"
+        ]
+    },
+    "test config": {
+        "type of test": "classification"
+    },
+    "target config": {
+        "architecture": "tna",
+        "use case": "anomaly_detection"
+    }
+}

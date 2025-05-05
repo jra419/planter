@@ -1,0 +1,67 @@
+{
+    "directory config": {
+        "data": "/home/docker/datasets/kitsune/active-wiretap/active-wiretap.csv",
+        "labels": "/home/docker/datasets/kitsune/active-wiretap/active-wiretap-labels.csv",
+        "work": "/home/docker/planter"
+    },
+    "model config": {
+        "model": "nn",
+        "number of classes": 2,
+        "learning rate": 0.01,
+        "batch size": 100,
+        "num epoch": 1,
+        "number of layers": 1,
+        "num hidden nodes": [
+            16
+        ],
+        "test table": "y"
+    },
+    "data config": {
+        "dataset": "kitsune",
+        "cur_trace": "active-wiretap",
+        "number of features": 5,
+        "testing mode": "n"
+    },
+    "timer log": {
+        "load data": {
+            "start": 1746437072.3431559,
+            "end": 1746437094.623415
+        },
+        "train model": {
+            "start": 1746437150.805519,
+            "end": 1746437244.5834332
+        },
+        "convert model": {
+            "start": 1746437244.5834348,
+            "end": 1746437244.5836675
+        },
+        "python-based test": {
+            "start": 1746437244.5939002,
+            "end": 1746437332.7139294
+        }
+    },
+    "p4 config": {
+        "model": "nn",
+        "num hidden nodes": [
+            16
+        ],
+        "number of features": 5,
+        "number of layers": 1,
+        "number of classes": 2,
+        "width of inputs": [
+            16.0,
+            16.0,
+            5.0,
+            8.0,
+            8.0
+        ],
+        "table name": "kitsune-active-wiretap-nn-1-16-0.01-100-1-exact_table.json"
+    },
+    "test config": {
+        "type of test": "classification"
+    },
+    "target config": {
+        "architecture": "tna",
+        "use case": "anomaly_detection"
+    }
+}

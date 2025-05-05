@@ -1,0 +1,169 @@
+{
+    "directory config": {
+        "data": "/home/docker/datasets/kitsune/arp-mitm/arp-mitm.csv",
+        "labels": "/home/docker/datasets/kitsune/arp-mitm/arp-mitm-labels.csv",
+        "work": "/home/docker/planter"
+    },
+    "model config": {
+        "model": "rf",
+        "number of trees": 200,
+        "number of depth": 30,
+        "max number of leaf nodes": 100000,
+        "number of classes": 2,
+        "test table": "y"
+    },
+    "data config": {
+        "dataset": "kitsune",
+        "cur_trace": "arp-mitm",
+        "number of features": 5,
+        "testing mode": "n"
+    },
+    "timer log": {
+        "load data": {
+            "start": 1744189989.4076364,
+            "end": 1744190042.6118865
+        }
+    },
+    "p4 config": {
+        "model": "RF",
+        "number of features": 5,
+        "number of classes": 2,
+        "number of trees": 12,
+        "table name": "Ternary_Table.json",
+        "decision table size": 1586,
+        "code table size": [
+            82,
+            234,
+            91,
+            92,
+            66,
+            96,
+            15,
+            44,
+            79,
+            78,
+            114,
+            96
+        ],
+        "default vote": 1,
+        "default label": 0,
+        "width of feature": [
+            17,
+            17,
+            6,
+            9,
+            9
+        ],
+        "width of code": [
+            [
+                3.0,
+                4.0,
+                2.0,
+                2.0,
+                3.0
+            ],
+            [
+                4.0,
+                5.0,
+                2.0,
+                1.0,
+                3.0
+            ],
+            [
+                4.0,
+                4.0,
+                2.0,
+                1.0,
+                3.0
+            ],
+            [
+                3.0,
+                4.0,
+                2.0,
+                2.0,
+                2.0
+            ],
+            [
+                3.0,
+                4.0,
+                2.0,
+                2.0,
+                2.0
+            ],
+            [
+                4.0,
+                4.0,
+                2.0,
+                2.0,
+                2.0
+            ],
+            [
+                1.0,
+                4.0,
+                1.0,
+                2.0,
+                3.0
+            ],
+            [
+                3.0,
+                3.0,
+                2.0,
+                2.0,
+                2.0
+            ],
+            [
+                3.0,
+                4.0,
+                2.0,
+                2.0,
+                2.0
+            ],
+            [
+                3.0,
+                4.0,
+                1.0,
+                2.0,
+                3.0
+            ],
+            [
+                4.0,
+                3.0,
+                1.0,
+                2.0,
+                3.0
+            ],
+            [
+                1.0,
+                5.0,
+                2.0,
+                2.0,
+                3.0
+            ]
+        ],
+        "used columns": [
+            96,
+            128,
+            8,
+            13,
+            26
+        ],
+        "width of probability": 7,
+        "width of result": 8,
+        "standard headers": [
+            "ethernet",
+            "Planter",
+            "arp",
+            "ipv4",
+            "tcp",
+            "udp",
+            "vlan_tag"
+        ]
+    },
+    "test config": {
+        "type of test": "classification"
+    },
+    "target config": {
+        "architecture": "tna",
+        "use case": "anomaly_detection"
+    }
+}

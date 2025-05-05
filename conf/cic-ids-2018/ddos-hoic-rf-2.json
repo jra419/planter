@@ -5,8 +5,7 @@
         "work": "/home/docker/planter"
     },
     "model config": {
-        "model": "RF",
-        "type": "3",
+        "model": "rf",
         "number of trees": 12,
         "number of depth": 6,
         "max number of leaf nodes": 1000,
@@ -21,7 +20,7 @@
     },
     "timer log": {
         "load data": {
-            "start": 1745366042.761431
+            "start": 1745784989.4288282
         }
     },
     "p4 config": {

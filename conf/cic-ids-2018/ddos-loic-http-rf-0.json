@@ -5,8 +5,7 @@
         "work": "/home/docker/planter"
     },
     "model config": {
-        "model": "RF",
-        "type": "3",
+        "model": "rf",
         "number of trees": 6,
         "number of depth": 4,
         "max number of leaf nodes": 1000,
@@ -21,32 +20,36 @@
     },
     "timer log": {
         "load data": {
-            "start": 1745366044.0213323,
-            "end": 1745366426.144848
+            "start": 1745784990.6778517,
+            "end": 1745785357.576122
         },
         "train model": {
-            "start": 1745366428.4093697,
-            "end": 1745366446.1459253
+            "start": 1745785359.6067207,
+            "end": 1745785372.8300219
         },
         "convert model": {
-            "start": 1745366446.14593,
-            "end": 1745366686.025191
+            "start": 1745785372.830024,
+            "end": 1745785608.4120924
+        },
+        "python-based test": {
+            "start": 1745785609.6556864,
+            "end": 1745807128.9807591
         }
     },
     "p4 config": {
-        "model": "RF",
+        "model": "rf",
         "number of features": 5,
         "number of classes": 2,
         "number of trees": 6,
         "table name": "ternary_table.json",
         "decision table size": 22,
         "code table size": [
-            4,
+            14,
             1,
-            4,
-            8,
-            6,
-            1
+            5,
+            7,
+            12,
+            4
         ],
         "default vote": 0,
         "default label": 0,
@@ -59,30 +62,37 @@
         ],
         "width of code": [
             [
-                1.0,
-                3.0,
-                1.0,
-                3.0,
-                3.0
-            ],
-            [
-                1.0,
-                3.0,
-                1.0,
-                3.0,
-                1.0
-            ],
-            [
                 2.0,
-                2.0,
+                3.0,
                 1.0,
                 3.0,
                 2.0
             ],
             [
+                1.0,
                 3.0,
+                1.0,
+                1.0,
+                3.0
+            ],
+            [
                 2.0,
+                1.0,
+                1.0,
+                4.0,
+                3.0
+            ],
+            [
                 2.0,
+                3.0,
+                1.0,
+                2.0,
+                3.0
+            ],
+            [
+                3.0,
+                3.0,
+                1.0,
                 3.0,
                 2.0
             ],
@@ -90,23 +100,16 @@
                 2.0,
                 3.0,
                 1.0,
-                3.0,
-                3.0
-            ],
-            [
-                1.0,
                 2.0,
-                2.0,
-                1.0,
-                3.0
+                2.0
             ]
         ],
         "used columns": [
-            33,
-            35,
-            7,
-            17,
-            20
+            47,
+            39,
+            6,
+            18,
+            15
         ],
         "width of probability": 7,
         "width of result": 8,

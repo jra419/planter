@@ -1,0 +1,181 @@
+{
+    "directory config": {
+        "data": "/home/docker/datasets/kitsune/ssdp-flood/ssdp-flood.csv",
+        "labels": "/home/docker/datasets/kitsune/ssdp-flood/ssdp-flood-labels.csv",
+        "work": "/home/docker/planter"
+    },
+    "model config": {
+        "model": "rf",
+        "number of trees": 200,
+        "number of depth": 30,
+        "max number of leaf nodes": 100000,
+        "number of classes": 2,
+        "test table": "y"
+    },
+    "data config": {
+        "dataset": "kitsune",
+        "cur_trace": "ssdp-flood",
+        "number of features": 5,
+        "testing mode": "n"
+    },
+    "timer log": {
+        "load data": {
+            "start": 1743814683.3389232,
+            "end": 1743814767.7689004
+        },
+        "train model": {
+            "start": 1743814767.911065,
+            "end": 1743814775.3086388
+        },
+        "convert model": {
+            "start": 1743814775.3086405,
+            "end": 1743815092.8411407
+        },
+        "python-based test": {
+            "start": 1743815094.5892587,
+            "end": 1743826423.37844
+        }
+    },
+    "p4 config": {
+        "model": "RF",
+        "number of features": 5,
+        "number of classes": 2,
+        "number of trees": 12,
+        "table name": "Ternary_Table.json",
+        "decision table size": 1586,
+        "code table size": [
+            1,
+            14,
+            5,
+            1,
+            6,
+            3,
+            4,
+            7,
+            49,
+            26,
+            54,
+            1
+        ],
+        "default vote": 0,
+        "default label": 0,
+        "width of feature": [
+            17,
+            17,
+            6,
+            9,
+            9
+        ],
+        "width of code": [
+            [
+                1.0,
+                2.0,
+                1.0,
+                1.0,
+                3.0
+            ],
+            [
+                3.0,
+                4.0,
+                1.0,
+                1.0,
+                3.0
+            ],
+            [
+                2.0,
+                3.0,
+                1.0,
+                1.0,
+                3.0
+            ],
+            [
+                1.0,
+                2.0,
+                1.0,
+                1.0,
+                3.0
+            ],
+            [
+                2.0,
+                3.0,
+                1.0,
+                1.0,
+                3.0
+            ],
+            [
+                2.0,
+                2.0,
+                2.0,
+                2.0,
+                3.0
+            ],
+            [
+                3.0,
+                3.0,
+                2.0,
+                1.0,
+                2.0
+            ],
+            [
+                2.0,
+                2.0,
+                2.0,
+                1.0,
+                3.0
+            ],
+            [
+                4.0,
+                3.0,
+                2.0,
+                1.0,
+                3.0
+            ],
+            [
+                3.0,
+                3.0,
+                2.0,
+                1.0,
+                3.0
+            ],
+            [
+                4.0,
+                4.0,
+                2.0,
+                1.0,
+                3.0
+            ],
+            [
+                1.0,
+                2.0,
+                1.0,
+                1.0,
+                3.0
+            ]
+        ],
+        "used columns": [
+            65,
+            78,
+            7,
+            14,
+            19
+        ],
+        "width of probability": 7,
+        "width of result": 8,
+        "standard headers": [
+            "ethernet",
+            "Planter",
+            "arp",
+            "ipv4",
+            "tcp",
+            "udp",
+            "vlan_tag"
+        ]
+    },
+    "test config": {
+        "type of test": "classification"
+    },
+    "target config": {
+        "architecture": "tna",
+        "use case": "anomaly_detection"
+    }
+}
