@@ -1,0 +1,71 @@
+{
+    "directory config": {
+        "data": "/home/docker/datasets/cic-ids-2018/cic-test.csv",
+        "labels": "/home/docker/datasets/cic-ids-2018/cic-test-labels.csv",
+        "work": "/home/docker/planter"
+    },
+    "model config": {
+        "model": "nn",
+        "number of classes": 2,
+        "learning rate": 0.01,
+        "batch size": 10,
+        "num epoch": 15,
+        "number of layers": 3,
+        "num hidden nodes": [
+            56,
+            56,
+            56
+        ],
+        "test table": "y"
+    },
+    "data config": {
+        "dataset": "cic-test",
+        "cur_trace": "test",
+        "number of features": 5,
+        "testing mode": "n"
+    },
+    "timer log": {
+        "load data": {
+            "start": 1746228250.9796417,
+            "end": 1746228251.0531676
+        },
+        "train model": {
+            "start": 1746228252.6877422,
+            "end": 1746228254.2877529
+        },
+        "convert model": {
+            "start": 1746228254.2877543,
+            "end": 1746228254.288923
+        },
+        "python-based test": {
+            "start": 1746228254.2893324,
+            "end": 1746228255.4073925
+        }
+    },
+    "p4 config": {
+        "model": "nn",
+        "num hidden nodes": [
+            56,
+            56,
+            56
+        ],
+        "number of features": 5,
+        "number of layers": 3,
+        "number of classes": 2,
+        "width of inputs": [
+            16.0,
+            16.0,
+            5.0,
+            8.0,
+            8.0
+        ],
+        "table name": "cic-test-test-nn-3-56-0.01-10-15-exact_table.json"
+    },
+    "test config": {
+        "type of test": "classification"
+    },
+    "target config": {
+        "architecture": "tna",
+        "use case": "anomaly_detection"
+    }
+}

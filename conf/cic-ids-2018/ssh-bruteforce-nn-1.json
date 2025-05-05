@@ -1,0 +1,67 @@
+{
+    "directory config": {
+        "data": "/home/docker/datasets/cic-ids-2018/ssh-bruteforce/ssh-bruteforce.csv",
+        "labels": "/home/docker/datasets/cic-ids-2018/ssh-bruteforce/ssh-bruteforce-labels.csv",
+        "work": "/home/docker/planter"
+    },
+    "model config": {
+        "model": "nn",
+        "number of classes": 2,
+        "learning rate": 0.01,
+        "batch size": 100,
+        "num epoch": 50,
+        "number of layers": 1,
+        "num hidden nodes": [32],
+        "test table": "y"
+    },
+    "data config": {
+        "dataset": "cic-ids-2018",
+        "cur_trace": "ssh-bruteforce",
+        "number of features": 5,
+        "testing mode": "n"
+    },
+    "timer log": {
+        "load data": {
+            "start": 1745942047.5954363,
+            "end": 1745942047.6683164
+        },
+        "train model": {
+            "start": 1745942049.6756082,
+            "end": 1745942051.2714565
+        },
+        "convert model": {
+            "start": 1745942051.2714581,
+            "end": 1745942051.2725875
+        },
+        "python-based test": {
+            "start": 1745942051.2730017,
+            "end": 1745942052.7819982
+        }
+    },
+    "p4 config": {
+        "model": "nn",
+        "num hidden nodes": [
+            56,
+            56,
+            56
+        ],
+        "number of features": 5,
+        "number of layers": 3,
+        "number of classes": 2,
+        "width of inputs": [
+            16.0,
+            16.0,
+            5.0,
+            8.0,
+            8.0
+        ],
+        "table name": "cic-test-test-nn-3-56-0.01-10-15-exact_table.json"
+    },
+    "test config": {
+        "type of test": "classification"
+    },
+    "target config": {
+        "architecture": "tna",
+        "use case": "anomaly_detection"
+    }
+}
