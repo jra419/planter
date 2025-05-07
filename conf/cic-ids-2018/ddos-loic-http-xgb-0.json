@@ -1,0 +1,106 @@
+{
+    "directory config": {
+        "data": "/home/docker/datasets/cic-ids-2018/ddos-loic-http/ddos-loic-http.csv",
+        "labels": "/home/docker/datasets/cic-ids-2018/ddos-loic-http/ddos-loic-http-labels.csv",
+        "work": "/home/docker/planter"
+    },
+    "model config": {
+        "model": "xgb",
+        "model size": "0",
+        "number of trees": 6,
+        "number of depth": 4,
+        "max number of leaf nodes": 1000,
+        "number of classes": 2,
+        "test table": "y"
+    },
+    "data config": {
+        "dataset": "cic-ids-2018",
+        "cur_trace": "ddos-loic-http",
+        "number of features": 5,
+        "testing mode": "n"
+    },
+    "timer log": {
+        "load data": {
+            "start": 1746650994.1337733,
+            "end": 1746651033.644744
+        },
+        "train model": {
+            "start": 1746651035.399284,
+            "end": 1746651036.3042102
+        },
+        "convert model": {
+            "start": 1746651036.3042116,
+            "end": 1746651238.9935386
+        }
+    },
+    "p4 config": {
+        "model": "XGB",
+        "number of features": 5,
+        "number of classes": 2,
+        "number of trees": 3,
+        "table name": "active-wiretap-xgb-0-ternary_table.json",
+        "decision table size": 81,
+        "code table size": [
+            42,
+            20,
+            8
+        ],
+        "default vote": 4,
+        "default label": 1,
+        "width of feature": [
+            17,
+            17,
+            6,
+            9,
+            9
+        ],
+        "width of code": [
+            [
+                1.0,
+                4.0,
+                3.0,
+                1.0,
+                2.0
+            ],
+            [
+                3.0,
+                4.0,
+                2.0,
+                1.0,
+                1.0
+            ],
+            [
+                1.0,
+                5.0,
+                1.0,
+                1.0,
+                1.0
+            ]
+        ],
+        "used columns": [
+            28,
+            77,
+            8,
+            9,
+            11
+        ],
+        "width of probability": 7,
+        "width of result": 8,
+        "standard headers": [
+            "ethernet",
+            "Planter",
+            "arp",
+            "ipv4",
+            "tcp",
+            "udp",
+            "vlan_tag"
+        ]
+    },
+    "test config": {
+        "type of test": "classification"
+    },
+    "target config": {
+        "architecture": "tna",
+        "use case": "anomaly_detection"
+    }
+}

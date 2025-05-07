@@ -1,0 +1,25 @@
+cd ..
+sudo python3 Planter.py -c conf/kitsune/active-wiretap-xgb-0.json
+sudo python3 Planter.py -c conf/kitsune/active-wiretap-xgb-1.json
+sudo python3 Planter.py -c conf/kitsune/active-wiretap-xgb-2.json
+sudo python3 Planter.py -c conf/kitsune/arp-mitm-xgb-0.json
+sudo python3 Planter.py -c conf/kitsune/arp-mitm-xgb-1.json
+sudo python3 Planter.py -c conf/kitsune/arp-mitm-xgb-2.json
+sudo python3 Planter.py -c conf/kitsune/dos-syn-xgb-0.json
+sudo python3 Planter.py -c conf/kitsune/dos-syn-xgb-1.json
+sudo python3 Planter.py -c conf/kitsune/dos-syn-xgb-2.json
+sudo python3 Planter.py -c conf/kitsune/fuzzing-xgb-0.json
+sudo python3 Planter.py -c conf/kitsune/fuzzing-xgb-1.json
+sudo python3 Planter.py -c conf/kitsune/fuzzing-xgb-2.json
+sudo python3 Planter.py -c conf/kitsune/os-scan-xgb-0.json
+sudo python3 Planter.py -c conf/kitsune/os-scan-xgb-1.json
+sudo python3 Planter.py -c conf/kitsune/os-scan-xgb-2.json
+sudo python3 Planter.py -c conf/kitsune/ssdp-flood-xgb-0.json
+sudo python3 Planter.py -c conf/kitsune/ssdp-flood-xgb-1.json
+sudo python3 Planter.py -c conf/kitsune/ssdp-flood-xgb-0.json
+sudo python3 Planter.py -c conf/kitsune/ssl-renegotiation-xgb-0.json
+sudo python3 Planter.py -c conf/kitsune/ssl-renegotiation-xgb-1.json
+sudo python3 Planter.py -c conf/kitsune/ssl-renegotiation-xgb-2.json
+sudo python3 Planter.py -c conf/kitsune/video-injection-xgb-0.json
+sudo python3 Planter.py -c conf/kitsune/video-injection-xgb-1.json
+sudo python3 Planter.py -c conf/kitsune/video-injection-xgb-2.json

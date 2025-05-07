@@ -1,0 +1,106 @@
+{
+    "directory config": {
+        "data": "/home/docker/datasets/kitsune/ssl-renegotiation/ssl-renegotiation.csv",
+        "labels": "/home/docker/datasets/kitsune/ssl-renegotiation/ssl-renegotiation-labels.csv",
+        "work": "/home/docker/planter"
+    },
+    "model config": {
+        "model": "xgb",
+        "model size": "2",
+        "number of trees": 12,
+        "number of depth": 6,
+        "max number of leaf nodes": 1000,
+        "number of classes": 2,
+        "test table": "y"
+    },
+    "data config": {
+        "dataset": "kitsune",
+        "cur_trace": "ssl-renegotiation",
+        "number of features": 5,
+        "testing mode": "n"
+    },
+    "timer log": {
+        "load data": {
+            "start": 1746650277.4146094,
+            "end": 1746650317.7557564
+        },
+        "train model": {
+            "start": 1746650319.5491326,
+            "end": 1746650320.454085
+        },
+        "convert model": {
+            "start": 1746650320.454087,
+            "end": 1746650494.5102222
+        }
+    },
+    "p4 config": {
+        "model": "XGB",
+        "number of features": 5,
+        "number of classes": 2,
+        "number of trees": 3,
+        "table name": "ssl-renegotiation-xgb-0-ternary_table.json",
+        "decision table size": 81,
+        "code table size": [
+            42,
+            20,
+            8
+        ],
+        "default vote": 4,
+        "default label": 1,
+        "width of feature": [
+            17,
+            17,
+            6,
+            9,
+            9
+        ],
+        "width of code": [
+            [
+                1.0,
+                4.0,
+                3.0,
+                1.0,
+                2.0
+            ],
+            [
+                3.0,
+                4.0,
+                2.0,
+                1.0,
+                1.0
+            ],
+            [
+                1.0,
+                5.0,
+                1.0,
+                1.0,
+                1.0
+            ]
+        ],
+        "used columns": [
+            28,
+            77,
+            8,
+            9,
+            11
+        ],
+        "width of probability": 7,
+        "width of result": 8,
+        "standard headers": [
+            "ethernet",
+            "Planter",
+            "arp",
+            "ipv4",
+            "tcp",
+            "udp",
+            "vlan_tag"
+        ]
+    },
+    "test config": {
+        "type of test": "classification"
+    },
+    "target config": {
+        "architecture": "tna",
+        "use case": "anomaly_detection"
+    }
+}

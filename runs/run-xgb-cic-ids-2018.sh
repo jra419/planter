@@ -1,0 +1,25 @@
+cd ..
+sudo python3 Planter.py -c conf/cic-ids-2018/botnet-xgb-0.json
+sudo python3 Planter.py -c conf/cic-ids-2018/botnet-xgb-1.json
+sudo python3 Planter.py -c conf/cic-ids-2018/botnet-xgb-2.json
+sudo python3 Planter.py -c conf/cic-ids-2018/ddos-hoic-xgb-0.json
+sudo python3 Planter.py -c conf/cic-ids-2018/ddos-hoic-xgb-1.json
+sudo python3 Planter.py -c conf/cic-ids-2018/ddos-hoic-xgb-2.json
+sudo python3 Planter.py -c conf/cic-ids-2018/ddos-loic-http-xgb-0.json
+sudo python3 Planter.py -c conf/cic-ids-2018/ddos-loic-http-xgb-1.json
+sudo python3 Planter.py -c conf/cic-ids-2018/ddos-loic-http-xgb-2.json
+sudo python3 Planter.py -c conf/cic-ids-2018/dos-goldeneye-xgb-0.json
+sudo python3 Planter.py -c conf/cic-ids-2018/dos-goldeneye-xgb-1.json
+sudo python3 Planter.py -c conf/cic-ids-2018/dos-goldeneye-xgb-2.json
+sudo python3 Planter.py -c conf/cic-ids-2018/dos-hulk-xgb-0.json
+sudo python3 Planter.py -c conf/cic-ids-2018/dos-hulk-xgb-1.json
+sudo python3 Planter.py -c conf/cic-ids-2018/dos-hulk-xgb-2.json
+sudo python3 Planter.py -c conf/cic-ids-2018/dos-slowhttptest-xgb-0.json
+sudo python3 Planter.py -c conf/cic-ids-2018/dos-slowhttptest-xgb-1.json
+sudo python3 Planter.py -c conf/cic-ids-2018/dos-slowhttptest-xgb-2.json
+sudo python3 Planter.py -c conf/cic-ids-2018/dos-slowloris-xgb-0.json
+sudo python3 Planter.py -c conf/cic-ids-2018/dos-slowloris-xgb-1.json
+sudo python3 Planter.py -c conf/cic-ids-2018/dos-slowloris-xgb-2.json
+sudo python3 Planter.py -c conf/cic-ids-2018/ssh-bruteforce-xgb-0.json
+sudo python3 Planter.py -c conf/cic-ids-2018/ssh-bruteforce-xgb-1.json
+sudo python3 Planter.py -c conf/cic-ids-2018/ssh-bruteforce-xgb-2.json

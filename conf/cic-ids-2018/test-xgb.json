@@ -1,0 +1,110 @@
+{
+    "directory config": {
+        "data": "/home/docker/datasets/cic-ids-2018/cic-test.csv",
+        "labels": "/home/docker/datasets/cic-ids-2018/cic-test-labels.csv",
+        "work": "/home/docker/planter"
+    },
+    "model config": {
+        "model": "xgb",
+        "model size": "test",
+        "number of trees": 6,
+        "number of depth": 4,
+        "number of classes": 2,
+        "max number of leaf nodes": 1000,
+        "test table": "y"
+    },
+    "data config": {
+        "dataset": "cic-test",
+        "cur_trace": "test",
+        "number of features": 5,
+        "testing mode": "n"
+    },
+    "timer log": {
+        "load data": {
+            "start": 1746650077.8648937,
+            "end": 1746650077.986483
+        },
+        "train model": {
+            "start": 1746650080.0148125,
+            "end": 1746650080.0382884
+        },
+        "convert model": {
+            "start": 1746650080.0382905,
+            "end": 1746650257.1730301
+        },
+        "python-based test": {
+            "start": 1746650257.8615026,
+            "end": 1746650258.6251707
+        }
+    },
+    "p4 config": {
+        "model": "XGB",
+        "number of features": 5,
+        "number of classes": 2,
+        "number of trees": 3,
+        "table name": "test-xgb-test-ternary_table.json",
+        "decision table size": 5,
+        "code table size": [
+            3,
+            1,
+            1
+        ],
+        "default vote": 1,
+        "default label": 0,
+        "width of feature": [
+            17,
+            17,
+            6,
+            9,
+            9
+        ],
+        "width of code": [
+            [
+                2.0,
+                1.0,
+                1.0,
+                2.0,
+                1.0
+            ],
+            [
+                1.0,
+                1.0,
+                1.0,
+                2.0,
+                2.0
+            ],
+            [
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                2.0
+            ]
+        ],
+        "used columns": [
+            26,
+            17,
+            6,
+            10,
+            12
+        ],
+        "width of probability": 7,
+        "width of result": 8,
+        "standard headers": [
+            "ethernet",
+            "Planter",
+            "arp",
+            "ipv4",
+            "tcp",
+            "udp",
+            "vlan_tag"
+        ]
+    },
+    "test config": {
+        "type of test": "classification"
+    },
+    "target config": {
+        "architecture": "tna",
+        "use case": "anomaly_detection"
+    }
+}

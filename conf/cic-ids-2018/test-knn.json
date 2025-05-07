@@ -1,0 +1,101 @@
+{
+    "directory config": {
+        "data": "/home/docker/datasets/cic-ids-2018/cic-test.csv",
+        "labels": "/home/docker/datasets/cic-ids-2018/cic-test-labels.csv",
+        "work": "/home/docker/planter"
+    },
+    "model config": {
+        "model": "knn",
+        "model size": "test",
+        "number of classes": 2,
+        "depth of quadtree": 2,
+        "number of neighbours": 4,
+        "test table": "y",
+        "lookup": {
+            "00000": 0,
+            "00001": 1,
+            "00010": 2,
+            "00011": 3,
+            "00100": 4,
+            "00101": 5,
+            "00110": 6,
+            "00111": 7,
+            "01000": 8,
+            "01001": 9,
+            "01010": 10,
+            "01011": 11,
+            "01100": 12,
+            "01101": 13,
+            "01110": 14,
+            "01111": 15,
+            "10000": 16,
+            "10001": 17,
+            "10010": 18,
+            "10011": 19,
+            "10100": 20,
+            "10101": 21,
+            "10110": 22,
+            "10111": 23,
+            "11000": 24,
+            "11001": 25,
+            "11010": 26,
+            "11011": 27,
+            "11100": 28,
+            "11101": 29,
+            "11110": 30,
+            "11111": 31
+        },
+        "feature max": [
+            64708,
+            64807,
+            18,
+            217,
+            255
+        ],
+        "feature min": [
+            53,
+            7,
+            6,
+            2,
+            1
+        ]
+    },
+    "data config": {
+        "dataset": "cic-test",
+        "cur_trace": "test",
+        "number of features": 5,
+        "testing mode": "n"
+    },
+    "timer log": {
+        "load data": {
+            "start": 1746547005.8867316,
+            "end": 1746547005.9858766
+        },
+        "train model": {
+            "start": 1746547007.821037,
+            "end": 1746547007.8843896
+        },
+        "convert model": {
+            "start": 1746547007.8843908,
+            "end": 1746547007.8887193
+        },
+        "python-based test": {
+            "start": 1746547007.9787605,
+            "end": 1746547007.9875903
+        }
+    },
+    "p4 config": {
+        "model": "knn",
+        "number of features": 5,
+        "number of classes": 2,
+        "table length": 1,
+        "table name": "test-knn-test-ternary_table.json"
+    },
+    "test config": {
+        "type of test": "classification"
+    },
+    "target config": {
+        "architecture": "tna",
+        "use case": "anomaly_detection"
+    }
+}
