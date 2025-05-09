@@ -126,6 +126,8 @@ RUN echo "source ~/.profile" >> /home/docker/.bash_profile
 COPY --chown=docker:docker ./scripts/packages.txt /opt/packages.txt
 RUN sudo pip3 install -r /opt/packages.txt
 
+RUN sudo pip3 install pathos
+
 ##########
 #  Misc  #
 ##########
