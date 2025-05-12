@@ -1,0 +1,59 @@
+{
+    "directory config": {
+        "data": "/home/docker/datasets/kitsune/arp-mitm/arp-mitm.csv",
+        "labels": "/home/docker/datasets/kitsune/arp-mitm/arp-mitm-labels.csv",
+        "work": "/home/docker/planter"
+    },
+    "model config": {
+        "model": "bayes",
+        "model size": "1",
+        "number of bits": 16,
+        "number of classes": 2,
+        "test table": "y"
+    },
+    "data config": {
+        "dataset": "kitsune",
+        "cur_trace": "arp-mitm",
+        "number of features": 5,
+        "testing mode": "n"
+    },
+    "timer log": {
+        "load data": {
+            "start": 1747062039.1209888,
+            "end": 1747062082.0297446
+        },
+        "train model": {
+            "start": 1747062083.7067482,
+            "end": 1747062085.1147366
+        },
+        "convert model": {
+            "start": 1747062085.1147385,
+            "end": 1747062089.2739897
+        },
+        "python-based test": {
+            "start": 1747062090.1441283,
+            "end": 1747062197.877152
+        }
+    },
+    "p4 config": {
+        "model": "bayes",
+        "number of features": 5,
+        "number of classes": 2,
+        "action data bits": 16,
+        "table name": "arp-mitm-bayes-1-exact_table.json",
+        "feature tbl len": [
+            65409,
+            60289,
+            19,
+            194,
+            257
+        ]
+    },
+    "test config": {
+        "type of test": "classification"
+    },
+    "target config": {
+        "architecture": "tna",
+        "use case": "anomaly_detection"
+    }
+}

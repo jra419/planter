@@ -1,0 +1,59 @@
+{
+    "directory config": {
+        "data": "/home/docker/datasets/kitsune/fuzzing/fuzzing.csv",
+        "labels": "/home/docker/datasets/kitsune/fuzzing/fuzzing-labels.csv",
+        "work": "/home/docker/planter"
+    },
+    "model config": {
+        "model": "bayes",
+        "model size": "1",
+        "number of bits": 16,
+        "number of classes": 2,
+        "test table": "y"
+    },
+    "data config": {
+        "dataset": "kitsune",
+        "cur_trace": "fuzzing",
+        "number of features": 5,
+        "testing mode": "n"
+    },
+    "timer log": {
+        "load data": {
+            "start": 1747062928.9972768,
+            "end": 1747062967.9184844
+        },
+        "train model": {
+            "start": 1747062969.5505393,
+            "end": 1747062970.7135239
+        },
+        "convert model": {
+            "start": 1747062970.713526,
+            "end": 1747062974.8739626
+        },
+        "python-based test": {
+            "start": 1747062975.79086,
+            "end": 1747063069.2429345
+        }
+    },
+    "p4 config": {
+        "model": "bayes",
+        "number of features": 5,
+        "number of classes": 2,
+        "action data bits": 16,
+        "table name": "fuzzing-bayes-1-exact_table.json",
+        "feature tbl len": [
+            65030,
+            64095,
+            19,
+            194,
+            252
+        ]
+    },
+    "test config": {
+        "type of test": "classification"
+    },
+    "target config": {
+        "architecture": "tna",
+        "use case": "anomaly_detection"
+    }
+}

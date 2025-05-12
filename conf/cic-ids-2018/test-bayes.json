@@ -1,0 +1,59 @@
+{
+    "directory config": {
+        "data": "/home/docker/datasets/cic-ids-2018/cic-test.csv",
+        "labels": "/home/docker/datasets/cic-ids-2018/cic-test-labels.csv",
+        "work": "/home/docker/planter"
+    },
+    "model config": {
+        "model": "bayes",
+        "model size": "test",
+        "number of bits": 16,
+        "number of classes": 2,
+        "test table": "y"
+    },
+    "data config": {
+        "dataset": "cic-test",
+        "cur_trace": "test",
+        "number of features": 5,
+        "testing mode": "n"
+    },
+    "timer log": {
+        "load data": {
+            "start": 1747060377.9084725,
+            "end": 1747060378.015057
+        },
+        "train model": {
+            "start": 1747060379.7802227,
+            "end": 1747060379.7967162
+        },
+        "convert model": {
+            "start": 1747060379.7967176,
+            "end": 1747060384.1406271
+        },
+        "python-based test": {
+            "start": 1747060385.023521,
+            "end": 1747060385.2376163
+        }
+    },
+    "p4 config": {
+        "model": "bayes",
+        "number of features": 5,
+        "number of classes": 2,
+        "action data bits": 16,
+        "table name": "test-bayes-test-exact_table.json",
+        "feature tbl len": [
+            64709,
+            64808,
+            19,
+            218,
+            256
+        ]
+    },
+    "test config": {
+        "type of test": "classification"
+    },
+    "target config": {
+        "architecture": "tna",
+        "use case": "anomaly_detection"
+    }
+}

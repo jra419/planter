@@ -1,0 +1,59 @@
+{
+    "directory config": {
+        "data": "/home/docker/datasets/cic-ids-2018/botnet/botnet.csv",
+        "labels": "/home/docker/datasets/cic-ids-2018/botnet/botnet-labels.csv",
+        "work": "/home/docker/planter"
+    },
+    "model config": {
+        "model": "bayes",
+        "model size": "1",
+        "number of bits": 16,
+        "number of classes": 2,
+        "test table": "y"
+    },
+    "data config": {
+        "dataset": "cic-ids-2018",
+        "cur_trace": "botnet",
+        "number of features": 5,
+        "testing mode": "n"
+    },
+    "timer log": {
+        "load data": {
+            "start": 1747073299.7608602,
+            "end": 1747073653.118022
+        },
+        "train model": {
+            "start": 1747073654.843389,
+            "end": 1747073663.9938018
+        },
+        "convert model": {
+            "start": 1747073663.993804,
+            "end": 1747073667.909242
+        },
+        "python-based test": {
+            "start": 1747073668.9019742,
+            "end": 1747074487.38686
+        }
+    },
+    "p4 config": {
+        "model": "bayes",
+        "number of features": 5,
+        "number of classes": 2,
+        "action data bits": 16,
+        "table name": "botnet-bayes-1-exact_table.json",
+        "feature tbl len": [
+            65537,
+            65537,
+            19,
+            225,
+            257
+        ]
+    },
+    "test config": {
+        "type of test": "classification"
+    },
+    "target config": {
+        "architecture": "tna",
+        "use case": "anomaly_detection"
+    }
+}

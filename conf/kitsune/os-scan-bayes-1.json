@@ -1,0 +1,54 @@
+{
+    "directory config": {
+        "data": "/home/docker/datasets/kitsune/os-scan/os-scan.csv",
+        "labels": "/home/docker/datasets/kitsune/os-scan/os-scan-labels.csv",
+        "work": "/home/docker/planter"
+    },
+    "model config": {
+        "model": "bayes",
+        "model size": "1",
+        "number of bits": 16,
+        "number of classes": 2,
+        "test table": "y"
+    },
+    "data config": {
+        "dataset": "kitsune",
+        "cur_trace": "os-scan",
+        "number of features": 5,
+        "testing mode": "n"
+    },
+    "timer log": {
+        "load data": {
+            "start": 1747063214.997431
+        }
+    },
+    "p4 config": {
+        "model": "SVM",
+        "number of features": 5,
+        "number of classes": 2,
+        "action data bits": 8,
+        "number of hps": 1,
+        "feature tbl len": [
+            64679,
+            61721,
+            18,
+            193,
+            256
+        ],
+        "table name": "os-scan-svm-0-exact_table.json",
+        "thresh and bias": "269, 44",
+        "hp_info": {
+            "0": [
+                0,
+                1
+            ]
+        }
+    },
+    "test config": {
+        "type of test": "classification"
+    },
+    "target config": {
+        "architecture": "tna",
+        "use case": "anomaly_detection"
+    }
+}

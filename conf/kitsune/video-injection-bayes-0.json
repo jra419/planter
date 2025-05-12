@@ -1,0 +1,59 @@
+{
+    "directory config": {
+        "data": "/home/docker/datasets/kitsune/video-injection/video-injection.csv",
+        "labels": "/home/docker/datasets/kitsune/video-injection/video-injection-labels.csv",
+        "work": "/home/docker/planter"
+    },
+    "model config": {
+        "model": "bayes",
+        "model size": "0",
+        "number of bits": 8,
+        "number of classes": 2,
+        "test table": "y"
+    },
+    "data config": {
+        "dataset": "kitsune",
+        "cur_trace": "video-injection",
+        "number of features": 5,
+        "testing mode": "n"
+    },
+    "timer log": {
+        "load data": {
+            "start": 1747064167.349306,
+            "end": 1747064208.6528215
+        },
+        "train model": {
+            "start": 1747064210.183748,
+            "end": 1747064211.3982613
+        },
+        "convert model": {
+            "start": 1747064211.3982635,
+            "end": 1747064214.9794366
+        },
+        "python-based test": {
+            "start": 1747064215.7698996,
+            "end": 1747064317.4997864
+        }
+    },
+    "p4 config": {
+        "model": "bayes",
+        "number of features": 5,
+        "number of classes": 2,
+        "action data bits": 8,
+        "table name": "video-injection-bayes-0-exact_table.json",
+        "feature tbl len": [
+            63846,
+            54869,
+            19,
+            194,
+            257
+        ]
+    },
+    "test config": {
+        "type of test": "classification"
+    },
+    "target config": {
+        "architecture": "tna",
+        "use case": "anomaly_detection"
+    }
+}

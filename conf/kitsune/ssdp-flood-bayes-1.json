@@ -1,0 +1,59 @@
+{
+    "directory config": {
+        "data": "/home/docker/datasets/kitsune/ssdp-flood/ssdp-flood.csv",
+        "labels": "/home/docker/datasets/kitsune/ssdp-flood/ssdp-flood-labels.csv",
+        "work": "/home/docker/planter"
+    },
+    "model config": {
+        "model": "bayes",
+        "model size": "1",
+        "number of bits": 16,
+        "number of classes": 2,
+        "test table": "y"
+    },
+    "data config": {
+        "dataset": "kitsune",
+        "cur_trace": "ssdp-flood",
+        "number of features": 5,
+        "testing mode": "n"
+    },
+    "timer log": {
+        "load data": {
+            "start": 1747063435.6197054,
+            "end": 1747063502.7221186
+        },
+        "train model": {
+            "start": 1747063504.3024333,
+            "end": 1747063506.0484333
+        },
+        "convert model": {
+            "start": 1747063506.0484352,
+            "end": 1747063509.9769716
+        },
+        "python-based test": {
+            "start": 1747063510.8742368,
+            "end": 1747063647.1550274
+        }
+    },
+    "p4 config": {
+        "model": "bayes",
+        "number of features": 5,
+        "number of classes": 2,
+        "action data bits": 16,
+        "table name": "ssdp-flood-bayes-1-exact_table.json",
+        "feature tbl len": [
+            65537,
+            65502,
+            19,
+            194,
+            257
+        ]
+    },
+    "test config": {
+        "type of test": "classification"
+    },
+    "target config": {
+        "architecture": "tna",
+        "use case": "anomaly_detection"
+    }
+}

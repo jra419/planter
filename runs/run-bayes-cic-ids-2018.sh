@@ -1,0 +1,25 @@
+cd ..
+sudo python3 Planter.py -c conf/cic-ids-2018/botnet-bayes-0.json
+sudo python3 Planter.py -c conf/cic-ids-2018/botnet-bayes-1.json
+sudo python3 Planter.py -c conf/cic-ids-2018/botnet-bayes-2.json
+sudo python3 Planter.py -c conf/cic-ids-2018/ddos-hoic-bayes-0.json
+sudo python3 Planter.py -c conf/cic-ids-2018/ddos-hoic-bayes-1.json
+sudo python3 Planter.py -c conf/cic-ids-2018/ddos-hoic-bayes-2.json
+sudo python3 Planter.py -c conf/cic-ids-2018/ddos-loic-http-bayes-0.json
+sudo python3 Planter.py -c conf/cic-ids-2018/ddos-loic-http-bayes-1.json
+sudo python3 Planter.py -c conf/cic-ids-2018/ddos-loic-http-bayes-2.json
+sudo python3 Planter.py -c conf/cic-ids-2018/dos-goldeneye-bayes-0.json
+sudo python3 Planter.py -c conf/cic-ids-2018/dos-goldeneye-bayes-1.json
+sudo python3 Planter.py -c conf/cic-ids-2018/dos-goldeneye-bayes-2.json
+sudo python3 Planter.py -c conf/cic-ids-2018/dos-hulk-bayes-0.json
+sudo python3 Planter.py -c conf/cic-ids-2018/dos-hulk-bayes-1.json
+sudo python3 Planter.py -c conf/cic-ids-2018/dos-hulk-bayes-2.json
+sudo python3 Planter.py -c conf/cic-ids-2018/dos-slowhttptest-bayes-0.json
+sudo python3 Planter.py -c conf/cic-ids-2018/dos-slowhttptest-bayes-1.json
+sudo python3 Planter.py -c conf/cic-ids-2018/dos-slowhttptest-bayes-2.json
+sudo python3 Planter.py -c conf/cic-ids-2018/dos-slowloris-bayes-0.json
+sudo python3 Planter.py -c conf/cic-ids-2018/dos-slowloris-bayes-1.json
+sudo python3 Planter.py -c conf/cic-ids-2018/dos-slowloris-bayes-2.json
+sudo python3 Planter.py -c conf/cic-ids-2018/ssh-bruteforce-bayes-0.json
+sudo python3 Planter.py -c conf/cic-ids-2018/ssh-bruteforce-bayes-1.json
+sudo python3 Planter.py -c conf/cic-ids-2018/ssh-bruteforce-bayes-2.json

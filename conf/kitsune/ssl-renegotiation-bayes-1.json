@@ -1,0 +1,59 @@
+{
+    "directory config": {
+        "data": "/home/docker/datasets/kitsune/ssl-renegotiation/ssl-renegotiation.csv",
+        "labels": "/home/docker/datasets/kitsune/ssl-renegotiation/ssl-renegotiation-labels.csv",
+        "work": "/home/docker/planter"
+    },
+    "model config": {
+        "model": "bayes",
+        "model size": "1",
+        "number of bits": 16,
+        "number of classes": 2,
+        "test table": "y"
+    },
+    "data config": {
+        "dataset": "kitsune",
+        "cur_trace": "ssl-renegotiation",
+        "number of features": 5,
+        "testing mode": "n"
+    },
+    "timer log": {
+        "load data": {
+            "start": 1747063962.3125956,
+            "end": 1747063998.507208
+        },
+        "train model": {
+            "start": 1747064000.0594862,
+            "end": 1747064000.7039638
+        },
+        "convert model": {
+            "start": 1747064000.7039652,
+            "end": 1747064004.6200538
+        },
+        "python-based test": {
+            "start": 1747064005.420943,
+            "end": 1747064063.418323
+        }
+    },
+    "p4 config": {
+        "model": "bayes",
+        "number of features": 5,
+        "number of classes": 2,
+        "action data bits": 16,
+        "table name": "ssl-renegotiation-bayes-1-exact_table.json",
+        "feature tbl len": [
+            65512,
+            55705,
+            19,
+            194,
+            257
+        ]
+    },
+    "test config": {
+        "type of test": "classification"
+    },
+    "target config": {
+        "architecture": "tna",
+        "use case": "anomaly_detection"
+    }
+}

@@ -1,0 +1,59 @@
+{
+    "directory config": {
+        "data": "/home/docker/datasets/kitsune/dos-syn/dos-syn.csv",
+        "labels": "/home/docker/datasets/kitsune/dos-syn/dos-syn-labels.csv",
+        "work": "/home/docker/planter"
+    },
+    "model config": {
+        "model": "bayes",
+        "model size": "2",
+        "number of bits": 32,
+        "number of classes": 2,
+        "test table": "y"
+    },
+    "data config": {
+        "dataset": "kitsune",
+        "cur_trace": "dos-syn",
+        "number of features": 5,
+        "testing mode": "n"
+    },
+    "timer log": {
+        "load data": {
+            "start": 1747062646.7253513,
+            "end": 1747062694.0108387
+        },
+        "train model": {
+            "start": 1747062695.7122586,
+            "end": 1747062696.648272
+        },
+        "convert model": {
+            "start": 1747062696.6482742,
+            "end": 1747062700.7100134
+        },
+        "python-based test": {
+            "start": 1747062701.6274867,
+            "end": 1747062784.9118485
+        }
+    },
+    "p4 config": {
+        "model": "bayes",
+        "number of features": 5,
+        "number of classes": 2,
+        "action data bits": 32,
+        "table name": "dos-syn-bayes-2-exact_table.json",
+        "feature tbl len": [
+            65421,
+            65525,
+            19,
+            194,
+            257
+        ]
+    },
+    "test config": {
+        "type of test": "classification"
+    },
+    "target config": {
+        "architecture": "tna",
+        "use case": "anomaly_detection"
+    }
+}

@@ -1,0 +1,59 @@
+{
+    "directory config": {
+        "data": "/home/docker/datasets/kitsune/active-wiretap/active-wiretap.csv",
+        "labels": "/home/docker/datasets/kitsune/active-wiretap/active-wiretap-labels.csv",
+        "work": "/home/docker/planter"
+    },
+    "model config": {
+        "model": "bayes",
+        "model size": "2",
+        "number of bits": 32,
+        "number of classes": 2,
+        "test table": "y"
+    },
+    "data config": {
+        "dataset": "kitsune",
+        "cur_trace": "active-wiretap",
+        "number of features": 5,
+        "testing mode": "n"
+    },
+    "timer log": {
+        "load data": {
+            "start": 1747061734.9861608,
+            "end": 1747061774.2123125
+        },
+        "train model": {
+            "start": 1747061776.015021,
+            "end": 1747061777.229033
+        },
+        "convert model": {
+            "start": 1747061777.2290344,
+            "end": 1747061781.5596616
+        },
+        "python-based test": {
+            "start": 1747061782.4298034,
+            "end": 1747061880.5268962
+        }
+    },
+    "p4 config": {
+        "model": "bayes",
+        "number of features": 5,
+        "number of classes": 2,
+        "action data bits": 32,
+        "table name": "active-wiretap-bayes-2-exact_table.json",
+        "feature tbl len": [
+            64680,
+            61722,
+            19,
+            194,
+            257
+        ]
+    },
+    "test config": {
+        "type of test": "classification"
+    },
+    "target config": {
+        "architecture": "tna",
+        "use case": "anomaly_detection"
+    }
+}
