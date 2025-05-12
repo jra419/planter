@@ -17,7 +17,7 @@ from datetime import datetime
 from src.functions.Range_to_TCAM_Top_Down import Table_to_TCAM
 from src.functions.json_encoder import NpEncoder
 from eval.eval_metrics import eval_metrics
-from pathos.multiprocessing import ProcessingPool
+from pathos.multiprocessing import ProcessingPool as Pool
 import numpy as np
 import time
 import math
@@ -475,11 +475,82 @@ def run_model(train_X, train_y, test_X, test_y, used_features, cur_dataset,
     # main()
     return sklearn_y_predict.tolist()
 
-def process_packets(batch, test_X, num_trees, num_features, Ternary_Table, Exact_Table, config, test_y, sklearn_test_y):
+# def process_packets(batch, test_X, num_trees, num_features, Ternary_Table, Exact_Table, config, test_y):
+#     results = []
+#     core_id = os.getpid()
+
+#     for i in batch:
+#         vote_list = np.zeros(num_trees).astype(dtype=int).tolist()
+#         input_feature_value = test_X.values[i]
+
+#         for tree in range(num_trees):
+#             code_list = np.zeros(num_features)
+#             ternary_code_list = np.zeros(num_features)
+
+#             for f in range(num_features):
+#                 match_or_not = False
+
+#                 # match ternary
+#                 TCAM_table = Ternary_Table['feature ' + str(f)]
+#                 keys = list(TCAM_table.keys())
+
+#                 for count in keys:
+#                     if input_feature_value[f] & TCAM_table[count][0] == TCAM_table[count][0] & TCAM_table[count][1]:
+#                         ternary_code_list[f] = TCAM_table[count][2][tree]
+#                         match_or_not = True
+#                         break
+
+#                 if not match_or_not:
+#                     print('feature table not matched')
+#                 # match exact
+#                 code_list[f] = Exact_Table['feature ' + str(f)][str(input_feature_value[f])][tree]
+#                 if not match_or_not:
+#                     print('feature table not matched')
+
+#             if str(code_list) != str(ternary_code_list):
+#                 print('error in exact to ternary match', code_list, ternary_code_list)
+
+#             for key in Exact_Table["tree " + str(tree)]:
+#                 match_or_not = False
+#                 all_True = True
+#                 for code_f in range(num_features):
+#                     if not Exact_Table["tree " + str(tree)][key]['f' + str(code_f) + ' code'] == code_list[code_f]:
+#                         all_True = False
+#                         break
+#                 if all_True:
+#                     vote_list[tree] = int(Exact_Table["tree " + str(tree)][key]['leaf'])
+#                     match_or_not = True
+#                     break
+#             if not match_or_not:
+#                 vote_list[tree] = config['p4 config']["default vote"]
+
+#         switch_prediction = config['p4 config']["default label"]
+#         for key in Exact_Table['decision']:
+#             match_or_not = False
+#             all_True = True
+#             for tree_v in range(num_trees):
+#                 if not Exact_Table["decision"][key]['t' + str(tree_v) + ' vote'] == vote_list[tree_v]:
+#                     all_True = False
+#                     break
+#             if all_True:
+#                 switch_prediction = Exact_Table['decision'][key]['class']
+#                 match_or_not = True
+#                 break
+
+#         switch_proba = sum(vote_list) / len(vote_list)
+#         results.append((switch_prediction, switch_proba))
+
+#     cur_ts = datetime.now()
+#     cur_ts = cur_ts.strftime("%H-%M-%S")
+#     print(f'[{cur_ts}]  Core {core_id} processed {len(batch)} packets.')
+#     return results
+
+def process_batch(batch_indices, test_X, num_trees, num_features, table_ternary, table_exact,
+                  config):
     results = []
     core_id = os.getpid()
 
-    for i in batch:
+    for i in batch_indices:
         vote_list = np.zeros(num_trees).astype(dtype=int).tolist()
         input_feature_value = test_X.values[i]
 
@@ -487,11 +558,10 @@ def process_packets(batch, test_X, num_trees, num_features, Ternary_Table, Exact
             code_list = np.zeros(num_features)
             ternary_code_list = np.zeros(num_features)
 
+            # Match ternary
+            match_or_not = False
             for f in range(num_features):
-                match_or_not = False
-
-                # match ternary
-                TCAM_table = Ternary_Table['feature ' + str(f)]
+                TCAM_table = table_ternary['feature ' + str(f)]
                 keys = list(TCAM_table.keys())
 
                 for count in keys:
@@ -502,48 +572,50 @@ def process_packets(batch, test_X, num_trees, num_features, Ternary_Table, Exact
 
                 if not match_or_not:
                     print('feature table not matched')
-                # match exact
-                code_list[f] = Exact_Table['feature ' + str(f)][str(input_feature_value[f])][tree]
+
+                # Match exact
+                code_list[f] = table_exact['feature ' + str(f)][str(input_feature_value[f])][tree]
                 if not match_or_not:
                     print('feature table not matched')
 
             if str(code_list) != str(ternary_code_list):
                 print('error in exact to ternary match', code_list, ternary_code_list)
 
-            for key in Exact_Table["tree " + str(tree)]:
-                match_or_not = False
+            match_or_not = False
+            for key in table_exact["tree " + str(tree)]:
                 all_True = True
                 for code_f in range(num_features):
-                    if not Exact_Table["tree " + str(tree)][key]['f' + str(code_f) + ' code'] == code_list[code_f]:
+                    if not table_exact["tree " + str(tree)][key]['f' + str(code_f) + ' code'] == code_list[code_f]:
                         all_True = False
                         break
                 if all_True:
-                    vote_list[tree] = int(Exact_Table["tree " + str(tree)][key]['leaf'])
+                    vote_list[tree] = int(table_exact["tree " + str(tree)][key]['leaf'])
                     match_or_not = True
                     break
             if not match_or_not:
                 vote_list[tree] = config['p4 config']["default vote"]
 
-        switch_prediction = config['p4 config']["default label"]
-        for key in Exact_Table['decision']:
-            match_or_not = False
+        match_or_not = False
+        for key in table_exact['decision']:
             all_True = True
             for tree_v in range(num_trees):
-                if not Exact_Table["decision"][key]['t' + str(tree_v) + ' vote'] == vote_list[tree_v]:
+                if not table_exact["decision"][key]['t' + str(tree_v) + ' vote'] == vote_list[tree_v]:
                     all_True = False
                     break
             if all_True:
-                switch_prediction = Exact_Table['decision'][key]['class']
+                switch_prediction = table_exact['decision'][key]['class']
                 match_or_not = True
                 break
+        if not match_or_not:
+            switch_prediction = config['p4 config']["default label"]
 
-        switch_proba = sum(vote_list) / len(vote_list)
-        results.append((switch_prediction, switch_proba))
+        results.append((switch_prediction, sum(vote_list) / len(vote_list)))
 
     cur_ts = datetime.now()
     cur_ts = cur_ts.strftime("%H-%M-%S")
-    print(f'[{cur_ts}]  Core {core_id} processed {len(batch)} packets.')
+    print(f'[{cur_ts}]  Core {core_id} processed {len(batch_indices)} packets.')
     return results
+
 
 def test_tables(sklearn_test_y, test_X, test_y, cur_dataset, cur_trace,
                 config_path=None, threshold=None):
@@ -573,12 +645,11 @@ def test_tables(sklearn_test_y, test_X, test_y, cur_dataset, cur_trace,
 
     batch_size = 10000
 
-    # Create batches of indices
     indices = list(range(np.shape(test_X.values)[0]))
     batches = [indices[i:i + batch_size] for i in range(0, len(indices), batch_size)]
 
-    with ProcessingPool() as pool:
-        results = pool.map(lambda batch: process_packets(batch, test_X, num_trees, num_features, table_ternary, table_exact, config, test_y, sklearn_test_y), batches)
+    with Pool() as pool:
+        results = pool.map(lambda batch: process_batch(batch, test_X, num_trees, num_features, table_ternary, table_exact, config), batches)
 
         for batch_results in results:
             for i, (switch_prediction, switch_proba) in enumerate(batch_results):
