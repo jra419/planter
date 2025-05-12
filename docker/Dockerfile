@@ -127,6 +127,7 @@ COPY --chown=docker:docker ./scripts/packages.txt /opt/packages.txt
 RUN sudo pip3 install -r /opt/packages.txt
 
 RUN sudo pip3 install pathos
+RUN sudo pip3 install scikit-learn-intelex
 
 ##########
 #  Misc  #
