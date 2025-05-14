@@ -126,3 +126,4 @@ tables/
 p4/
 eval/metrics/
 src/tmp/*.tar
+eval/plots/*.png

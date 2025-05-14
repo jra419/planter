@@ -509,6 +509,7 @@ def test_tables(sklearn_test_y, test_X, test_y, cur_dataset, cur_trace,
     error = 0
     switch_test_y = []
     switch_test_y_proba = []
+    test_y_new = []
 
     batch_size = 10000
 
@@ -525,6 +526,8 @@ def test_tables(sklearn_test_y, test_X, test_y, cur_dataset, cur_trace,
 
                 # Calculate correct, same, and error counts
                 original_index = batches[i // batch_size][i % batch_size]  # Get the original index
+                test_y_new = test_y[original_index]
+
                 if switch_prediction == test_y[original_index]:
                     correct += 1
 
@@ -533,7 +536,7 @@ def test_tables(sklearn_test_y, test_X, test_y, cur_dataset, cur_trace,
                 else:
                     error += 1
 
-    eval_metrics(test_y,
+    eval_metrics(test_y_new,
                  switch_test_y,
                  switch_test_y_proba,
                  cur_dataset,
