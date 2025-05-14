@@ -219,14 +219,24 @@ def run_model(train_X, train_y, test_X, test_y, used_features, cur_dataset,
     data_train = xgb.DMatrix(train_X, label=train_y)
     data_test = xgb.DMatrix(test_X, label=test_y)
     watchlist = [(data_test, 'eval'), (data_train, 'train')]
-    param = {'max_depth': num_depth, 'eta': 1, 'silent': 0, 'objective': 'binary:logistic'}
+    # param = {'max_depth': num_depth, 'eta': 1, 'silent': 0, 'objective': 'binary:logistic'}
+    # param = {'max_depth': num_depth, 'eta': 1, 'silent': 0, 'objective': 'multi:softmax', 'num_class': num_classes}
+    param = {'max_depth': num_depth, 'eta': 1, 'silent': 0, 'objective': 'multi:softprob', 'num_class': num_classes}
     bst = xgb.train(param, data_train, num_boost_round=num_boost_rounds, evals=watchlist)
 
     # param = {'max_depth': 8, 'num_class': 2}
     # bst = xgb.train(param, data_train, num_boost_round=200, evals=watchlist)
     bst.dump_model("src/tmp/tree.txt")
-    sklearn_y_predict_proba = bst.predict(data_test)
-    sklearn_y_predict       = np.where(sklearn_y_predict_proba > 0.5, 1, 0)
+
+    sklearn_y_predict_probas = bst.predict(data_test)
+    # sklearn_y_predict       = np.where(sklearn_y_predict_proba > 0.5, 1, 0)
+    sklearn_y_predict       = np.argmax(sklearn_y_predict_probas, axis=1)
+    # sklearn_y_predict_proba = sklearn_y_predict_probas[np.arange(sklearn_y_predict_probas.shape[0]), sklearn_y_predict]
+    sklearn_y_predict_proba = sklearn_y_predict_probas[np.arange(sklearn_y_predict_probas.shape[0]), 1]
+
+    # print(f'sklearn predict_probas: {sklearn_y_predict_probas}')
+    # print(f'sklearn predict: {sklearn_y_predict}')
+    # print(f'sklearn predict_proba: {sklearn_y_predict_proba}')
 
     eval_metrics(test_y,
                  sklearn_y_predict,
@@ -477,6 +487,9 @@ def process_packets(batch, test_X, num_trees, num_features, Ternary_Table, Exact
                 break
 
         switch_proba = sum(vote_list) / len(vote_list)
+        if switch_prediction == 0:
+            switch_proba = 1 - switch_proba
+
         results.append((switch_prediction, switch_proba))
 
     cur_ts = datetime.now()
@@ -526,7 +539,7 @@ def test_tables(sklearn_test_y, test_X, test_y, cur_dataset, cur_trace,
 
                 # Calculate correct, same, and error counts
                 original_index = batches[i // batch_size][i % batch_size]  # Get the original index
-                test_y_new = test_y[original_index]
+                test_y_new.append(test_y[original_index])
 
                 if switch_prediction == test_y[original_index]:
                     correct += 1

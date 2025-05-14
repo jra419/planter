@@ -40,6 +40,14 @@ def eval_metrics(y_test, y_pred, y_pred_proba, cur_dataset, cur_trace,
     except ZeroDivisionError:
         fnr = 0
 
+    print(f'TP:         {tp}')
+    print(f'TN:         {tn}')
+    print(f'FP:         {fp}')
+    print(f'FN:         {fn}')
+    print(f'TPR:        {tpr}')
+    print(f'TNR:        {tnr}')
+    print(f'FPR:        {fpr}')
+    print(f'FNR:        {fnr}')
     print(f'Accuracy:   {accuracy}')
     print(f'Precision:  {precision}')
     print(f'Recall:     {recall}')
