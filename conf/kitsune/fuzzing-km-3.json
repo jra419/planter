@@ -1,0 +1,60 @@
+{
+    "directory config": {
+        "data": "/home/docker/datasets/kitsune/fuzzing/fuzzing.csv",
+        "labels": "/home/docker/datasets/kitsune/fuzzing/fuzzing-labels.csv",
+        "work": "/home/docker/planter"
+    },
+    "model config": {
+        "model": "km",
+        "model size": "3",
+        "number of bits": 0,
+        "random state": 5,
+        "number of classes": 2,
+        "test table": "y"
+    },
+    "data config": {
+        "dataset": "kitsune",
+        "cur_trace": "fuzzing",
+        "number of features": 5,
+        "testing mode": "n"
+    },
+    "timer log": {
+        "load data": {
+            "start": 1747735571.5828655,
+            "end": 1747735610.328013
+        },
+        "train model": {
+            "start": 1747735612.0366414,
+            "end": 1747735613.8643017
+        },
+        "convert model": {
+            "start": 1747735613.8643034,
+            "end": 1747735615.3118265
+        },
+        "python-based test": {
+            "start": 1747735616.4819365,
+            "end": 1747735671.6236172
+        }
+    },
+    "p4 config": {
+        "model": "km",
+        "number of features": 5,
+        "number of classes": 2,
+        "action data bits": 0,
+        "table name": "fuzzing-km-3-ternary_table.json",
+        "feature tbl len": [
+            64586,
+            63651,
+            12,
+            1,
+            246
+        ]
+    },
+    "test config": {
+        "type of test": "classification"
+    },
+    "target config": {
+        "architecture": "tna",
+        "use case": "anomaly_detection"
+    }
+}

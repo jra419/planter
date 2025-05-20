@@ -1,0 +1,60 @@
+{
+    "directory config": {
+        "data": "/home/docker/datasets/kitsune/video-injection/video-injection.csv",
+        "labels": "/home/docker/datasets/kitsune/video-injection/video-injection-labels.csv",
+        "work": "/home/docker/planter"
+    },
+    "model config": {
+        "model": "km",
+        "model size": "3",
+        "number of bits": 0,
+        "random state": 5,
+        "number of classes": 2,
+        "test table": "y"
+    },
+    "data config": {
+        "dataset": "kitsune",
+        "cur_trace": "video-injection",
+        "number of features": 5,
+        "testing mode": "n"
+    },
+    "timer log": {
+        "load data": {
+            "start": 1747736277.0632377,
+            "end": 1747736319.0033736
+        },
+        "train model": {
+            "start": 1747736320.7116952,
+            "end": 1747736322.8229048
+        },
+        "convert model": {
+            "start": 1747736322.822907,
+            "end": 1747736324.1521654
+        },
+        "python-based test": {
+            "start": 1747736325.2440894,
+            "end": 1747736386.1225548
+        }
+    },
+    "p4 config": {
+        "model": "km",
+        "number of features": 5,
+        "number of classes": 2,
+        "action data bits": 0,
+        "table name": "video-injection-km-3-ternary_table.json",
+        "feature tbl len": [
+            63778,
+            54815,
+            17,
+            193,
+            255
+        ]
+    },
+    "test config": {
+        "type of test": "classification"
+    },
+    "target config": {
+        "architecture": "tna",
+        "use case": "anomaly_detection"
+    }
+}

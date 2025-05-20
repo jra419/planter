@@ -1,0 +1,60 @@
+{
+    "directory config": {
+        "data": "/home/docker/datasets/cic-ids-2018/ddos-loic-http/ddos-loic-http.csv",
+        "labels": "/home/docker/datasets/cic-ids-2018/ddos-loic-http/ddos-loic-http-labels.csv",
+        "work": "/home/docker/planter"
+    },
+    "model config": {
+        "model": "km",
+        "model size": "2",
+        "number of bits": 32,
+        "random state": 5,
+        "number of classes": 2,
+        "test table": "y"
+    },
+    "data config": {
+        "dataset": "cic-ids-2018",
+        "cur_trace": "ddos-loic-http",
+        "number of features": 5,
+        "testing mode": "n"
+    },
+    "timer log": {
+        "load data": {
+            "start": 1747734810.1033673,
+            "end": 1747734849.8103926
+        },
+        "train model": {
+            "start": 1747734851.9018133,
+            "end": 1747734853.968745
+        },
+        "convert model": {
+            "start": 1747734853.9687474,
+            "end": 1747734855.9093735
+        },
+        "python-based test": {
+            "start": 1747734856.8497615,
+            "end": 1747734916.620594
+        }
+    },
+    "p4 config": {
+        "model": "km",
+        "number of features": 5,
+        "number of classes": 2,
+        "action data bits": 32,
+        "table name": "active-wiretap-km-2-ternary_table.json",
+        "feature tbl len": [
+            64612,
+            61668,
+            17,
+            193,
+            255
+        ]
+    },
+    "test config": {
+        "type of test": "classification"
+    },
+    "target config": {
+        "architecture": "tna",
+        "use case": "anomaly_detection"
+    }
+}

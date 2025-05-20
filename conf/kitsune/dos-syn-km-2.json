@@ -1,0 +1,60 @@
+{
+    "directory config": {
+        "data": "/home/docker/datasets/kitsune/dos-syn/dos-syn.csv",
+        "labels": "/home/docker/datasets/kitsune/dos-syn/dos-syn-labels.csv",
+        "work": "/home/docker/planter"
+    },
+    "model config": {
+        "model": "km",
+        "model size": "2",
+        "number of bits": 32,
+        "random state": 5,
+        "number of classes": 2,
+        "test table": "y"
+    },
+    "data config": {
+        "dataset": "kitsune",
+        "cur_trace": "dos-syn",
+        "number of features": 5,
+        "testing mode": "n"
+    },
+    "timer log": {
+        "load data": {
+            "start": 1747735257.0743613,
+            "end": 1747735303.523708
+        },
+        "train model": {
+            "start": 1747735305.211123,
+            "end": 1747735306.9020252
+        },
+        "convert model": {
+            "start": 1747735306.9020264,
+            "end": 1747735308.7908745
+        },
+        "python-based test": {
+            "start": 1747735309.686935,
+            "end": 1747735359.7721786
+        }
+    },
+    "p4 config": {
+        "model": "km",
+        "number of features": 5,
+        "number of classes": 2,
+        "action data bits": 32,
+        "table name": "dos-syn-km-2-ternary_table.json",
+        "feature tbl len": [
+            65352,
+            65471,
+            17,
+            193,
+            256
+        ]
+    },
+    "test config": {
+        "type of test": "classification"
+    },
+    "target config": {
+        "architecture": "tna",
+        "use case": "anomaly_detection"
+    }
+}

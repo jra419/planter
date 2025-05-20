@@ -317,10 +317,16 @@ def Planter(iteration = 0):
         config['timer log']['python-based test'] = {}
         config['timer log']['python-based test']['start'] = time.time()
         # =================== python-based test timer ===================
-        main_functions.test_tables(sklearn_test_y, test_X, test_y,
-                                   config['data config']['dataset'],
-                                   config['data config']['cur_trace'],
-                                   config_path=args.config_path, threshold=threshold)
+        if config['model config']['model'] == 'km':
+            main_functions.test_tables(sklearn_test_y, train_X, train_y, test_X, test_y,
+                                    config['data config']['dataset'],
+                                    config['data config']['cur_trace'],
+                                    config_path=args.config_path, threshold=threshold)
+        else:
+            main_functions.test_tables(sklearn_test_y, test_X, test_y,
+                                    config['data config']['dataset'],
+                                    config['data config']['cur_trace'],
+                                    config_path=args.config_path, threshold=threshold)
         # =================== python-based test timer ===================
         config['timer log']['python-based test']['end'] = time.time()
         # =================== python-based test timer ===================
@@ -335,6 +341,10 @@ def Planter(iteration = 0):
     except Exception as e:
         print(f'Error: {e}')
         pass
+
+    if config['model config']['model'] == "km" and config['model config']['model size'] == "3":
+        print('P4 generation not avaliable for current model and config. Exiting.')
+        exit()
 
     # =================== select the target device ===================
     # reload the config file

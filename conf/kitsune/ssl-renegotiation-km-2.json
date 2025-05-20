@@ -1,0 +1,60 @@
+{
+    "directory config": {
+        "data": "/home/docker/datasets/kitsune/ssl-renegotiation/ssl-renegotiation.csv",
+        "labels": "/home/docker/datasets/kitsune/ssl-renegotiation/ssl-renegotiation-labels.csv",
+        "work": "/home/docker/planter"
+    },
+    "model config": {
+        "model": "km",
+        "model size": "2",
+        "number of bits": 32,
+        "random state": 5,
+        "number of classes": 2,
+        "test table": "y"
+    },
+    "data config": {
+        "dataset": "kitsune",
+        "cur_trace": "ssl-renegotiation",
+        "number of features": 5,
+        "testing mode": "n"
+    },
+    "timer log": {
+        "load data": {
+            "start": 1747735994.5396488,
+            "end": 1747736031.5930004
+        },
+        "train model": {
+            "start": 1747736033.294546,
+            "end": 1747736034.662911
+        },
+        "convert model": {
+            "start": 1747736034.6629128,
+            "end": 1747736036.4225118
+        },
+        "python-based test": {
+            "start": 1747736037.2451081,
+            "end": 1747736074.0747764
+        }
+    },
+    "p4 config": {
+        "model": "km",
+        "number of features": 5,
+        "number of classes": 2,
+        "action data bits": 32,
+        "table name": "ssl-renegotiation-km-2-ternary_table.json",
+        "feature tbl len": [
+            65443,
+            55651,
+            17,
+            193,
+            252
+        ]
+    },
+    "test config": {
+        "type of test": "classification"
+    },
+    "target config": {
+        "architecture": "tna",
+        "use case": "anomaly_detection"
+    }
+}

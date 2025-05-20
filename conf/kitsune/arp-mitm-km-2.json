@@ -1,0 +1,60 @@
+{
+    "directory config": {
+        "data": "/home/docker/datasets/kitsune/arp-mitm/arp-mitm.csv",
+        "labels": "/home/docker/datasets/kitsune/arp-mitm/arp-mitm-labels.csv",
+        "work": "/home/docker/planter"
+    },
+    "model config": {
+        "model": "km",
+        "model size": "2",
+        "number of bits": 32,
+        "random state": 5,
+        "number of classes": 2,
+        "test table": "y"
+    },
+    "data config": {
+        "dataset": "kitsune",
+        "cur_trace": "arp-mitm",
+        "number of features": 5,
+        "testing mode": "n"
+    },
+    "timer log": {
+        "load data": {
+            "start": 1747735026.6187174,
+            "end": 1747735070.1959429
+        },
+        "train model": {
+            "start": 1747735072.168585,
+            "end": 1747735074.3289154
+        },
+        "convert model": {
+            "start": 1747735074.328917,
+            "end": 1747735076.1828096
+        },
+        "python-based test": {
+            "start": 1747735077.072816,
+            "end": 1747735139.8728735
+        }
+    },
+    "p4 config": {
+        "model": "km",
+        "number of features": 5,
+        "number of classes": 2,
+        "action data bits": 32,
+        "table name": "arp-mitm-km-2-ternary_table.json",
+        "feature tbl len": [
+            65271,
+            60235,
+            17,
+            24,
+            252
+        ]
+    },
+    "test config": {
+        "type of test": "classification"
+    },
+    "target config": {
+        "architecture": "tna",
+        "use case": "anomaly_detection"
+    }
+}

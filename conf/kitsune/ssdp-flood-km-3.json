@@ -1,0 +1,60 @@
+{
+    "directory config": {
+        "data": "/home/docker/datasets/kitsune/ssdp-flood/ssdp-flood.csv",
+        "labels": "/home/docker/datasets/kitsune/ssdp-flood/ssdp-flood-labels.csv",
+        "work": "/home/docker/planter"
+    },
+    "model config": {
+        "model": "km",
+        "model size": "3",
+        "number of bits": 0,
+        "random state": 5,
+        "number of classes": 2,
+        "test table": "y"
+    },
+    "data config": {
+        "dataset": "kitsune",
+        "cur_trace": "ssdp-flood",
+        "number of features": 5,
+        "testing mode": "n"
+    },
+    "timer log": {
+        "load data": {
+            "start": 1747735837.996613,
+            "end": 1747735906.466703
+        },
+        "train model": {
+            "start": 1747735908.21948,
+            "end": 1747735910.916497
+        },
+        "convert model": {
+            "start": 1747735910.9164991,
+            "end": 1747735912.4264557
+        },
+        "python-based test": {
+            "start": 1747735913.626838,
+            "end": 1747735992.8200989
+        }
+    },
+    "p4 config": {
+        "model": "km",
+        "number of features": 5,
+        "number of classes": 2,
+        "action data bits": 0,
+        "table name": "ssdp-flood-km-3-ternary_table.json",
+        "feature tbl len": [
+            65535,
+            65448,
+            17,
+            193,
+            255
+        ]
+    },
+    "test config": {
+        "type of test": "classification"
+    },
+    "target config": {
+        "architecture": "tna",
+        "use case": "anomaly_detection"
+    }
+}
