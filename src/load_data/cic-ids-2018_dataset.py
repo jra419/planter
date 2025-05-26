@@ -77,6 +77,7 @@ def load_data(num_features, data, labels):
     print('df_full.head:')
     print(df_full.head())
 
+    print(f'TEST size before: {len(df_full)}')
     #Replace values with NaN, inf, -inf
     df_full.replace([np.inf, -np.inf], np.nan)
     #print('')
@@ -84,6 +85,7 @@ def load_data(num_features, data, labels):
     ##Remove rows containing NaN
     df_full.dropna(how="any", inplace = True)
     df_full = df_full[df_full.replace([np.inf, -np.inf], np.nan).notnull().all(axis=1)]
+    print(f'TEST size after: {len(df_full)}')
 
     df_full.describe()
     df_full.info()
@@ -94,8 +96,8 @@ def load_data(num_features, data, labels):
     X = copy.deepcopy(df_full[used_features].astype('int'))
     y = copy.deepcopy(df_full['label'].astype('int'))
 
-    # X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=1000000)
-    X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=0.2, stratify=y, random_state=42, shuffle=True)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=1000000)
+    # X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=0.2, stratify=y, random_state=42, shuffle=True)
 
     print('dataset is loaded')
 
