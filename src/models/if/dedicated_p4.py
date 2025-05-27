@@ -261,7 +261,6 @@ def create_load_tables(fname, fjson, config, planter_config):
         tload.write("        num = cont * '0' + num\n")
         tload.write("    return num\n\n")
 
-
         for i in range(0, config['num_features']):
             tload.write("print('load feature " + str(i) + " table with',len(table['feature " + str( i) + "'].keys()),'entries')\n" \
                         "for k in range(len(table['feature " + str( i) + "'].keys())):\n")
