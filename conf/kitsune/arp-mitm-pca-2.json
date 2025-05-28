@@ -1,0 +1,61 @@
+{
+    "directory config": {
+        "data": "/home/docker/datasets/kitsune/arp-mitm/arp-mitm.csv",
+        "labels": "/home/docker/datasets/kitsune/arp-mitm/arp-mitm-labels.csv",
+        "work": "/home/docker/planter"
+    },
+    "model config": {
+        "model": "pca",
+        "model size": "2",
+        "number of bits": 32,
+        "num components": 2,
+        "number of classes": 2,
+        "test table": "y"
+    },
+    "data config": {
+        "dataset": "kitsune",
+        "cur_trace": "arp-mitm",
+        "number of features": 5,
+        "testing mode": "n"
+    },
+    "timer log": {
+        "load data": {
+            "start": 1748353442.8935785,
+            "end": 1748353486.9636364
+        },
+        "train model": {
+            "start": 1748353487.0766022,
+            "end": 1748353487.1940496
+        },
+        "convert model": {
+            "start": 1748353487.1940513,
+            "end": 1748353489.8025246
+        },
+        "python-based test": {
+            "start": 1748353490.6776419,
+            "end": 1748353534.8828402
+        }
+    },
+    "p4 config": {
+        "model": "PCA",
+        "number of features": 5,
+        "number of classes": 2,
+        "action data bits": 32,
+        "table name": "arp-mitm-pca-2-exact_table.json",
+        "feature tbl len": [
+            65408,
+            60288,
+            18,
+            193,
+            256
+        ],
+        "num components": 2
+    },
+    "test config": {
+        "type of test": "dimension_reduction"
+    },
+    "target config": {
+        "architecture": "tna",
+        "use case": "anomaly_detection"
+    }
+}

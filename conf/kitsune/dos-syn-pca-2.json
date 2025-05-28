@@ -1,0 +1,61 @@
+{
+    "directory config": {
+        "data": "/home/docker/datasets/kitsune/dos-syn/dos-syn.csv",
+        "labels": "/home/docker/datasets/kitsune/dos-syn/dos-syn-labels.csv",
+        "work": "/home/docker/planter"
+    },
+    "model config": {
+        "model": "pca",
+        "model size": "2",
+        "number of bits": 32,
+        "num components": 2,
+        "number of classes": 2,
+        "test table": "y"
+    },
+    "data config": {
+        "dataset": "kitsune",
+        "cur_trace": "dos-syn",
+        "number of features": 5,
+        "testing mode": "n"
+    },
+    "timer log": {
+        "load data": {
+            "start": 1748353633.6539505,
+            "end": 1748353680.6312225
+        },
+        "train model": {
+            "start": 1748353680.7141984,
+            "end": 1748353680.8337462
+        },
+        "convert model": {
+            "start": 1748353680.8337483,
+            "end": 1748353683.6150534
+        },
+        "python-based test": {
+            "start": 1748353684.5897007,
+            "end": 1748353719.7524316
+        }
+    },
+    "p4 config": {
+        "model": "PCA",
+        "number of features": 5,
+        "number of classes": 2,
+        "action data bits": 32,
+        "table name": "dos-syn-pca-2-exact_table.json",
+        "feature tbl len": [
+            65420,
+            65524,
+            18,
+            193,
+            256
+        ],
+        "num components": 2
+    },
+    "test config": {
+        "type of test": "dimension_reduction"
+    },
+    "target config": {
+        "architecture": "tna",
+        "use case": "anomaly_detection"
+    }
+}

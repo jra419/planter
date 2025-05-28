@@ -1,0 +1,61 @@
+{
+    "directory config": {
+        "data": "/home/docker/datasets/kitsune/ssdp-flood/ssdp-flood.csv",
+        "labels": "/home/docker/datasets/kitsune/ssdp-flood/ssdp-flood-labels.csv",
+        "work": "/home/docker/planter"
+    },
+    "model config": {
+        "model": "pca",
+        "model size": "2",
+        "number of bits": 32,
+        "num components": 2,
+        "number of classes": 2,
+        "test table": "y"
+    },
+    "data config": {
+        "dataset": "kitsune",
+        "cur_trace": "ssdp-flood",
+        "number of features": 5,
+        "testing mode": "n"
+    },
+    "timer log": {
+        "load data": {
+            "start": 1748354124.0014822,
+            "end": 1748354196.2299385
+        },
+        "train model": {
+            "start": 1748354196.3271263,
+            "end": 1748354196.5012343
+        },
+        "convert model": {
+            "start": 1748354196.5012364,
+            "end": 1748354199.2707293
+        },
+        "python-based test": {
+            "start": 1748354200.1972198,
+            "end": 1748354260.8879542
+        }
+    },
+    "p4 config": {
+        "model": "PCA",
+        "number of features": 5,
+        "number of classes": 2,
+        "action data bits": 32,
+        "table name": "ssdp-flood-pca-2-exact_table.json",
+        "feature tbl len": [
+            65536,
+            65501,
+            18,
+            193,
+            256
+        ],
+        "num components": 2
+    },
+    "test config": {
+        "type of test": "dimension_reduction"
+    },
+    "target config": {
+        "architecture": "tna",
+        "use case": "anomaly_detection"
+    }
+}

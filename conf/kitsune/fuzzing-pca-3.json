@@ -1,0 +1,61 @@
+{
+    "directory config": {
+        "data": "/home/docker/datasets/kitsune/fuzzing/fuzzing.csv",
+        "labels": "/home/docker/datasets/kitsune/fuzzing/fuzzing-labels.csv",
+        "work": "/home/docker/planter"
+    },
+    "model config": {
+        "model": "pca",
+        "model size": "3",
+        "number of bits": 0,
+        "num components": 2,
+        "number of classes": 2,
+        "test table": "y"
+    },
+    "data config": {
+        "dataset": "kitsune",
+        "cur_trace": "fuzzing",
+        "number of features": 5,
+        "testing mode": "n"
+    },
+    "timer log": {
+        "load data": {
+            "start": 1748437249.5842605,
+            "end": 1748437287.8008935
+        },
+        "train model": {
+            "start": 1748437287.89438,
+            "end": 1748437288.009571
+        },
+        "convert model": {
+            "start": 1748437288.0095737,
+            "end": 1748437290.2197697
+        },
+        "python-based test": {
+            "start": 1748437291.4229312,
+            "end": 1748437332.196475
+        }
+    },
+    "p4 config": {
+        "model": "PCA",
+        "number of features": 5,
+        "number of classes": 2,
+        "action data bits": 0,
+        "table name": "fuzzing-pca-3-exact_table.json",
+        "feature tbl len": [
+            65029,
+            64094,
+            18,
+            193,
+            251
+        ],
+        "num components": 2
+    },
+    "test config": {
+        "type of test": "dimension_reduction"
+    },
+    "target config": {
+        "architecture": "tna",
+        "use case": "anomaly_detection"
+    }
+}

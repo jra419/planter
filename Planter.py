@@ -317,7 +317,7 @@ def Planter(iteration = 0):
         config['timer log']['python-based test'] = {}
         config['timer log']['python-based test']['start'] = time.time()
         # =================== python-based test timer ===================
-        if config['model config']['model'] == 'km':
+        if config['model config']['model'] == 'km' or config['model config']['model'] == 'pca':
             main_functions.test_tables(sklearn_test_y, train_X, train_y, test_X, test_y,
                                     config['data config']['dataset'],
                                     config['data config']['cur_trace'],
