@@ -22,6 +22,7 @@ from src.functions.Range_to_TCAM_Top_Down import *
 from src.functions.Range_to_LPM import Table_to_LPM
 from src.functions.Muti_Exact_to_LPM import *
 from eval.eval_metrics import eval_metrics
+from sklearn.tree import _tree
 
 def get_lineage(tree, feature_names, file):
     left            = tree.tree_.children_left
@@ -86,7 +87,7 @@ def get_lineage(tree, feature_names, file):
 def print_tree(tree, feature_names):
     tree_           = tree.tree_
     feature_name    = [
-        feature_names[i] if i != tree.TREE_UNDEFINED else "undefined!"
+        feature_names[i] if i != _tree.TREE_UNDEFINED else "undefined!"
         for i in tree_.feature
     ]
     # print('feature_name:', feature_name)
@@ -97,7 +98,7 @@ def print_tree(tree, feature_names):
     def recurse(node, depth, share):
         indent = "  " * depth
 
-        if tree_.feature[node] != tree.TREE_UNDEFINED:
+        if tree_.feature[node] != _tree.TREE_UNDEFINED:
             name        = feature_name[node]
             share[name] = {}
             threshold   = tree_.threshold[node]
@@ -320,14 +321,11 @@ def votes_to_class(tree_num, vote_list, num_trees, num_classes, g_table, num,
 
         for t in range(num_trees):
             vote += leaf_info["tree "+str(t)][vote_list[t]]
-        # if vote.index(np.max(vote))== 0:
-        # if True :
         g_table['votes to class'][num] = {}
 
         for t in range(len(vote_list)):
             g_table['votes to class'][num]['t'+str(t)+' vote'] = \
                     leaf_info["tree "+str(t)][vote_list[t]]
-            # g_table['votes to class'][num]['t'+str(t)+' vote'] = vote_list[t]
 
         if vote >= path_len_threshold*num_trees:
             g_table['votes to class'][num]['class'] = 0
@@ -353,8 +351,6 @@ def run_model(train_X, train_y, test_X, test_y, used_features, cur_dataset,
         config = json.load(open(config_path, 'r'))
     else:
         config = json.load(open('conf/planter_config.json', 'r'))
-
-    config['model config']['number of classes'] = int(np.max(train_y) + 1)
 
     num_features    = config['data config']['number of features']
     cur_model       = config['model config']['model']
@@ -629,7 +625,6 @@ def test_tables(sklearn_test_y, test_X, test_y, cur_dataset, cur_trace,
 
         switch_test_y_proba += [ (-1.0) * sum(vote_list)/len(vote_list) ]
         switch_test_y       += [switch_prediction]
-
 
     eval_metrics(test_y,
                  switch_test_y,
