@@ -1,7 +1,7 @@
 {
     "directory config": {
-        "data": "/home/docker/datasets/kitsune/active-wiretap/active-wiretap.csv",
-        "labels": "/home/docker/datasets/kitsune/active-wiretap/active-wiretap-labels.csv",
+        "data": "/home/docker/datasets/cic-ids-2018/botnet/botnet.csv",
+        "labels": "/home/docker/datasets/cic-ids-2018/botnet/botnet-labels.csv",
         "work": "/home/docker/planter"
     },
     "model config": {
@@ -15,8 +15,8 @@
         "test table": "y"
     },
     "data config": {
-        "dataset": "kitsune",
-        "cur_trace": "active-wiretap",
+        "dataset": "cic-ids-2018",
+        "cur_trace": "botnet",
         "number of features": 5,
         "testing mode": "n"
     },

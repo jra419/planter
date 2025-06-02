@@ -246,6 +246,11 @@ def main(config_path):
     cur_trace   = planter_config['data config']['cur_trace']
     cur_model   = planter_config['model config']['model']
     model_size  = planter_config['model config']['model size']
+
+    last_n = cur_dataset[-3:]
+    if last_n == '-ad':
+        cur_dataset = cur_dataset [:-3]
+
     # if planter_config['model config']['model'] == 'rf':
     #     num_trees   = planter_config['model config']['number of trees']
     #     depth       = planter_config['model config']['number of depth']

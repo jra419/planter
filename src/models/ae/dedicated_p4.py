@@ -16,16 +16,15 @@ import json
 
 
 def load_config(fname):
-    Planter_config = json.load(open('src/configs/' + fname, 'r'))
-    config_file = Planter_config['p4 config']
-    config = {}
-    config['num_features'] = config_file["number of features"]
-    config['num_classes'] = config_file["number of classes"]
-    config['num_bits'] = Planter_config['p4 config']["action data bits"]
-    config['f_tbl_len'] = Planter_config['p4 config']["feature tbl len"]
-    config['num_axis'] = Planter_config['p4 config']["num components"]
-    return config, Planter_config
-
+    planter_config          = json.load(open(fname, 'r'))
+    config_file             = planter_config['p4 config']
+    config                  = {}
+    config['num_features']  = config_file["number of features"]
+    config['num_classes']   = config_file["number of classes"]
+    config['num_bits']      = planter_config['p4 config']["action data bits"]
+    config['f_tbl_len']     = planter_config['p4 config']["feature tbl len"]
+    config['num_axis']      = planter_config['p4 config']["num components"]
+    return config, planter_config
 
 def add_model_intro(fname, config):
     with open(fname, 'a') as intro:
@@ -60,7 +59,6 @@ def add_model_intro(fname, config):
                      " * is dropped\n"
                      " */\n\n")
 
-
 def separate_metadata(fname, config):
     with open(fname, 'a') as headers:
         # write the metadata struct
@@ -72,9 +70,6 @@ def separate_metadata(fname, config):
 
 
         # headers.write("}\n\n")
-
-
-
 
 def separate_tables(fname, config):
     with open(fname, 'a') as ingress:
@@ -91,8 +86,6 @@ def separate_tables(fname, config):
                 ingress.write("        meta.middle_ax" + str(ax)+" = meta.middle_ax" + str(ax)+" + (bit<32>)f"+str(f)+"ax"+str(ax) +";\n")
             ingress.write("    }\n\n")
 
-
-
         for f in range(0, config['num_features']):
             ingress.write("    table lookup_feature" + str(f) + " {\n"
                      "        key = { hdr.Planter.feature" + str(f) + ":exact; }\n"
@@ -103,7 +96,6 @@ def separate_tables(fname, config):
                      "        size = " + str( config['f_tbl_len'][f]) + ";\n"
                      "        default_action = NoAction;\n"
                      "    }\n\n")
-
 
         ingress.write("    action read_bias(")
         for ax in range(0, config['num_axis']):
@@ -116,8 +108,6 @@ def separate_tables(fname, config):
         for ax in range(0, config['num_axis']):
             ingress.write("        meta.middle_ax" + str(ax)+ " = (bit<32>)bias_ax"+str(ax) +";\n")
         ingress.write("    }\n\n")
-
-
 
         ingress.write("    table bias {\n"
                       "        key = {hdr.Planter.ver:exact;}\n"
@@ -132,8 +122,6 @@ def separate_tables(fname, config):
         for ax in range(0, config['num_axis']):
             ingress.write("        hdr.Planter.feature"+str(ax)+" = meta.middle_ax" + str(ax) + ";\n")
         ingress.write("    }\n\n")
-
-
 
 def separate_logics(fname, config):
     with open(fname, 'a') as ingress:
@@ -151,22 +139,29 @@ def separate_logics(fname, config):
                       # "        send(3);\n")
                       "        send(ig_intr_md.ingress_port);\n")
 
-
-
 ###################################################
 # Create a tables load script
 # input: table script file name, tables data json file name, configuration
 # output: none
 ###################################################
 
-def create_tables(Planter_config):
+def create_tables(planter_config):
     Table_entries = []
-    config_file = 'src/configs/Planter_config.json'
-    Planter_config = json.load(open(config_file, 'r'))
-    num_features = Planter_config['data config']['number of features']
-    num_classes = Planter_config['model config']['number of classes']
-    num_components = Planter_config['model config']['num components']
-    Exact_Table = json.load(open('Tables/Exact_Table.json', 'r'))
+
+    cur_dataset     = planter_config['data config']['dataset']
+    cur_trace       = planter_config['data config']['cur_trace']
+    num_features    = planter_config['data config']['number of features']
+    cur_model       = planter_config['model config']['model']
+    model_size      = planter_config['model config']['model size']
+    num_components  = planter_config['model config']['num components']
+
+    last_n = cur_dataset[-3:]
+    if last_n == '-ad':
+        cur_dataset = cur_dataset [:-3]
+
+    Exact_Table = json.load(open(f'eval/tables/{cur_dataset}/{cur_model}/{cur_trace}-'
+                                 f'{cur_model}-{model_size}-exact_table.json', 'r'))
+
     for f in range(num_features):
         for idx in Exact_Table['feature ' + str(f)]:
             key_value = int(idx)
@@ -187,20 +182,29 @@ def create_tables(Planter_config):
     Entry["action_name"] = "SwitchIngress.read_bias"
     Entry["action_params"] = {}
     for ax in range(num_components):
-        Entry["action_params"]["bias_ax" + str(ax)] = np.int(Exact_Table["bias"]['ax' + str(ax)])
+        Entry["action_params"]["bias_ax" + str(ax)] = int(Exact_Table["bias"]['ax' + str(ax)])
     Table_entries += [Entry]
 
     Runtime = {}
     Runtime["table_entries"] = Table_entries
-    json.dump(Runtime, open('Tables/Runtime.json', 'w'), indent=4)
-    # print('BMv2 runtime file is partly generated')
+    json.dump(Runtime, open(f'eval/tables/{cur_dataset}/{cur_model}/{cur_trace}-{cur_model}-'
+                                  f'{model_size}-runtime.json', 'w'), indent=4)
 
+def create_tables_command(fname, config):
+    cur_dataset     = config['data config']['dataset']
+    cur_trace       = config['data config']['cur_trace']
+    cur_model       = config['model config']['model']
+    model_size      = config['model config']['model size']
+    num_components  = config['model config']['num components']
+    num_features    = config['data config']['number of features']
 
-def create_tables_Commend(fname, config):
-    num_features = config['data config']['number of features']
-    num_classes = config['model config']['number of classes']
-    num_components = config['model config']['num components']
-    Exact_Table = json.load(open('Tables/Exact_Table.json', 'r'))
+    last_n = cur_dataset[-3:]
+    if last_n == '-ad':
+        cur_dataset = cur_dataset [:-3]
+
+    Exact_Table = json.load(open(f'eval/tables/{cur_dataset}/{cur_model}/{cur_trace}-'
+                                 f'{cur_model}-{model_size}-exact_table.json', 'r'))
+
     with open(fname, 'w') as file:
         for f in range(num_features):
             for idx in Exact_Table['feature ' + str(f)]:
@@ -212,29 +216,33 @@ def create_tables_Commend(fname, config):
                 file.write("\n")
             file.write("\n")
 
-
-
         file.write("table_add SwitchIngress.bias read_bias 1 => " )
 
         for ax in range(num_components):
             file.write(str(label) + " ")
-            label = np.int(Exact_Table["bias"]['ax' + str(ax)])
+            label = int(Exact_Table["bias"]['ax' + str(ax)])
             file.write("\n")
         file.write("\n")
 
+def create_load_tables(fname, fjson, config, planter_config):
+    work_root = planter_config['directory config']['work']
 
+    create_tables(planter_config)
 
+    # command_file = work_root + "/src/targets/bmv2/software/model_test/test_environment/s1-commands.txt"
+    # create_tables_command(command_file, Planter_config)
 
-def create_load_tables(fname, fjson, config, Planter_config, file_name):
-    work_root = Planter_config['directory config']['work']
+    cur_dataset = planter_config['data config']['dataset']
+    cur_trace   = planter_config['data config']['cur_trace']
+    cur_model   = planter_config['model config']['model']
+    model_size  = planter_config['model config']['model size']
 
-    create_tables(Planter_config)
+    last_n = cur_dataset[-3:]
+    if last_n == '-ad':
+        cur_dataset = cur_dataset [:-3]
 
-    commend_file = work_root + "/src/targets/bmv2/software/model_test/test_environment/s1-commands.txt"
-    create_tables_Commend(commend_file, Planter_config)
-
-    commend_file = work_root + "/Tables/s1-commands.txt"
-    create_tables_Commend(commend_file, Planter_config)
+    command_file = work_root + f'/eval/tables/{cur_dataset}/{cur_model}/{cur_trace}-{cur_model}-{model_size}-s1-commands.txt'
+    create_tables_command(command_file, planter_config)
 
     config['debug_load_table'] = False
     with open(fname, 'a') as tload:
@@ -248,7 +256,8 @@ def create_load_tables(fname, fjson, config, Planter_config, file_name):
                     "table = json.load(open('./Tables/" + fjson + "','r'))\n"
                     "Planter_config = json.load(open('./src/configs/Planter_config.json','r'))\n"\
                     "config = Planter_config['p4 config']\n\n")
-        tload.write((config['debug_load_table']) * ('# ') + "Ingress = bfrt."+file_name+".pipe.SwitchIngress\n")
+        tload.write((config['debug_load_table']) * ('# ')                       \
+                    + "Ingress = bfrt."+ cur_trace + "-" + cur_model + "- " + model_size + ".pipe.SwitchIngress\n")
         tload.write((config['debug_load_table']) * ('# ') + "Ingress.clear()" + "\n\n")
 
         tload.write("def ten_to_bin(num, count):\n")
@@ -258,12 +267,11 @@ def create_load_tables(fname, fjson, config, Planter_config, file_name):
         tload.write("        num = cont * '0' + num\n")
         tload.write("    return num\n\n")
 
-
         for f in range(0, config['num_features']):
             tload.write("print('load feature " + str(f) + " table with',len(table['feature " + str(f) + "'].keys()),'entries')\n"
                         "for k in range(len(table['feature " + str(f) + "'].keys())):\n")
             tload.write("    key = str(k)\n")
-            
+
             tload.write("    " + (config['debug_load_table'] * "# ") +
                         "Ingress.lookup_feature" + str(f) +
                         ".add_with_extract_feature" + str(f) +
@@ -281,8 +289,6 @@ def create_load_tables(fname, fjson, config, Planter_config, file_name):
                     "'][key][1],table['feature " + str(f) +
                     "'][key][0], int(key), int(codes,2)), end='')\n\n")
 
-
-
         tload.write("print('load_bias table with 1 entries')\n")
         tload.write((config['debug_load_table'] * "# ") +
                     "Ingress.bias.add_with_read_bias("
@@ -294,5 +300,3 @@ def create_load_tables(fname, fjson, config, Planter_config, file_name):
                 tload.write(", table['bias']['ax" + str(ax) + "']")
 
         tload.write(")\n\n")
-
-

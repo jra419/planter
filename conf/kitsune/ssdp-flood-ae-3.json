@@ -1,22 +1,22 @@
 {
     "directory config": {
-        "data": "/home/docker/datasets/kitsune/active-wiretap/active-wiretap.csv",
-        "labels": "/home/docker/datasets/kitsune/active-wiretap/active-wiretap-labels.csv",
+        "data": "/home/docker/datasets/kitsune/ssdp-flood/ssdp-flood.csv",
+        "labels": "/home/docker/datasets/kitsune/ssdp-flood/ssdp-flood-labels.csv",
         "work": "/home/docker/planter"
     },
     "model config": {
         "model": "ae",
-        "model size": "2",
+        "model size": "3",
         "num components": 2,
         "learning rate": 0.01,
         "batch size": 100,
         "num epoch": 50,
-        "number of bits": 32,
+        "number of bits": 0,
         "test table": "y"
     },
     "data config": {
         "dataset": "kitsune",
-        "cur_trace": "active-wiretap",
+        "cur_trace": "ssdp-flood",
         "number of features": 5,
         "testing mode": "n"
     },

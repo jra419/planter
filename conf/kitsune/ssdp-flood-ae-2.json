@@ -1,7 +1,7 @@
 {
     "directory config": {
-        "data": "/home/docker/datasets/kitsune/active-wiretap/active-wiretap.csv",
-        "labels": "/home/docker/datasets/kitsune/active-wiretap/active-wiretap-labels.csv",
+        "data": "/home/docker/datasets/kitsune/ssdp-flood/ssdp-flood.csv",
+        "labels": "/home/docker/datasets/kitsune/ssdp-flood/ssdp-flood-labels.csv",
         "work": "/home/docker/planter"
     },
     "model config": {
@@ -16,7 +16,7 @@
     },
     "data config": {
         "dataset": "kitsune",
-        "cur_trace": "active-wiretap",
+        "cur_trace": "ssdp-flood",
         "number of features": 5,
         "testing mode": "n"
     },
