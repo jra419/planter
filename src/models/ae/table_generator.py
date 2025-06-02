@@ -126,8 +126,8 @@ def run_model(train_X, train_y, test_X, test_y, used_features, cur_dataset,
             optimizer.step()
             total_loss += loss
         # if epoch % 10 == 0:
-            print(f'[Train] Cur epoch: {epoch}')
-            print('[Train] Training loss {}'.format(total_loss.data.numpy()),end=" ")
+        print(f'[Train] Cur epoch: {epoch}')
+        print('[Train] Training loss {}'.format(total_loss.data.numpy()),end=" ")
 
     # =================== train model timer ===================
     config['timer log']['train model']['end'] = time.time()
