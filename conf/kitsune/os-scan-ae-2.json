@@ -12,6 +12,7 @@
         "batch size": 100,
         "num epoch": 50,
         "number of bits": 32,
+        "number of classes": 2,
         "test table": "y"
     },
     "data config": {
