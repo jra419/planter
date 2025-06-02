@@ -292,13 +292,8 @@ def Planter(iteration = 0):
                                              config['data config']['cur_trace'],
                                              config_path=args.config_path)
 
-    threshold = -1
-
-    if config["model config"]["model"] == "Autoencoder":
-        sklearn_test_y  = model_output[0]
-        threshold       = model_output[1]
-    else:
-        sklearn_test_y = model_output
+    threshold       = -1
+    sklearn_test_y  = model_output
 
     # reload the config file
     if args.config_path:
@@ -317,7 +312,9 @@ def Planter(iteration = 0):
         config['timer log']['python-based test'] = {}
         config['timer log']['python-based test']['start'] = time.time()
         # =================== python-based test timer ===================
-        if config['model config']['model'] == 'km' or config['model config']['model'] == 'pca':
+        if config['model config']['model'] == 'km' \
+                or config['model config']['model'] == 'pca' \
+                or config['model config']['model'] == 'ae':
             main_functions.test_tables(sklearn_test_y, train_X, train_y, test_X, test_y,
                                     config['data config']['dataset'],
                                     config['data config']['cur_trace'],
