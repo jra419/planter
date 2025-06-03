@@ -84,20 +84,27 @@ def run_model(train_X, train_y, test_X, test_y, used_features, cur_dataset,
     # x = MMScaler.fit_transform(x)
     # iforestX = x
 
-    ###### Convert input data to the dataset type accepted by the neural network, set batch size to 10
-    tensor_x = torch.from_numpy(cur_X.to_numpy().astype(np.float32))
-    tensor_y = torch.from_numpy(cur_y.astype(np.float32))
+    ###### Convert input data to the dataset type accepted by the neural network,
+    # set batch size to 10
+
+    tensor_x = torch.from_numpy(train_X.to_numpy().astype(np.float32))
+    tensor_y = torch.from_numpy(train_y.astype(np.float32))
+
     # tensor_x = torch.from_numpy(train_X.to_numpy().astype(np.float32))
     # tensor_y = torch.from_numpy(train_y.astype(np.float32))
     # X_new = copy.deepcopy(test_X)
     # sklearn_X_new = copy.deepcopy(test_X)
+
     sklearn_X_new = copy.deepcopy(cur_X)
-    # test_X = torch.from_numpy(test_X.to_numpy().astype(np.float32))
-    # test_y = torch.from_numpy(test_y.astype(np.float32))
-    my_dataset = TensorDataset(tensor_x, tensor_y)
-    # my_dataset = TensorDataset(tensor_x)
-    # my_test_dataset = TensorDataset(test_X, test_y)
-    my_dataset_loader = DataLoader(my_dataset, batch_size=batch_size, shuffle=False)
+
+    test_X = torch.from_numpy(cur_X.to_numpy().astype(np.float32))
+    test_y = torch.from_numpy(cur_y.astype(np.float32))
+
+    dataset_train   = TensorDataset(tensor_x, tensor_y)
+    dataset_test    = TensorDataset(test_X, test_y)
+
+    dataset_train_loader    = DataLoader(dataset_train, batch_size=batch_size, shuffle=False)
+    dataset_test_loader     = DataLoader(dataset_test, batch_size=batch_size, shuffle=False)
 
     model = autoencoder(num_features, num_components)
 
@@ -117,7 +124,7 @@ def run_model(train_X, train_y, test_X, test_y, used_features, cur_dataset,
 
     for epoch in range(num_epoch):
         total_loss = 0
-        for i, (x, y) in enumerate(my_dataset_loader):
+        for i, (x, y) in enumerate(dataset_train_loader):
             _, pred = model(V(x))
             loss    = criterion(pred, x)
 
@@ -127,7 +134,7 @@ def run_model(train_X, train_y, test_X, test_y, used_features, cur_dataset,
             total_loss += loss
         # if epoch % 10 == 0:
         print(f'[Train] Cur epoch: {epoch}')
-        print('[Train] Training loss {}'.format(total_loss.data.numpy()),end=" ")
+        print('[Train] Training loss {}'.format(total_loss.data.numpy()))
 
     # =================== train model timer ===================
     config['timer log']['train model']['end'] = time.time()
@@ -224,7 +231,7 @@ def run_model(train_X, train_y, test_X, test_y, used_features, cur_dataset,
 
     x_ = []
     y_ = []
-    for i, (x, y) in enumerate(my_dataset):
+    for i, (x, y) in enumerate(dataset_test):
         _, pred = model(V(x))
         dimension = _.data.numpy()
         for ax in range(num_components):
