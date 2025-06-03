@@ -11,18 +11,21 @@
 # Functions: This file is responsible for training, algorithm mapping, and software testing of the ML model.
 #            Please refer to ./Docs/Planter_User_Document.pdf or further information.
 
-import numpy as np
 from sklearn.ensemble import IsolationForest
-import math
-import json
-import copy
-import re
 from src.functions.json_encoder import NpEncoder
 from src.functions.Range_to_TCAM_Top_Down import *
 from src.functions.Range_to_LPM import Table_to_LPM
 from src.functions.Muti_Exact_to_LPM import *
 from eval.eval_metrics import eval_metrics
 from sklearn.tree import _tree
+from pathos.multiprocessing import ProcessingPool as Pool
+from datetime import datetime
+import os
+import numpy as np
+import math
+import json
+import copy
+import re
 
 def get_lineage(tree, feature_names, file):
     left            = tree.tree_.children_left
@@ -528,6 +531,91 @@ def run_model(train_X, train_y, test_X, test_y, used_features, cur_dataset,
 
     return sklearn_y_predict.tolist()
 
+def process_batch(batch_indices, test_X, num_trees, num_features, table_lpm, table_exact,
+                  config):
+    results = []
+    core_id = os.getpid()
+
+    for i in batch_indices:
+        vote_list           = np.zeros(num_trees).astype(dtype=int).tolist()
+        anomaly_cnt         = 0
+        input_feature_value = test_X.values[i]
+
+        for tree in range(num_trees):
+            code_list           = np.zeros(num_features)
+            lpm_code_list       = np.zeros(num_features)
+            input_feature_value = test_X.values[i]
+
+            for f in range(num_features):
+                match_or_not = False
+
+                # match ternary
+                LPM_table   = table_lpm['feature ' + str(f)]
+                keys        = list(LPM_table.keys())
+                mask        = []
+                action      = []
+
+                # For each value in LPM table, check if it matches that separation key
+                for count in np.sort(keys):
+                    # if there is a ternary match
+                    if input_feature_value[f] & LPM_table[count][0] == LPM_table[count][0] & LPM_table[count][1]:
+                        mask.append(LPM_table[count][0])
+                        action.append(LPM_table[count][2])
+
+                max_mask            = max(mask)
+                max_index           = mask.index(max_mask)
+                # Choose the action with the longest prefix match
+                lpm_code_list[f]    = action[max_index][tree]
+
+                # match exact
+                code_list[f] = table_exact['feature ' + str(f)][str(input_feature_value[f])][tree]
+
+            if str(code_list) != str(lpm_code_list):
+                print('error in exact to ternary match', code_list, lpm_code_list)
+
+            for key in table_exact["tree " + str(tree)]:
+                match_or_not    = False
+                all_True        = True
+
+                for code_f in range(num_features):
+                    if not table_exact["tree " + str(tree)][key]['f' + str(code_f) + ' code'] == code_list[code_f]:
+                        all_True = False
+                        break
+
+                if all_True:
+                    vote_list[tree] = int(table_exact["tree " + str(tree)][key]['leaf'])
+                    match_or_not    = True
+                    break
+
+            if not match_or_not:
+                vote_list[tree] = config['p4 config']["default vote"]
+
+        for key in table_exact['decision']:
+            match_or_not    = False
+            all_True        = True
+
+            for tree_v in range(num_trees):
+                if not table_exact["decision"][key]['t' + str(tree_v) + ' vote'] == vote_list[tree_v]:
+                    all_True = False
+                    break
+                else:
+                    anomaly_cnt += 1
+
+            if all_True:
+                switch_prediction = table_exact['decision'][key]['class']
+                match_or_not = True
+                break
+
+        if not match_or_not:
+            switch_prediction = config['p4 config']["default label"]
+
+        # results.append((switch_prediction, (-1.0) * sum(vote_list) / len(vote_list)))
+        results.append((switch_prediction, anomaly_cnt / num_trees))
+
+    cur_ts = datetime.now()
+    cur_ts = cur_ts.strftime("%H-%M-%S")
+    print(f'[{cur_ts}]  Core {core_id} processed {len(batch_indices)} packets.')
+    return results
 
 def test_tables(sklearn_test_y, test_X, test_y, cur_dataset, cur_trace,
                 config_path=None, threshold=None):
@@ -553,78 +641,18 @@ def test_tables(sklearn_test_y, test_X, test_y, cur_dataset, cur_trace,
     switch_test_y       = []
     switch_test_y_proba = []
 
-    for i in range(np.shape(test_X.values)[0]):
-        vote_list = np.zeros(num_trees).astype(dtype=int).tolist()
+    batch_size = 10000
 
-        for tree in range(num_trees):
-            code_list           = np.zeros(num_features)
-            lpm_code_list       = np.zeros(num_features)
-            input_feature_value = test_X.values[i]
+    indices = list(range(np.shape(test_X.values)[0]))
+    batches = [indices[i:i + batch_size] for i in range(0, len(indices), batch_size)]
 
-            for f in range(num_features):
-                match_or_not = False
+    with Pool() as pool:
+        results = pool.map(lambda batch: process_batch(batch, test_X, num_trees, num_features, LPM_Table, Exact_Table, config), batches)
 
-                # match ternary
-                LPM_table   = LPM_Table['feature ' + str(f)]
-                keys        = list(LPM_table.keys())
-                mask        = []
-                action      = []
-
-                # For each value in LPM table, check if it matches that separation key
-                for count in np.sort(keys):
-                    # if there is a ternary match
-                    if input_feature_value[f] & LPM_table[count][0] == LPM_table[count][0] & LPM_table[count][1]:
-                        mask.append(LPM_table[count][0])
-                        action.append(LPM_table[count][2])
-
-                max_mask            = max(mask)
-                max_index           = mask.index(max_mask)
-                # Choose the action with the longest prefix match
-                lpm_code_list[f]    = action[max_index][tree]
-
-                # match exact
-                code_list[f] = Exact_Table['feature ' + str(f)][str(input_feature_value[f])][tree]
-
-            if str(code_list) != str(lpm_code_list):
-                print('error in exact to ternary match', code_list, lpm_code_list)
-
-            for key in Exact_Table["tree " + str(tree)]:
-                match_or_not    = False
-                all_True        = True
-
-                for code_f in range(num_features):
-                    if not Exact_Table["tree " + str(tree)][key]['f' + str(code_f) + ' code'] == code_list[code_f]:
-                        all_True = False
-                        break
-
-                if all_True:
-                    vote_list[tree] = int(Exact_Table["tree " + str(tree)][key]['leaf'])
-                    match_or_not    = True
-                    break
-
-            if not match_or_not:
-                vote_list[tree] = config['p4 config']["default vote"]
-
-        for key in Exact_Table['decision']:
-            match_or_not    = False
-            all_True        = True
-
-            for tree_v in range(num_trees):
-                if not Exact_Table["decision"][key]['t' + str(tree_v) + ' vote'] == vote_list[tree_v]:
-                    all_True = False
-                    break
-
-            if all_True:
-                switch_prediction = Exact_Table['decision'][key]['class']
-                match_or_not = True
-                break
-
-        if not match_or_not:
-            switch_prediction = config['p4 config']["default label"]
-
-
-        switch_test_y_proba += [ (-1.0) * sum(vote_list)/len(vote_list) ]
-        switch_test_y       += [switch_prediction]
+        for batch_results in results:
+            for i, (switch_prediction, switch_proba) in enumerate(batch_results):
+                switch_test_y.append(switch_prediction)
+                switch_test_y_proba.append(switch_proba)
 
     eval_metrics(test_y,
                  switch_test_y,
@@ -634,3 +662,111 @@ def test_tables(sklearn_test_y, test_X, test_y, cur_dataset, cur_trace,
                  cur_model,
                  model_size,
                  'switch')
+
+# SINGLE PROCESS
+
+# def test_tables(sklearn_test_y, test_X, test_y, cur_dataset, cur_trace,
+#                 config_path=None, threshold=None):
+#     if config_path:
+#         print(config_path)
+#         config = json.load(open(config_path, 'r'))
+#     else:
+#         config = json.load(open('conf/planter_config.json', 'r'))
+
+#     num_features    = config['data config']['number of features']
+#     cur_model       = config['model config']['model']
+#     model_size      = config['model config']['model size']
+#     num_trees       = config['model config']['number of trees']
+
+#     LPM_Table       = json.load(open(f'eval/tables/{cur_dataset}/{cur_model}/{cur_trace}-'
+#                                      f'{cur_model}-{model_size}-lpm_table.json', 'r'))
+#     Exact_Table     = json.load(open(f'eval/tables/{cur_dataset}/{cur_model}/{cur_trace}-'
+
+#                                      f'{cur_model}-{model_size}-exact_table.json', 'r'))
+
+#     print('Test the exact feature table, extact code and decision table (feel free if the acc to sklearn is slightly lower than 1)')
+
+#     switch_test_y       = []
+#     switch_test_y_proba = []
+
+#     for i in range(np.shape(test_X.values)[0]):
+#         vote_list = np.zeros(num_trees).astype(dtype=int).tolist()
+
+#         for tree in range(num_trees):
+#             code_list           = np.zeros(num_features)
+#             lpm_code_list       = np.zeros(num_features)
+#             input_feature_value = test_X.values[i]
+
+#             for f in range(num_features):
+#                 match_or_not = False
+
+#                 # match ternary
+#                 LPM_table   = LPM_Table['feature ' + str(f)]
+#                 keys        = list(LPM_table.keys())
+#                 mask        = []
+#                 action      = []
+
+#                 # For each value in LPM table, check if it matches that separation key
+#                 for count in np.sort(keys):
+#                     # if there is a ternary match
+#                     if input_feature_value[f] & LPM_table[count][0] == LPM_table[count][0] & LPM_table[count][1]:
+#                         mask.append(LPM_table[count][0])
+#                         action.append(LPM_table[count][2])
+
+#                 max_mask            = max(mask)
+#                 max_index           = mask.index(max_mask)
+#                 # Choose the action with the longest prefix match
+#                 lpm_code_list[f]    = action[max_index][tree]
+
+#                 # match exact
+#                 code_list[f] = Exact_Table['feature ' + str(f)][str(input_feature_value[f])][tree]
+
+#             if str(code_list) != str(lpm_code_list):
+#                 print('error in exact to ternary match', code_list, lpm_code_list)
+
+#             for key in Exact_Table["tree " + str(tree)]:
+#                 match_or_not    = False
+#                 all_True        = True
+
+#                 for code_f in range(num_features):
+#                     if not Exact_Table["tree " + str(tree)][key]['f' + str(code_f) + ' code'] == code_list[code_f]:
+#                         all_True = False
+#                         break
+
+#                 if all_True:
+#                     vote_list[tree] = int(Exact_Table["tree " + str(tree)][key]['leaf'])
+#                     match_or_not    = True
+#                     break
+
+#             if not match_or_not:
+#                 vote_list[tree] = config['p4 config']["default vote"]
+
+#         for key in Exact_Table['decision']:
+#             match_or_not    = False
+#             all_True        = True
+
+#             for tree_v in range(num_trees):
+#                 if not Exact_Table["decision"][key]['t' + str(tree_v) + ' vote'] == vote_list[tree_v]:
+#                     all_True = False
+#                     break
+
+#             if all_True:
+#                 switch_prediction = Exact_Table['decision'][key]['class']
+#                 match_or_not = True
+#                 break
+
+#         if not match_or_not:
+#             switch_prediction = config['p4 config']["default label"]
+
+
+#         switch_test_y_proba += [ (-1.0) * sum(vote_list)/len(vote_list) ]
+#         switch_test_y       += [switch_prediction]
+
+#     eval_metrics(test_y,
+#                  switch_test_y,
+#                  switch_test_y_proba,
+#                  cur_dataset,
+#                  cur_trace,
+#                  cur_model,
+#                  model_size,
+#                  'switch')
