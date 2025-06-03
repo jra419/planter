@@ -1,53 +1,53 @@
 {
     "directory config": {
-        "data": "/home/docker/datasets/kitsune/os-scan/os-scan.csv",
-        "labels": "/home/docker/datasets/kitsune/os-scan/os-scan-labels.csv",
+        "data": "/home/docker/datasets/cic-ids-2018/cic-test.csv",
+        "labels": "/home/docker/datasets/cic-ids-2018/cic-test-labels.csv",
         "work": "/home/docker/planter"
     },
     "model config": {
         "model": "km",
-        "model size": "2",
-        "number of bits": 32,
+        "model size": "test",
+        "number of bits": 16,
         "random state": 5,
         "number of classes": 2,
         "test table": "y"
     },
     "data config": {
-        "dataset": "kitsune",
-        "cur_trace": "os-scan",
+        "dataset": "cic-test-ad",
+        "cur_trace": "test",
         "number of features": 5,
         "testing mode": "n"
     },
     "timer log": {
         "load data": {
-            "start": 1747909292.2807066,
-            "end": 1747909321.0824685
+            "start": 1747749274.1814167,
+            "end": 1747749274.2848368
         },
         "train model": {
-            "start": 1747909322.776184,
-            "end": 1747909324.3572319
+            "start": 1747749276.105529,
+            "end": 1747749276.1458511
         },
         "convert model": {
-            "start": 1747909324.3572338,
-            "end": 1747909326.2776566
+            "start": 1747749276.145853,
+            "end": 1747749278.083817
         },
         "python-based test": {
-            "start": 1747909327.1514232,
-            "end": 1747909369.684008
+            "start": 1747749278.9320858,
+            "end": 1747749279.1187983
         }
     },
     "p4 config": {
         "model": "km",
         "number of features": 5,
         "number of classes": 2,
-        "action data bits": 32,
-        "table name": "os-scan-km-2-exact_table.json",
+        "action data bits": 16,
+        "table name": "test-km-test-exact_table.json",
         "feature tbl len": [
-            65535,
-            65535,
-            17,
-            24,
-            255
+            64655,
+            64800,
+            12,
+            215,
+            254
         ]
     },
     "test config": {

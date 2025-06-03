@@ -155,12 +155,12 @@ def run_model(train_X, train_y, test_X, test_y, used_features, cur_dataset,
         feature_tbl_len += [len(Exact_Table['feature ' + str(f)].keys())]
 
     config['p4 config'] = {}
-
     config['p4 config']["model"]                = "km"
     config['p4 config']["number of features"]   = num_features
-    config['p4 config']["number of classes"]    =  num_classes
+    config['p4 config']["number of classes"]    = num_classes
     config['p4 config']["action data bits"]     = num_bits
-    config['p4 config']['table name']           = f'{cur_trace}-{cur_model}-{model_size}-ternary_table.json'
+    config['p4 config']['table name']           = (
+            f'{cur_trace}-{cur_model}-{model_size}-exact_table.json')
     config['p4 config']["feature tbl len"]      = feature_tbl_len
     config['test config']                       = {}
     config['test config']['type of test']       = 'classification'
@@ -179,7 +179,7 @@ def test_tables(sklearn_y, train_X, train_y, test_X, test_y, cur_dataset, cur_tr
 
     last_n = cur_dataset[-3:]
     if last_n == '-ad':
-        cur_dataset = cur_dataset [:-3]
+        cur_dataset = cur_dataset[:-3]
 
     if config_path:
         print(config_path)
@@ -209,7 +209,7 @@ def test_tables(sklearn_y, train_X, train_y, test_X, test_y, cur_dataset, cur_tr
         switch_y           += [switch_prediction]
 
     eval_metrics_kmeans(cur_y, switch_y, cur_dataset, cur_trace, cur_model,
-                        model_size, 'sklearn')
+                        model_size, 'switch')
 
 def resource_prediction(config_path):
     config = json.load(open(config_path, 'r'))

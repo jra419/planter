@@ -20,21 +20,34 @@
     },
     "timer log": {
         "load data": {
-            "start": 1747735674.3498902
+            "start": 1747909374.7499177,
+            "end": 1747909403.7788281
+        },
+        "train model": {
+            "start": 1747909405.4559767,
+            "end": 1747909407.0948377
+        },
+        "convert model": {
+            "start": 1747909407.09484,
+            "end": 1747909408.5879176
+        },
+        "python-based test": {
+            "start": 1747909409.8215983,
+            "end": 1747909453.4776788
         }
     },
     "p4 config": {
-        "model": "bayes",
+        "model": "km",
         "number of features": 5,
         "number of classes": 2,
-        "action data bits": 32,
-        "table name": "os-scan-bayes-2-exact_table.json",
+        "action data bits": 0,
+        "table name": "os-scan-km-3-exact_table.json",
         "feature tbl len": [
-            64680,
-            61722,
-            19,
-            194,
-            257
+            65535,
+            65535,
+            17,
+            24,
+            255
         ]
     },
     "test config": {

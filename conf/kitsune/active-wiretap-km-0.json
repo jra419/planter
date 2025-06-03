@@ -1,52 +1,52 @@
 {
     "directory config": {
-        "data": "/home/docker/datasets/kitsune/os-scan/os-scan.csv",
-        "labels": "/home/docker/datasets/kitsune/os-scan/os-scan-labels.csv",
+        "data": "/home/docker/datasets/kitsune/active-wiretap/active-wiretap.csv",
+        "labels": "/home/docker/datasets/kitsune/active-wiretap/active-wiretap-labels.csv",
         "work": "/home/docker/planter"
     },
     "model config": {
         "model": "km",
-        "model size": "2",
-        "number of bits": 32,
+        "model size": "0",
+        "number of bits": 2,
         "random state": 5,
         "number of classes": 2,
         "test table": "y"
     },
     "data config": {
         "dataset": "kitsune",
-        "cur_trace": "os-scan",
+        "cur_trace": "active-wiretap",
         "number of features": 5,
         "testing mode": "n"
     },
     "timer log": {
         "load data": {
-            "start": 1747909292.2807066,
-            "end": 1747909321.0824685
+            "start": 1747923553.5699768,
+            "end": 1747923591.3128574
         },
         "train model": {
-            "start": 1747909322.776184,
-            "end": 1747909324.3572319
+            "start": 1747923593.2011693,
+            "end": 1747923595.1488342
         },
         "convert model": {
-            "start": 1747909324.3572338,
-            "end": 1747909326.2776566
+            "start": 1747923595.1488357,
+            "end": 1747923597.0406153
         },
         "python-based test": {
-            "start": 1747909327.1514232,
-            "end": 1747909369.684008
+            "start": 1747923597.8902085,
+            "end": 1747923656.105861
         }
     },
     "p4 config": {
         "model": "km",
         "number of features": 5,
         "number of classes": 2,
-        "action data bits": 32,
-        "table name": "os-scan-km-2-exact_table.json",
+        "action data bits": 2,
+        "table name": "active-wiretap-km-0-exact_table.json",
         "feature tbl len": [
-            65535,
-            65535,
+            64612,
+            61668,
             17,
-            24,
+            193,
             255
         ]
     },
