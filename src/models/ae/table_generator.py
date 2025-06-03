@@ -206,7 +206,7 @@ def run_model(train_X, train_y, test_X, test_y, used_features, cur_dataset,
 
     print('Done')
     json.dump(Exact_Table, open(f'eval/tables/{cur_dataset}/{cur_model}/{cur_trace}-{cur_model}-'
-                                f'{model_size}-exact_table.json', 'w'), indent=4)
+                                f'{model_size}-exact_table.json', 'w'), indent=4, cls=NpEncoder)
 
     feature_tbl_len = []
     for f in range(num_features):
