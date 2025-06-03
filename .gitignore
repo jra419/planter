@@ -125,5 +125,7 @@ tables/
 tables/
 p4/
 eval/metrics/
+eval/feats/
 src/tmp/*.tar
 eval/plots/*.png
+src/logs/
