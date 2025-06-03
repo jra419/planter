@@ -1,20 +1,20 @@
 {
     "directory config": {
-        "data": "/home/docker/datasets/kitsune/ssdp-flood/ssdp-flood.csv",
-        "labels": "/home/docker/datasets/kitsune/ssdp-flood/ssdp-flood-labels.csv",
+        "data": "/home/docker/datasets/cic-ids-2018/cic-test.csv",
+        "labels": "/home/docker/datasets/cic-ids-2018/cic-test-labels.csv",
         "work": "/home/docker/planter"
     },
     "model config": {
         "model": "pca",
-        "model size": "3",
-        "number of bits": 0,
+        "model size": "test",
+        "number of bits": 16,
         "num components": 2,
         "number of classes": 2,
         "test table": "y"
     },
     "data config": {
-        "dataset": "kitsune",
-        "cur_trace": "ssdp-flood",
+        "dataset": "cic-test",
+        "cur_trace": "test",
         "number of features": 5,
         "testing mode": "n"
     },
