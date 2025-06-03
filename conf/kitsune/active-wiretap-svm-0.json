@@ -1,0 +1,63 @@
+{
+    "directory config": {
+        "data": "/home/docker/datasets/kitsune/active-wiretap/active-wiretap.csv",
+        "labels": "/home/docker/datasets/kitsune/active-wiretap/active-wiretap-labels.csv",
+        "work": "/home/docker/planter"
+    },
+    "model config": {
+        "model": "svm",
+        "model size": "0",
+        "number of bits": 8,
+        "number of classes": 2,
+        "test table": "y"
+    },
+    "data config": {
+        "dataset": "kitsune",
+        "cur_trace": "active-wiretap",
+        "number of features": 5,
+        "testing mode": "n"
+    },
+    "timer log": {
+        "load data": {
+            "start": 1746997586.2320197,
+            "end": 1746997626.6335573
+        },
+        "train model": {
+            "start": 1746997628.6749744,
+            "end": 1746997635.902406
+        },
+        "convert model": {
+            "start": 1746997635.902408,
+            "end": 1746997636.459602
+        }
+    },
+    "p4 config": {
+        "model": "SVM",
+        "number of features": 5,
+        "number of classes": 2,
+        "action data bits": 8,
+        "number of hps": 1,
+        "feature tbl len": [
+            64679,
+            61721,
+            18,
+            193,
+            256
+        ],
+        "table name": "active-wiretap-svm-0-exact_table.json",
+        "thresh and bias": "269, 44",
+        "hp_info": {
+            "0": [
+                0,
+                1
+            ]
+        }
+    },
+    "test config": {
+        "type of test": "classification"
+    },
+    "target config": {
+        "architecture": "tna",
+        "use case": "anomaly_detection"
+    }
+}

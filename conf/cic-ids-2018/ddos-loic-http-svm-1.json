@@ -1,0 +1,96 @@
+{
+    "directory config": {
+        "data": "/home/docker/datasets/cic-ids-2018/ddos-loic-http/ddos-loic-http.csv",
+        "labels": "/home/docker/datasets/cic-ids-2018/ddos-loic-http/ddos-loic-http-labels.csv",
+        "work": "/home/docker/planter"
+    },
+    "model config": {
+        "model": "svm",
+        "model size": "1",
+        "number of bits": 16,
+		"number of classes": 2,
+        "test table": "y"
+    },
+    "data config": {
+        "dataset": "cic-ids-2018",
+        "cur_trace": "ddos-loic-http",
+        "number of features": 5,
+        "testing mode": "n"
+    },
+    "timer log": {
+        "load data": {
+            "start": 1746709960.1521525,
+            "end": 1746709960.2542245
+        }
+    },
+    "p4 config": {
+        "model": "XGB",
+        "number of features": 5,
+        "number of classes": 2,
+        "number of trees": 3,
+        "table name": "test-xgb-test-ternary_table.json",
+        "decision table size": 5,
+        "code table size": [
+            3,
+            1,
+            1
+        ],
+        "default vote": 1,
+        "default label": 0,
+        "width of feature": [
+            17,
+            17,
+            6,
+            9,
+            9
+        ],
+        "width of code": [
+            [
+                2.0,
+                1.0,
+                1.0,
+                2.0,
+                1.0
+            ],
+            [
+                1.0,
+                1.0,
+                1.0,
+                2.0,
+                2.0
+            ],
+            [
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                2.0
+            ]
+        ],
+        "used columns": [
+            26,
+            17,
+            6,
+            10,
+            12
+        ],
+        "width of probability": 7,
+        "width of result": 8,
+        "standard headers": [
+            "ethernet",
+            "Planter",
+            "arp",
+            "ipv4",
+            "tcp",
+            "udp",
+            "vlan_tag"
+        ]
+    },
+    "test config": {
+        "type of test": "classification"
+    },
+    "target config": {
+        "architecture": "tna",
+        "use case": "anomaly_detection"
+    }
+}

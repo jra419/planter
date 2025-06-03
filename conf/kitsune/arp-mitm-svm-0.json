@@ -1,0 +1,67 @@
+{
+    "directory config": {
+        "data": "/home/docker/datasets/kitsune/arp-mitm/arp-mitm.csv",
+        "labels": "/home/docker/datasets/kitsune/arp-mitm/arp-mitm-labels.csv",
+        "work": "/home/docker/planter"
+    },
+    "model config": {
+        "model": "svm",
+        "model size": "0",
+        "number of bits": 8,
+        "number of classes": 2,
+        "test table": "y"
+    },
+    "data config": {
+        "dataset": "kitsune",
+        "cur_trace": "arp-mitm",
+        "number of features": 5,
+        "testing mode": "n"
+    },
+    "timer log": {
+        "load data": {
+            "start": 1747055754.7236211,
+            "end": 1747055797.9190788
+        },
+        "train model": {
+            "start": 1747055799.8568146,
+            "end": 1747055810.3099725
+        },
+        "convert model": {
+            "start": 1747055810.3099742,
+            "end": 1747055810.8026366
+        },
+        "python-based test": {
+            "start": 1747055811.5233731,
+            "end": 1747055855.9202092
+        }
+    },
+    "p4 config": {
+        "model": "SVM",
+        "number of features": 5,
+        "number of classes": 2,
+        "action data bits": 8,
+        "number of hps": 1,
+        "feature tbl len": [
+            65408,
+            60288,
+            18,
+            193,
+            256
+        ],
+        "table name": "arp-mitm-svm-0-exact_table.json",
+        "thresh and bias": "169, 28",
+        "hp_info": {
+            "0": [
+                0,
+                1
+            ]
+        }
+    },
+    "test config": {
+        "type of test": "classification"
+    },
+    "target config": {
+        "architecture": "tna",
+        "use case": "anomaly_detection"
+    }
+}
