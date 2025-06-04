@@ -72,6 +72,13 @@ def eval_metrics(y_test, y_pred, y_pred_proba, cur_dataset, cur_trace,
     f.write(f'F1 Score:     {f1}\n')
     f.write(f'AuC:          {auc}\n')
 
+    # df_predict  = pd.DataFrame(y_pred)
+    # df_scores   = pd.DataFrame(y_pred_proba)
+
+    # df_predict.to_csv(f'{outdir}/metrics/{cur_dataset}/{cur_model}/{cur_trace}-{cur_model}-{model_size}-{arch}-{ts_datetime}-predict.csv', header=False, index=False)
+    # df_scores.to_csv(f'{outdir}/metrics/{cur_dataset}/{cur_model}/{cur_trace}-{cur_model}-{model_size}-{arch}-{ts_datetime}-scores.csv', header=False, index=False)
+
+
 def eval_metrics_kmeans(y_test, y_pred, cur_dataset, cur_trace, cur_model,
                         model_size, arch):
     outdir = f'{Path(__file__).parents[0]}'

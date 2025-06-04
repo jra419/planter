@@ -28,94 +28,73 @@ import copy
 import re
 
 def get_lineage(tree, feature_names, file):
-    left            = tree.tree_.children_left
-    right           = tree.tree_.children_right
-    threshold       = tree.tree_.threshold
-    features        = [feature_names[i] for i in tree.tree_.feature]
-    value           = tree.tree_.value
-    n_node_samples  = tree.tree_.n_node_samples
-
-    le  = '<='
-    g   = '>'
-
+    left = tree.tree_.children_left
+    right = tree.tree_.children_right
+    threshold = tree.tree_.threshold
+    features = [feature_names[i] for i in tree.tree_.feature]
+    value = tree.tree_.value
+    n_node_samples = tree.tree_.n_node_samples
+    le = '<='
+    g = '>'
     # get ids of child nodes
     idx = np.argwhere(left == -1)[:, 0]
-
     # traverse the tree and get the node information
     def recurse(left, right, child, lineage=None):
         if lineage is None:
             lineage = [child]
         if child in left:
-            parent  = np.where(left == child)[0].item()
-            split   = 'l'
+            parent = np.where(left == child)[0].item()
+            split = 'l'
         else:
-            parent  = np.where(right == child)[0].item()
-            split   = 'r'
-
+            parent = np.where(right == child)[0].item()
+            split = 'r'
         lineage.append((parent, split, threshold[parent], features[parent]))
-
         if parent == 0:
             lineage.reverse()
             return lineage
         else:
             return recurse(left, right, parent, lineage)
-
     for j, child in enumerate(idx):
         clause = ' when '
-
         for node in recurse(left, right, child):
             if len(str(node)) < 3:
                 continue
             i = node
-
             if not isinstance(i, tuple):
                 continue
-
             if i[1] == 'l':
                 sign = le
             else:
                 sign = g
-
             clause = clause + i[3] + sign + str(i[2]) + ' and '
-
-        # write the node information into text file
+        # wirte the node information into text file
         # print(node)
-
-        ind     = n_node_samples[node]
-        clause  = clause[:-4] + ' then ' + str(ind)
-
+        ind = n_node_samples[node]
+        clause = clause[:-4] + ' then ' + str(ind)
         file.write(clause)
         file.write(";\n")
 
 def print_tree(tree, feature_names):
-    tree_           = tree.tree_
-    feature_name    = [
+    tree_ = tree.tree_
+    feature_name = [
         feature_names[i] if i != _tree.TREE_UNDEFINED else "undefined!"
         for i in tree_.feature
     ]
     # print('feature_name:', feature_name)
-
     print("def tree({}):".format(", ".join(feature_names)))
     share = {}
-
     def recurse(node, depth, share):
         indent = "  " * depth
-
         if tree_.feature[node] != _tree.TREE_UNDEFINED:
-            name        = feature_name[node]
+            name = feature_name[node]
             share[name] = {}
-            threshold   = tree_.threshold[node]
-
+            threshold = tree_.threshold[node]
             print("{}if {} <= {}:".format(indent, name, threshold))
-
             recurse(tree_.children_left[node], depth + 1, share)
-
             print("{}else:  # if {} > {}".format(indent, name, threshold))
-
             recurse(tree_.children_right[node], depth + 1, share)
         else:
             print("{}return {}".format(indent, tree_.value[node]))
-
     recurse(0, 1, share)
 
 def ten_to_bin(num, count):
@@ -128,14 +107,11 @@ def ten_to_bin(num, count):
 def find_feature_split(model, tree_index, num_features):
     feature_names = []
     feature_split = {}
-
     for a in range(num_features):
         feature_split["feature "+str(a)] = []
         feature_names += ["f" + chr(ord('A') + a)]
-
-    threshold   = model.tree_.threshold
-    features    = [feature_names[i] for i in model.tree_.feature]
-
+    threshold = model.tree_.threshold
+    features = [feature_names[i] for i in model.tree_.feature]
     for i, fe in enumerate(features):
         for a in range(num_features):
             if a == 0:
@@ -146,38 +122,28 @@ def find_feature_split(model, tree_index, num_features):
                 if threshold[i] != -2.0:
                     feature_split["feature "+str(a)].append(threshold[i])
                 continue
-
     for a in range(num_features):
-        feature_split["feature "+str(a)] = \
-                [int(np.floor(i)) for i in feature_split["feature "+str(a)]]
+        feature_split["feature "+str(a)] = [int(np.floor(i)) for i in feature_split["feature "+str(a)]]
         feature_split["feature "+str(a)].sort()
-
     tree = open('src/tmp/tree'+str(tree_index)+'.txt', "w+")
-
     for a in range(num_features):
         tree.write(str(feature_names[a]) + " = ")
         tree.write(str(feature_split["feature "+str(a)]))
         tree.write(";\n")
-
     # print_tree(model, feature_names)
-
     get_lineage(model, feature_names, tree)
     tree.close()
-
-    action      = [0, 1]
-    textfile    = 'src/tmp/tree'+str(tree_index)+'.txt'
-
+    # action = [0, 1]
+    textfile = 'src/tmp/tree'+str(tree_index)+'.txt'
     for f in range(num_features):
         feature_split['feature ' + str(f)] = sorted(list(set(feature_split['feature ' + str(f)])))
-
     return textfile, feature_split
 
 def generate_feature_tables(split, num_features,feature_max, table):
     for i in range(num_features):
-        table["feature "+str(i)]    = {}
-        count_code                  = 0
-        nife                        = sorted(split["feature "+str(i)])
-
+        table["feature "+str(i)] = {}
+        count_code = 0
+        nife = sorted(split["feature "+str(i)])
         for j in range(feature_max[i]+1):
             if nife !=[] :
                 if len(nife) > count_code:
@@ -187,49 +153,39 @@ def generate_feature_tables(split, num_features,feature_max, table):
     return table
 
 def find_classification(textfile, feature_split, num_features):
-    fea         = []
-    sign        = []
-    num         = []
-    f           = open(textfile, 'r')
-    feature_n   = {}
-    text        = r"("
-
+    fea = []
+    sign = []
+    num = []
+    f = open(textfile, 'r')
+    feature_n = {}
+    text = r"("
     for b in range(num_features):
         feature_n[b] = []
-
-        if b == 0:
+        if b==0:
             text += "f"+chr(ord('A')+b)
         else:
             text += "|f" + chr(ord('A')+b)
-
     text += ")"
-
     for line in f:
         n = re.findall(r"when", line)
         if n:
             fea.append(re.findall(text, line))
             sign.append(re.findall(r"(<=|>)", line))
             num.append(re.findall(r"\d+\.?\d*", line))
-
     f.close()
-
-    classfication   = []
-    featuren        = {}
-
+    classfication = []
+    featuren = {}
     for i in range(len(fea)):
         num_nodes = 0
-
         for b in range(num_features):
             featuren[b] = [k for k in range(len(feature_split["feature "+str(b)]) + 1)]
-
         for j, feature in enumerate(fea[i]):
             for b in range(num_features):
                 if feature == "f"+chr(ord('A')+b):
-                    sig         = sign[i][j]
-                    thres       = int(float(num[i][j]))
-                    id          = feature_split["feature "+str(b)].index(thres)
-                    num_nodes  += 1
-
+                    sig = sign[i][j]
+                    thres = int(float(num[i][j]))
+                    id = feature_split["feature "+str(b)].index(thres)
+                    num_nodes += 1
                     if sig == '<=':
                         while id < len(feature_split["feature "+str(b)]):
                             if id + 1 in featuren[b]:
@@ -241,110 +197,129 @@ def find_classification(textfile, feature_split, num_features):
                                 featuren[b].remove(id)
                             id = id - 1
                     continue
-
         for b in range(num_features):
             feature_n[b].append(featuren[b])
-
         a = len(num[i])
-
-        classfication.append(num_nodes)
+        classfication.append([num_nodes, int(num[i][a - 1])])
 
     return feature_n, classfication
 
 def find_path_for_leaf_nodes(feature_n, classfication, num_features):
     path_to_leaf = {}
-
     for i in range(len(classfication)):
         path_to_leaf["path "+str(i)] = {}
         path_to_leaf["path " + str(i)]["leaf"] = classfication[i]
-
         for j in range(num_features):
             path_to_leaf["path " + str(i)]["feature "+str(j)] = feature_n[j][i]
-
     return path_to_leaf
 
 def generate_code_table_for_path(table, leaf_path, code_dict, feature_num, num_features, count):
     if feature_num == num_features:
         table['code to vote'][count] = {}
-
         for f in range(num_features):
             table['code to vote'][count]['f'+str(f)+' code'] = code_dict['feature ' + str(f)]
-
         table['code to vote'][count]['leaf'] = leaf_path['leaf']
         count += 1
-
         return table, count
     else:
         for value in leaf_path['feature '+str(feature_num)]:
             code_dict['feature ' + str(feature_num)] = value
-
             feature_num += 1
-            table, count = generate_code_table_for_path(table, leaf_path, code_dict,
-                                                        feature_num, num_features, count)
+            table, count = generate_code_table_for_path(table, leaf_path, code_dict, feature_num, num_features, count)
             feature_num -= 1
-
     return table, count
 
 def generate_code_table(table, path_to_leaf, num_features):
-    table['code to vote']   = {}
-    count                   = 0
-
+    table['code to vote'] = {}
+    count = 0
     for p in path_to_leaf:
-        table, count = generate_code_table_for_path(table, path_to_leaf[p], {}, 0,
-                                                    num_features, count)
-
+        table, count = generate_code_table_for_path(table, path_to_leaf[p], {}, 0, num_features, count)
     return table
 
 def generate_table(model, tree_index, num_features, g_table, feature_max, leaf_info):
     textfile, feature_split = find_feature_split(model, tree_index, num_features)
-
+    
     g_table[tree_index] = {}
-    g_table[tree_index] = generate_feature_tables(feature_split, num_features,
-                                                  feature_max, g_table[tree_index])
-
-    feature_n, classfication    = find_classification(textfile, feature_split , num_features)
-    path_to_leaf                = find_path_for_leaf_nodes(feature_n, classfication, num_features)
-    code_width_for_feature      = np.zeros(num_features)
-
+    g_table[tree_index] = generate_feature_tables(feature_split, num_features, feature_max, g_table[tree_index])
+    
+    feature_n, classfication = find_classification(textfile, feature_split , num_features)
+    path_to_leaf = find_path_for_leaf_nodes(feature_n, classfication, num_features)
+    code_width_for_feature = np.zeros(num_features)
     for i in range(num_features):
         code_width_for_feature[i] = int(np.ceil(math.log(g_table[tree_index]['feature ' + str(i)][np.max(list(g_table[tree_index]['feature ' + str(i)].keys()))]+1,2))) or 1
-
     g_table[tree_index] = generate_code_table(g_table[tree_index], path_to_leaf, num_features)
-
+    
+    # print(classfication)
     print('\rThe table for Tree: {} is generated'.format(tree_index), end="")
-
-    leaf_info['tree '+str(tree_index)]= np.unique(classfication)
-
+    leaf_info['tree '+str(tree_index)]= np.unique(classfication, axis=0)
     return g_table, leaf_info
+
+def _average_path_length(n_samples_leaf):
+    """
+    The average path length in a n_samples iTree, which is equal to
+    the average path length of an unsuccessful BST search since the
+    latter has the same structure as an isolation tree.
+    Parameters
+    ----------
+    n_samples_leaf : array-like of shape (n_samples,)
+        The number of training samples in each test sample leaf, for
+        each estimators.
+
+    Returns
+    -------
+    average_path_length : ndarray of shape (n_samples,)
+    """
+
+    # n_samples_leaf = check_array(n_samples_leaf, ensure_2d=False)
+
+    n_samples_leaf_shape = n_samples_leaf.shape
+    n_samples_leaf = n_samples_leaf.reshape((1, -1))
+    average_path_length = np.zeros(n_samples_leaf.shape)
+
+    mask_1 = n_samples_leaf <= 1
+    mask_2 = n_samples_leaf == 2
+    not_mask = ~np.logical_or(mask_1, mask_2)
+
+    average_path_length[mask_1] = 0.
+    average_path_length[mask_2] = 1.
+    average_path_length[not_mask] = (
+        2.0 * (np.log(n_samples_leaf[not_mask] - 1.0) + np.euler_gamma)
+        - 2.0 * (n_samples_leaf[not_mask] - 1.0) / n_samples_leaf[not_mask]
+    )
+
+    return average_path_length.reshape(n_samples_leaf_shape)
+
+def complex_list_idx(target_list, component):
+    for i, x in enumerate(target_list):
+        if np.all(x==component):
+            # print(i)
+            return i
 
 def votes_to_class(tree_num, vote_list, num_trees, num_classes, g_table, num,
                    leaf_info, path_len_threshold):
     if tree_num  == num_trees:
         vote = 0
-
         for t in range(num_trees):
-            vote += leaf_info["tree "+str(t)][vote_list[t]]
+            vote += (leaf_info["tree "+str(t)][vote_list[t]][0] + _average_path_length(leaf_info["tree "+str(t)][vote_list[t]][1]))
+        # if vote.index(np.max(vote))== 0:
+        # if True :
         g_table['votes to class'][num] = {}
-
         for t in range(len(vote_list)):
-            g_table['votes to class'][num]['t'+str(t)+' vote'] = \
-                    leaf_info["tree "+str(t)][vote_list[t]]
-
+            g_table['votes to class'][num]['t'+str(t)+' vote'] = leaf_info["tree "+str(t)][vote_list[t]]
+            # g_table['votes to class'][num]['t'+str(t)+' vote'] = vote_list[t]
         if vote >= path_len_threshold*num_trees:
             g_table['votes to class'][num]['class'] = 0
         else:
             g_table['votes to class'][num]['class'] = 1
 
         num += 1
-
         return g_table, num
     else:
         for value in range(len(leaf_info["tree "+str(tree_num)])):
-            vote_list[tree_num]     = value
-            tree_num               += 1
-            g_table, num = votes_to_class(tree_num, vote_list, num_trees, num_classes,
-                                          g_table, num, leaf_info, path_len_threshold)
-            tree_num               -= 1
+            vote_list[tree_num] = value
+            tree_num += 1
+            g_table, num = votes_to_class(tree_num, vote_list, num_trees, num_classes, g_table, num, leaf_info, path_len_threshold)
+            tree_num -= 1
     return g_table, num
 
 def run_model(train_X, train_y, test_X, test_y, used_features, cur_dataset,
@@ -362,7 +337,7 @@ def run_model(train_X, train_y, test_X, test_y, used_features, cur_dataset,
     num_classes     = config['model config']['number of classes']
     num_trees       = config['model config']['number of trees']
 
-    path_len_threshold = (2 * (np.log(num_samples - 1) + np.euler_gamma) - (2 * (num_samples - 1) / num_samples)) * (-math.log(0.6, 2))
+    path_len_threshold = (2 * (np.log(num_samples - 1) + np.euler_gamma) - (2 * (num_samples - 1) / num_samples)) * (-math.log(0.5, 2))
 
     print("The threshold of path length is %.2f" % path_len_threshold)
 
@@ -380,7 +355,7 @@ def run_model(train_X, train_y, test_X, test_y, used_features, cur_dataset,
     rng = np.random.RandomState(42)
 
     # fit the model
-    clf = IsolationForest(n_estimators= num_trees,
+    clf = IsolationForest(n_estimators=num_trees,
                           max_samples=num_samples,
                           random_state=rng)
     clf.fit(train_X)
@@ -417,82 +392,100 @@ def run_model(train_X, train_y, test_X, test_y, used_features, cur_dataset,
     print("\nGenerating vote to class table...", end="")
     g_table, _ = votes_to_class(0, np.zeros(num_trees).tolist(), num_trees, num_classes,
                                 g_table, 0, leaf_info, path_len_threshold)
+
     print('Done')
+
+
+    for t in range(num_trees):
+        leaf_info['tree ' + str(t)] = list(leaf_info['tree ' + str(t)])
+        for i, x in enumerate(leaf_info['tree ' + str(t)]):
+            tmp_list = list(x)
+            tmp_list = [a.item() for a in tmp_list]
+            # leaf_info['tree ' + str(t)][i] = str(list(x))
+            leaf_info['tree ' + str(t)][i] = str(list(tmp_list))
+
+    for t in range(num_trees):
+        for k in g_table[t]['code to vote'].keys():
+            g_table[t]['code to vote'][k]['leaf'] = leaf_info['tree ' + str(t)].index(str(list(g_table[t]['code to vote'][k]['leaf'])))
+
+    # json.dump(g_table, open(f'eval/tables/{cur_dataset}/{cur_model}/{cur_trace}-{cur_model}-'
+    #                           f'{model_size}-gtable.json', 'w'), indent=4, cls=NpEncoder)
+    # json.dump(leaf_info, open(f'eval/tables/{cur_dataset}/{cur_model}/{cur_trace}-{cur_model}-'
+    #                           f'{model_size}-leaf_info.json', 'w'), indent=4, cls=NpEncoder)
+
+    for k in g_table['votes to class'].keys():
+        for t in range(num_trees):
+            tmp_list = list(g_table['votes to class'][k]['t'+str(t)+' vote'])
+            tmp_list = [a.item() for a in tmp_list]
+            g_table['votes to class'][k]['t'+str(t)+' vote'] = leaf_info['tree ' + str(t)].index(str(tmp_list))
 
     feature_width = []
     for max_f in feature_max:
         feature_width += [int(np.ceil(math.log(max_f, 2)) + 1)]
 
     code_width_tree_feature = np.zeros((num_trees, num_features))
-
     for i in range(num_features):
         for tree in range(num_trees):
+            # code_width_tree_feature[tree, i] = np.ceil(math.log(g_table[tree]['feature ' + str(i)][feature_max[i]],2))
             code_width_tree_feature[tree, i] = int(np.ceil(math.log(
-                g_table[tree]['feature ' + str(i)][np.max(list(g_table[tree]['feature ' + str(i)].keys()))] + 1, 2) + 1)) or 1
+                g_table[tree]['feature ' + str(i)][np.max(list(g_table[tree]['feature ' + str(i)].keys()))] + 1,
+                2) + 1)) or 1
+            # print(code_width_tree_feature[tree, i] , g_table[tree]['feature ' + str(i)][feature_max[i]])
+            # print('stop')
 
-    LPM_Table               = {}
-    LPM_Table['decision']   = g_table['votes to class']
+    LPM_Table = {}
+    LPM_Table['decision'] = g_table['votes to class']
 
     for tree in range(num_trees):
         LPM_Table['tree ' + str(tree)] = g_table[tree]['code to vote']
 
     for i in range(num_features):
         LPM_Table['feature ' + str(i)] = {}
-
         for value in range(feature_max[i]):
             LPM_Table['feature ' + str(i)][value] = []
-
             for tree in range(num_trees):
-                LPM_Table['feature ' + str(i)][value] += \
-                        [g_table[tree]["feature " + str(i)][value]]
-
+                LPM_Table['feature ' + str(i)][value] += [g_table[tree]["feature " + str(i)][value]]
     Exact_Table = copy.deepcopy(LPM_Table)
-
     for i in range(num_features):
         if i != 0:
             print('')
-        print('Begin transfer: Feature table ' + str(i))
-
+        print('Begine transfer: Feature table ' + str(i))
         LPM_Table['feature ' + str(i)] = Table_to_LPM(LPM_Table['feature ' + str(i)], feature_width[i])
 
     # ===================== prepare default vote =========================
 
+    print("\nPreparing default vote...", end="")
     collect_votes = []
     for t in range(num_trees):
         for idx in Exact_Table['tree ' + str(t)]:
             collect_votes += [int(Exact_Table['tree ' + str(t)][idx]['leaf'])]
-
     default_vote = max(collect_votes, key=collect_votes.count)
 
     code_table_size = 0
     for t in range(num_trees):
         LPM_Table['tree ' + str(t)] = {}
-
         for idx in Exact_Table['tree ' + str(t)]:
             if int(Exact_Table['tree ' + str(t)][idx]['leaf']) != default_vote:
-                LPM_Table['tree ' + str(t)][code_table_size] = \
-                        Exact_Table['tree ' + str(t)][idx]
+                LPM_Table['tree ' + str(t)][code_table_size] = Exact_Table['tree ' + str(t)][idx]
                 code_table_size += 1
         Exact_Table['tree ' + str(t)] = copy.deepcopy(LPM_Table['tree ' + str(t)])
+    print('Done')
 
     # ===================== prepare default class =========================
 
+    print("Preparing default class...", end="")
     collect_class = []
-
     for idx in Exact_Table['decision']:
         collect_class += [Exact_Table['decision'][idx]['class']]
-
     default_class = max(collect_class, key=collect_class.count)
-
     code_table_size = 0
-
     LPM_Table['decision'] = {}
     for idx in Exact_Table['decision']:
         if Exact_Table['decision'][idx]['class'] != default_class:
             LPM_Table['decision'][code_table_size] = Exact_Table['decision'][idx]
             code_table_size += 1
-
     Exact_Table['decision'] = copy.deepcopy(LPM_Table['decision'])
+    print('Done')
 
     json.dump(LPM_Table, open(f'eval/tables/{cur_dataset}/{cur_model}/{cur_trace}-{cur_model}-'
                               f'{model_size}-lpm_table.json', 'w'), indent=4, cls=NpEncoder)
@@ -540,6 +533,7 @@ def process_batch(batch_indices, test_X, num_trees, num_features, table_lpm, tab
         vote_list           = np.zeros(num_trees).astype(dtype=int).tolist()
         anomaly_cnt         = 0
         input_feature_value = test_X.values[i]
+        switch_prediction   = config['p4 config']["default label"]
 
         for tree in range(num_trees):
             code_list           = np.zeros(num_features)
@@ -573,6 +567,8 @@ def process_batch(batch_indices, test_X, num_trees, num_features, table_lpm, tab
             if str(code_list) != str(lpm_code_list):
                 print('error in exact to ternary match', code_list, lpm_code_list)
 
+            match_or_not    = False
+            all_True        = True
             for key in table_exact["tree " + str(tree)]:
                 match_or_not    = False
                 all_True        = True
@@ -690,7 +686,10 @@ def test_tables(sklearn_test_y, test_X, test_y, cur_dataset, cur_trace,
 #     switch_test_y_proba = []
 
 #     for i in range(np.shape(test_X.values)[0]):
+#         if i % 10000 == 0:
+#             print(f'Test: processed {i} packets.')
 #         vote_list = np.zeros(num_trees).astype(dtype=int).tolist()
+#         anomaly_cnt         = 0
 
 #         for tree in range(num_trees):
 #             code_list           = np.zeros(num_features)
@@ -741,6 +740,8 @@ def test_tables(sklearn_test_y, test_X, test_y, cur_dataset, cur_trace,
 #             if not match_or_not:
 #                 vote_list[tree] = config['p4 config']["default vote"]
 
+#         match_or_not    = False
+#         all_True        = True
 #         for key in Exact_Table['decision']:
 #             match_or_not    = False
 #             all_True        = True
@@ -749,6 +750,7 @@ def test_tables(sklearn_test_y, test_X, test_y, cur_dataset, cur_trace,
 #                 if not Exact_Table["decision"][key]['t' + str(tree_v) + ' vote'] == vote_list[tree_v]:
 #                     all_True = False
 #                     break
+#                 anomaly_cnt += 1
 
 #             if all_True:
 #                 switch_prediction = Exact_Table['decision'][key]['class']
@@ -758,8 +760,8 @@ def test_tables(sklearn_test_y, test_X, test_y, cur_dataset, cur_trace,
 #         if not match_or_not:
 #             switch_prediction = config['p4 config']["default label"]
 
-
-#         switch_test_y_proba += [ (-1.0) * sum(vote_list)/len(vote_list) ]
+#         # switch_test_y_proba += [ (-1.0) * sum(vote_list)/len(vote_list) ]
+#         switch_test_y_proba += [anomaly_cnt / num_trees]
 #         switch_test_y       += [switch_prediction]
 
 #     eval_metrics(test_y,
