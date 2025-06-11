@@ -27,6 +27,7 @@ import copy
 import re
 
 REUSE_TABLES = False
+SKLEARN_ONLY = True
 
 def get_lineage(tree, feature_names, file):
     left            = tree.tree_.children_left
@@ -440,6 +441,9 @@ def run_model(train_X, train_y, test_X, test_y, used_features, cur_dataset,
                  model_size,
                  'sklearn')
 
+    if SKLEARN_ONLY:
+        exit()
+
     if not REUSE_TABLES:
 
         g_table                 = {}
@@ -709,7 +713,7 @@ def test_tables(sklearn_test_y, test_X, test_y, cur_dataset, cur_trace,
     indices = list(range(np.shape(test_X.values)[0]))
     batches = [indices[i:i + batch_size] for i in range(0, len(indices), batch_size)]
 
-    with Pool(nodes=24) as pool:
+    with Pool(nodes=8) as pool:
         results = pool.map(lambda batch: process_batch(batch, test_X, num_trees, num_features, LPM_Table, Exact_Table, config), batches)
 
         for batch_results in results:
