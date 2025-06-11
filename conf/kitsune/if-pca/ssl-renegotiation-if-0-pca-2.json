@@ -7,7 +7,7 @@
     "model config": {
         "model": "if",
         "model size": "0",
-        "number of trees": 6,
+        "number of trees": 3,
         "number of samples": 128,
         "number of classes": 2,
         "test table": "y"

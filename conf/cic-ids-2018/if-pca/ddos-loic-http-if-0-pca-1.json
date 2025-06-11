@@ -1,7 +1,7 @@
 {
     "directory config": {
-        "data": "/home/docker/planter/eval/feats/kitsune/pca/os-scan-pca-1-feats.csv",
-        "labels": "/home/docker/datasets/kitsune/os-scan/os-scan-labels-planter-trimmed.csv",
+        "data": "/home/docker/planter/eval/feats/cic-ids-2018/pca/ddos-loic-http-pca-1-feats.csv",
+        "labels": "/home/docker/datasets/cic-ids-2018/ddos-loic-http/ddos-loic-http-labels-planter-trimmed.csv",
         "work": "/home/docker/planter"
     },
     "model config": {
@@ -13,8 +13,8 @@
         "test table": "y"
     },
     "data config": {
-        "dataset": "kitsune_labels",
-        "cur_trace": "os-scan",
+        "dataset": "cic-ids-2018_labels",
+        "cur_trace": "ddos-loic-http",
         "number of features": 2,
         "testing mode": "n"
     },
