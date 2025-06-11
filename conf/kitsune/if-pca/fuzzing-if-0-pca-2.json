@@ -13,7 +13,7 @@
         "test table": "y"
     },
     "data config": {
-        "dataset": "kitsune_labels",
+        "dataset": "pca",
         "cur_trace": "fuzzing",
         "number of features": 2,
         "testing mode": "n"
