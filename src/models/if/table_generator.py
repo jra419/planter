@@ -656,6 +656,8 @@ def process_batch(batch_indices, test_X, num_trees, num_features, table_lpm, tab
             if not match_or_not:
                 vote_list[tree] = default_vote
 
+        switch_prediction = default_pred
+
         for key in table_exact['decision']:
             decision_entry  = table_exact["decision"][key]
             all_match       = True
