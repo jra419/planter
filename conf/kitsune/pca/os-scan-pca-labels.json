@@ -1,0 +1,48 @@
+{
+    "directory config": {
+        "data": "/home/docker/datasets/kitsune/os-scan/os-scan.csv",
+        "labels": "/home/docker/datasets/kitsune/os-scan/os-scan-labels.csv",
+        "work": "/home/docker/planter"
+    },
+    "model config": {
+        "model": "pca",
+        "model size": "2",
+        "number of bits": 32,
+        "num components": 2,
+        "number of classes": 2,
+        "test table": "y"
+    },
+    "data config": {
+        "dataset": "kitsune_labels",
+        "cur_trace": "os-scan",
+        "number of features": 5,
+        "testing mode": "n"
+    },
+    "timer log": {
+        "load data": {
+            "start": 1748960699.4099836
+        }
+    },
+    "p4 config": {
+        "model": "PCA",
+        "number of features": 5,
+        "number of classes": 2,
+        "action data bits": 32,
+        "table name": "os-scan-pca-2-exact_table.json",
+        "feature tbl len": [
+            64679,
+            61721,
+            18,
+            193,
+            256
+        ],
+        "num components": 2
+    },
+    "test config": {
+        "type of test": "dimension_reduction"
+    },
+    "target config": {
+        "architecture": "tna",
+        "use case": "anomaly_detection"
+    }
+}

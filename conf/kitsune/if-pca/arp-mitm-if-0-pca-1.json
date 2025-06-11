@@ -1,0 +1,97 @@
+{
+    "directory config": {
+        "data": "/home/docker/planter/eval/feats/kitsune/pca/arp-mitm-pca-1-feats.csv",
+        "labels": "/home/docker/datasets/kitsune/arp-mitm/arp-mitm-labels-planter-trimmed.csv",
+        "work": "/home/docker/planter"
+    },
+    "model config": {
+        "model": "if",
+        "model size": "0",
+        "number of trees": 3,
+        "number of samples": 128,
+        "number of classes": 2,
+        "test table": "y"
+    },
+    "data config": {
+        "dataset": "pca",
+        "cur_trace": "arp-mitm",
+        "number of features": 2,
+        "testing mode": "n"
+    },
+    "timer log": {
+        "load data": {
+            "start": 1749404188.7995732,
+            "end": 1749404189.443211
+        }
+    },
+    "p4 config": {
+        "model": "if",
+        "number of features": 2,
+        "number of classes": 2,
+        "number of trees": 6,
+        "table name": "arp-mitm-if-0-lpm_table.json",
+        "decision table size": 266749,
+        "code table size": [
+            35,
+            35,
+            37,
+            30,
+            20,
+            24
+        ],
+        "default vote": 0,
+        "default label": 1,
+        "width of feature": [
+            17,
+            17
+        ],
+        "width of code": [
+            [
+                1.0,
+                4.0
+            ],
+            [
+                1.0,
+                4.0
+            ],
+            [
+                1.0,
+                4.0
+            ],
+            [
+                1.0,
+                4.0
+            ],
+            [
+                1.0,
+                5.0
+            ],
+            [
+                1.0,
+                4.0
+            ]
+        ],
+        "used columns": [
+            1,
+            114
+        ],
+        "width of probability": 7,
+        "width of result": 8,
+        "standard headers": [
+            "ethernet",
+            "Planter",
+            "arp",
+            "ipv4",
+            "tcp",
+            "udp",
+            "vlan_tag"
+        ]
+    },
+    "test config": {
+        "type of test": "classification"
+    },
+    "target config": {
+        "architecture": "tna",
+        "use case": "anomaly_detection"
+    }
+}

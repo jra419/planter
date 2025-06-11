@@ -1,0 +1,61 @@
+{
+    "directory config": {
+        "data": "/home/docker/datasets/kitsune/video-injection/video-injection.csv",
+        "labels": "/home/docker/datasets/kitsune/video-injection/video-injection-labels.csv",
+        "work": "/home/docker/planter"
+    },
+    "model config": {
+        "model": "pca",
+        "model size": "1",
+        "number of bits": 16,
+        "num components": 2,
+        "number of classes": 2,
+        "test table": "y"
+    },
+    "data config": {
+        "dataset": "kitsune",
+        "cur_trace": "video-injection",
+        "number of features": 5,
+        "testing mode": "n"
+    },
+    "timer log": {
+        "load data": {
+            "start": 1749116724.871494,
+            "end": 1749116766.6605215
+        },
+        "train model": {
+            "start": 1749116766.7562525,
+            "end": 1749116766.8661911
+        },
+        "convert model": {
+            "start": 1749116766.8661938,
+            "end": 1749116769.313849
+        },
+        "python-based test": {
+            "start": 1749116770.1293504,
+            "end": 1749116810.0475242
+        }
+    },
+    "p4 config": {
+        "model": "PCA",
+        "number of features": 5,
+        "number of classes": 2,
+        "action data bits": 16,
+        "table name": "video-injection-pca-1-exact_table.json",
+        "feature tbl len": [
+            63845,
+            54868,
+            18,
+            193,
+            256
+        ],
+        "num components": 2
+    },
+    "test config": {
+        "type of test": "dimension_reduction"
+    },
+    "target config": {
+        "architecture": "tna",
+        "use case": "anomaly_detection"
+    }
+}

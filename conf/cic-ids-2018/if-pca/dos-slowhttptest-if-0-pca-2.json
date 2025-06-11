@@ -1,31 +1,31 @@
 {
     "directory config": {
-        "data": "/home/docker/datasets/kitsune/dos-syn/dos-syn.csv",
-        "labels": "/home/docker/datasets/kitsune/dos-syn/dos-syn-labels.csv",
+        "data": "/home/docker/planter/eval/feats/cic-ids-2018/pca/dos-slowhttptest-pca-2-feats.csv",
+        "labels": "/home/docker/datasets/cic-ids-2018/dos-slowhttptest/dos-slowhttptest-labels-planter-trimmed.csv",
         "work": "/home/docker/planter"
     },
     "model config": {
         "model": "if",
         "model size": "0",
-        "number of trees": 3,
+        "number of trees": 6,
         "number of samples": 128,
         "number of classes": 2,
         "test table": "y"
     },
     "data config": {
-        "dataset": "kitsune",
-        "cur_trace": "dos-syn",
-        "number of features": 5,
+        "dataset": "cic-ids-2018_labels",
+        "cur_trace": "dos-slowhttptest",
+        "number of features": 2,
         "testing mode": "n"
     },
     "timer log": {
         "load data": {
-            "start": 1748558508.556792,
-            "end": 1748558565.0089762
+            "start": 1748558066.5147083,
+            "end": 1748558107.7896674
         },
         "python-based test": {
-            "start": 1748558568.5372415,
-            "end": 1748558568.537366
+            "start": 1748558112.2428496,
+            "end": 1748558112.242971
         }
     },
     "p4 config": {

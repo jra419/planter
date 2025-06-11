@@ -1,0 +1,82 @@
+{
+    "directory config": {
+        "data": "/home/docker/planter/eval/feats/kitsune/pca/dos-syn-pca-1-feats.csv",
+        "labels": "/home/docker/datasets/kitsune/dos-syn/dos-syn-labels-planter-trimmed.csv",
+        "work": "/home/docker/planter"
+    },
+    "model config": {
+        "model": "if",
+        "model size": "0",
+        "number of trees": 6,
+        "number of samples": 128,
+        "number of classes": 2,
+        "test table": "y"
+    },
+    "data config": {
+        "dataset": "pca",
+        "cur_trace": "dos-syn",
+        "number of features": 2,
+        "testing mode": "n"
+    },
+    "timer log": {
+        "load data": {
+            "start": 1749515992.3734787,
+            "end": 1749515992.9506898
+        }
+    },
+    "p4 config": {
+        "model": "if",
+        "number of features": 2,
+        "number of classes": 2,
+        "number of trees": 3,
+        "table name": "dos-syn-if-0-lpm_table.json",
+        "decision table size": 21,
+        "code table size": [
+            8,
+            13,
+            13
+        ],
+        "default vote": 3,
+        "default label": 1,
+        "width of feature": [
+            17,
+            17
+        ],
+        "width of code": [
+            [
+                1.0,
+                2.0
+            ],
+            [
+                1.0,
+                3.0
+            ],
+            [
+                1.0,
+                3.0
+            ]
+        ],
+        "used columns": [
+            1,
+            35
+        ],
+        "width of probability": 7,
+        "width of result": 8,
+        "standard headers": [
+            "ethernet",
+            "Planter",
+            "arp",
+            "ipv4",
+            "tcp",
+            "udp",
+            "vlan_tag"
+        ]
+    },
+    "test config": {
+        "type of test": "classification"
+    },
+    "target config": {
+        "architecture": "tna",
+        "use case": "anomaly_detection"
+    }
+}
