@@ -598,7 +598,6 @@ def process_batch(batch_indices, test_X, num_trees, num_features, table_lpm, tab
     sorted_keys = {f: set(np.sort(list(table_lpm['feature ' + str(f)].keys()))) for f in range(num_features)}
 
     for i in batch_indices:
-        print(f'Core {core_id}: idx {i}')
         vote_list           = np.zeros(num_trees).astype(dtype=int)
         anomaly_cnt         = 0
         input_feature_value = test_X.values[i]
