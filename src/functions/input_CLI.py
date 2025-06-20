@@ -12,8 +12,7 @@
 
 import os
 import copy
-import numpy as np
-from src.functions.directory_management import *
+from .directory_management import find_folder_options
 
 def CLI_loop(question, default, check_dir_existence, check_available_options, option_address,
              option_prefix, option_suffix):
@@ -46,16 +45,16 @@ def take_CLI_input(DINC_config, config_type, config_name, question, default, man
         try:
             CLI_input = DINC_config[config_type][config_name]
             print('= Config type: \''+config_type+'\' config name: \''+config_name+'\' is auto filled with: ' + str(CLI_input))
-        except Exception as e:
+        except Exception:
             try:
                 _ = DINC_config[config_type]
-            except Exception as e:
+            except Exception:
                 DINC_config[config_type] = {}
             CLI_input = CLI_loop(question, default, check_dir_existence, check_available_options, option_address, option_prefix, option_suffix)
     else:
         try:
             _ = DINC_config[config_type]
-        except Exception as e:
+        except Exception:
             DINC_config[config_type] = {}
         CLI_input = CLI_loop(question, default, check_dir_existence, check_available_options, option_address, option_prefix, option_suffix)
     if numeric:

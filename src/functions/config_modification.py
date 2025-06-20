@@ -12,7 +12,7 @@
 
 import os
 import json
-from src.functions.json_encoder import *
+from .json_encoder import NpEncoder
 
 def reload_config(config_file_dir):
     if os.path.exists(config_file_dir):
