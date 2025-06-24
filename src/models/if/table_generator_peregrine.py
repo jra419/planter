@@ -9,6 +9,7 @@ import math
 import json
 import copy
 import re
+import gc
 
 REUSE_TABLES = False
 SKLEARN_ONLY = True
@@ -122,11 +123,9 @@ class IF:
 
         for a in range(num_features):
             feature_split["feature "+str(a)] = []
-            feature_names                   += ["f" + chr(ord('A') + a)]
+            feature_names                   += [f'f{a}']
 
         threshold   = model.tree_.threshold
-        print(model.tree_.feature)
-        print(feature_names)
         features    = [feature_names[i] for i in model.tree_.feature]
 
         for i, fe in enumerate(features):
@@ -169,13 +168,11 @@ class IF:
             count_code                  = 0
             nife                        = sorted(split["feature "+str(i)])
 
-            for j in range(int(feature_max[i]+1)):
-                if nife !=[] :
-                    if len(nife) > count_code:
-                        if j-1 == nife[count_code]:
-                            count_code+=1
-
-                table["feature " + str(i)][j] = count_code
+            table["feature " + str(i)][count_code] = 0
+            if nife != []:
+                for j, count_code in enumerate(nife):
+                    if count_code < feature_max[i]-1:
+                        table["feature " + str(i)][count_code+1] = j+1
 
         return table
 
@@ -260,14 +257,15 @@ class IF:
     def generate_code_table_for_path(self, table, leaf_path, code_dict, feature_num,
                                      num_features, count):
         if feature_num == num_features:
-            table['code to vote'][count] = {}
+            table['ctv'][count] = {}
 
             for f in range(num_features):
-                table['code to vote'][count]['f'+str(f)+' code'] = code_dict['feature ' + str(f)]
+                table['ctv'][count]['f'+str(f)] = code_dict['feature ' + str(f)]
 
-            table['code to vote'][count]['leaf'] = leaf_path['leaf']
-            count                               += 1
+            table['ctv'][count]['leaf'] = leaf_path['leaf']
+            count                      += 1
 
+            gc.collect()
             return table, count
         else:
             for value in leaf_path['feature '+str(feature_num)]:
@@ -277,11 +275,12 @@ class IF:
                         table, leaf_path, code_dict, feature_num, num_features, count)
                 feature_num -= 1
 
+        gc.collect()
         return table, count
 
     def generate_code_table(self, table, path_to_leaf, num_features):
-        table['code to vote']   = {}
-        count                   = 0
+        table['ctv']    = {}
+        count           = 0
 
         for p in path_to_leaf:
             table, count = self.generate_code_table_for_path(
@@ -399,13 +398,11 @@ class IF:
 
         train_x = pd.DataFrame(train_x)
 
-        feat_names = []
-        for i, f in enumerate(train_x.columns):
-            train_x.rename(columns={f: "f" + str(i)}, inplace=True)
-            feat_names += ["f" + str(i)]
+        new_column_names = [f"f{i}" for i in range(num_features)]
+        train_x.columns = new_column_names
 
         feat_max = []
-        for i in feat_names:
+        for i in new_column_names:
             t_t = [train_x[[i]].max()[0]]
             feat_max += [np.max(t_t)+1]
 
