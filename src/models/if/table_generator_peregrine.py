@@ -387,7 +387,7 @@ class IF:
                 tree_num           -= 1
         return g_table, num
 
-    def train_model(self, train_x, num_features=80):
+    def train_model(self, train_x, switch_model, num_features=80):
         cur_dataset     = self.conf['data config']['dataset']
         cur_trace       = self.conf['data config']['cur_trace']
         cur_model       = self.conf['model config']['model']
@@ -401,160 +401,167 @@ class IF:
         new_column_names = [f"f{i}" for i in range(num_features)]
         train_x.columns = new_column_names
 
-        feat_max = []
-        for i in new_column_names:
-            t_t = [train_x[[i]].max()[0]]
-            feat_max += [np.max(t_t)+1]
-
         self.clf.fit(train_x)
 
-        path_len_thres = (2 * (np.log(num_samples - 1) + np.euler_gamma) - (2 * (num_samples - 1) / num_samples)) * (-math.log(0.5, 2))
+        if switch_model:
+            feat_max = []
+            for i in new_column_names:
+                t_t = [train_x[[i]].max()[0]]
+                feat_max += [np.max(t_t)+1]
 
-        g_table                 = {}
-        leaf_info               = {}
-        leaf_info['max value']  = 0
-        leaf_info['min value']  = 0
+            path_len_thres = (2 * (np.log(num_samples - 1) + np.euler_gamma) - (2 * (num_samples - 1) / num_samples)) * (-math.log(0.5, 2))
 
-        for idx, estimator in enumerate(self.clf.estimators_):
-            g_table, leaf_info = self.generate_table(
-                    estimator, idx, num_features, g_table, feat_max, leaf_info)
+            g_table                 = {}
+            leaf_info               = {}
+            leaf_info['max value']  = 0
+            leaf_info['min value']  = 0
 
-        g_table['votes to class'] = {}
-        print("\nGenerating vote to class table...")
-        g_table, _ = self.votes_to_class(
-                0, np.zeros(num_trees).tolist(), num_trees, num_classes, g_table, 0,
-                leaf_info, path_len_thres)
+            for idx, estimator in enumerate(self.clf.estimators_):
+                g_table, leaf_info = self.generate_table(
+                        estimator, idx, num_features, g_table, feat_max, leaf_info)
 
-        print('Done')
+            g_table['votes to class'] = {}
+            print("\nGenerating vote to class table...")
+            g_table, _ = self.votes_to_class(
+                    0, np.zeros(num_trees).tolist(), num_trees, num_classes, g_table, 0,
+                    leaf_info, path_len_thres)
 
-        json.dump(g_table, open(f'eval/tables/{cur_dataset}/{cur_model}/{cur_trace}-{cur_model}-'
-                                f'{model_size}-g_table.json', 'w'), indent=4, cls=NpEncoder)
+            print('Done')
 
-        for t in range(num_trees):
-            leaf_info['tree ' + str(t)] = list(leaf_info['tree ' + str(t)])
-            for i, x in enumerate(leaf_info['tree ' + str(t)]):
-                tmp_list = list(x)
-                tmp_list = [a.item() for a in tmp_list]
-                leaf_info['tree ' + str(t)][i] = str(list(tmp_list))
+            json.dump(g_table, open(f'eval/tables/{cur_dataset}/{cur_model}/{cur_trace}-{cur_model}-'
+                                    f'{model_size}-g_table.json', 'w'), indent=4, cls=NpEncoder)
 
-        for t in range(num_trees):
-            for k in g_table[t]['code to vote'].keys():
-                g_table[t]['code to vote'][k]['leaf'] = leaf_info['tree ' + str(t)].index(str(list(g_table[t]['code to vote'][k]['leaf'])))
-
-        for k in g_table['votes to class'].keys():
             for t in range(num_trees):
-                tmp_list = list(g_table['votes to class'][k]['t'+str(t)+' vote'])
-                tmp_list = [a.item() for a in tmp_list]
-                g_table['votes to class'][k]['t'+str(t)+' vote'] = leaf_info['tree ' + str(t)].index(str(tmp_list))
+                leaf_info['tree ' + str(t)] = list(leaf_info['tree ' + str(t)])
+                for i, x in enumerate(leaf_info['tree ' + str(t)]):
+                    tmp_list = list(x)
+                    tmp_list = [a.item() for a in tmp_list]
+                    leaf_info['tree ' + str(t)][i] = str(list(tmp_list))
 
-        feat_width = []
-        for max_f in feat_max:
-            feat_width += [int(np.ceil(math.log(max_f, 2)) + 1)]
+            for t in range(num_trees):
+                for k in g_table[t]['code to vote'].keys():
+                    g_table[t]['code to vote'][k]['leaf'] = leaf_info['tree ' + str(t)].index(str(list(g_table[t]['code to vote'][k]['leaf'])))
 
-        code_width_tree_feature = np.zeros((num_trees, num_features))
-        for i in range(num_features):
-            for tree in range(num_trees):
-                code_width_tree_feature[tree, i] = int(np.ceil(math.log(
-                    g_table[tree]['feature ' + str(i)][np.max(list(g_table[tree]['feature ' + str(i)].keys()))] + 1, 2) + 1)) or 1
+            for k in g_table['votes to class'].keys():
+                for t in range(num_trees):
+                    tmp_list = list(g_table['votes to class'][k]['t'+str(t)+' vote'])
+                    tmp_list = [a.item() for a in tmp_list]
+                    g_table['votes to class'][k]['t'+str(t)+' vote'] = leaf_info['tree ' + str(t)].index(str(tmp_list))
 
-        LPM_Table = {}
-        LPM_Table['decision'] = g_table['votes to class']
+            feat_width = []
+            for max_f in feat_max:
+                feat_width += [int(np.ceil(math.log(max_f, 2)) + 1)]
 
-        for tree in range(num_trees):
-            LPM_Table['tree ' + str(tree)] = g_table[tree]['code to vote']
-
-        for i in range(num_features):
-            LPM_Table['feature ' + str(i)] = {}
-            for value in range(feat_max[i]):
-                LPM_Table['feature ' + str(i)][value] = []
+            code_width_tree_feature = np.zeros((num_trees, num_features))
+            for i in range(num_features):
                 for tree in range(num_trees):
-                    LPM_Table['feature ' + str(i)][value] += [g_table[tree]["feature " + str(i)][value]]
-        Exact_Table = copy.deepcopy(LPM_Table)
-        for i in range(num_features):
-            if i != 0:
-                print('')
-            print('Begin transfer: Feature table ' + str(i))
-            LPM_Table['feature ' + str(i)] = Table_to_LPM(LPM_Table['feature ' + str(i)], feat_width[i])
+                    code_width_tree_feature[tree, i] = int(np.ceil(math.log(
+                        g_table[tree]['feature ' + str(i)][np.max(list(g_table[tree]['feature ' + str(i)].keys()))] + 1, 2) + 1)) or 1
 
-        # ===================== prepare default vote =========================
+            LPM_Table = {}
+            LPM_Table['decision'] = g_table['votes to class']
 
-        print("\nPreparing default vote...")
-        collect_votes = []
+            for tree in range(num_trees):
+                LPM_Table['tree ' + str(tree)] = g_table[tree]['code to vote']
 
-        for t in range(num_trees):
-            collect_votes.extend(int(Exact_Table['tree ' + str(t)][idx]['leaf']) for idx in Exact_Table['tree ' + str(t)])
+            for i in range(num_features):
+                LPM_Table['feature ' + str(i)] = {}
+                for value in range(feat_max[i]):
+                    LPM_Table['feature ' + str(i)][value] = []
+                    for tree in range(num_trees):
+                        LPM_Table['feature ' + str(i)][value] += [g_table[tree]["feature " + str(i)][value]]
+            Exact_Table = copy.deepcopy(LPM_Table)
+            for i in range(num_features):
+                if i != 0:
+                    print('')
+                print('Begin transfer: Feature table ' + str(i))
+                LPM_Table['feature ' + str(i)] = Table_to_LPM(LPM_Table['feature ' + str(i)], feat_width[i])
 
-        default_vote = Counter(collect_votes).most_common(1)[0][0]
+            # ===================== prepare default vote =========================
 
-        code_table_size = 0
-        for t in range(num_trees):
-            LPM_Table['tree ' + str(t)] = {}
-            for idx in Exact_Table['tree ' + str(t)]:
-                if int(Exact_Table['tree ' + str(t)][idx]['leaf']) != default_vote:
-                    LPM_Table['tree ' + str(t)][code_table_size] = Exact_Table['tree ' + str(t)][idx]
+            print("\nPreparing default vote...")
+            collect_votes = []
+
+            for t in range(num_trees):
+                collect_votes.extend(int(Exact_Table['tree ' + str(t)][idx]['leaf']) for idx in Exact_Table['tree ' + str(t)])
+
+            default_vote = Counter(collect_votes).most_common(1)[0][0]
+
+            code_table_size = 0
+            for t in range(num_trees):
+                LPM_Table['tree ' + str(t)] = {}
+                for idx in Exact_Table['tree ' + str(t)]:
+                    if int(Exact_Table['tree ' + str(t)][idx]['leaf']) != default_vote:
+                        LPM_Table['tree ' + str(t)][code_table_size] = Exact_Table['tree ' + str(t)][idx]
+                        code_table_size += 1
+                Exact_Table['tree ' + str(t)] = copy.deepcopy(LPM_Table['tree ' + str(t)])
+            print('Done')
+
+            # ===================== prepare default class =========================
+
+            print("Preparing default class...")
+
+            collect_class = []
+            collect_class = [value['class'] for value in Exact_Table['decision'].values()]
+            default_class = Counter(collect_class).most_common(1)[0][0]
+
+            code_table_size         = 0
+            LPM_Table['decision']   = {}
+
+            for idx in Exact_Table['decision']:
+                if Exact_Table['decision'][idx]['class'] != default_class:
+                    LPM_Table['decision'][code_table_size] = Exact_Table['decision'][idx]
                     code_table_size += 1
-            Exact_Table['tree ' + str(t)] = copy.deepcopy(LPM_Table['tree ' + str(t)])
-        print('Done')
 
-        # ===================== prepare default class =========================
+            Exact_Table['decision'] = copy.deepcopy(LPM_Table['decision'])
+            print('Done')
 
-        print("Preparing default class...")
+            json.dump(LPM_Table, open(f'eval/tables/{cur_dataset}/{cur_model}/{cur_trace}-{cur_model}-'
+                                    f'{model_size}-lpm_table.json', 'w'), indent=4, cls=NpEncoder)
 
-        collect_class = []
-        collect_class = [value['class'] for value in Exact_Table['decision'].values()]
-        default_class = Counter(collect_class).most_common(1)[0][0]
+            json.dump(Exact_Table, open(f'eval/tables/{cur_dataset}/{cur_model}/{cur_trace}-{cur_model}-'
+                                        f'{model_size}-exact_table.json', 'w'), indent=4, cls=NpEncoder)
 
-        code_table_size         = 0
-        LPM_Table['decision']   = {}
+            self.conf['p4 config']                         = {}
+            self.conf['p4 config']["model"]                = "if"
+            self.conf['p4 config']["number of features"]   = num_features
+            self.conf['p4 config']["number of classes"]    = num_classes
+            self.conf['p4 config']["number of trees"]      = num_trees
+            self.conf['p4 config']['table name']           = f'{cur_trace}-{cur_model}-{model_size}-lpm_table.json'
+            self.conf['p4 config']["decision table size"]  = len(LPM_Table['decision'].keys())
+            self.conf['p4 config']["code table size"]      = []
+            for tree in range(num_trees):
+                self.conf['p4 config']["code table size"] += [len(LPM_Table['tree ' + str(tree)].keys())]
+            self.conf['p4 config']["default vote"]         = default_vote
+            self.conf['p4 config']["default label"]        = default_class
+            self.conf['p4 config']["width of feature"]     = feat_width
+            self.conf['p4 config']["width of code"]        = code_width_tree_feature
+            self.conf['p4 config']["used columns"]         = []
+            for i in range(num_features):
+                self.conf['p4 config']["used columns"]    += [len(LPM_Table['feature ' + str(i)].keys())]
+            self.conf['p4 config']["width of probability"] = 7
+            self.conf['p4 config']["width of result"]      = 8
+            self.conf['p4 config']["standard headers"]     = ["ethernet", "Planter", "arp", "ipv4",
+                                                            "tcp", "udp", "vlan_tag"]
+            self.conf['test config']                       = {}
+            self.conf['test config']['type of test']       = 'classification'
 
-        for idx in Exact_Table['decision']:
-            if Exact_Table['decision'][idx]['class'] != default_class:
-                LPM_Table['decision'][code_table_size] = Exact_Table['decision'][idx]
-                code_table_size += 1
+            json.dump(self.conf, open(self.conf_path, 'w'), indent=4, cls=NpEncoder)
 
-        Exact_Table['decision'] = copy.deepcopy(LPM_Table['decision'])
-        print('Done')
+    def train_pred(self, test_x, num_features=80):
+        df_test_x           = pd.DataFrame(test_x)
+        new_column_names    = [f"f{i}" for i in range(num_features)]
+        try:
+            df_test_x.columns      = new_column_names
+        except ValueError:
+            if df_test_x.shape[1] == 1:
+                df_test_x           = pd.DataFrame([test_x])
+                df_test_x.columns   = new_column_names
 
-        json.dump(LPM_Table, open(f'eval/tables/{cur_dataset}/{cur_model}/{cur_trace}-{cur_model}-'
-                                f'{model_size}-lpm_table.json', 'w'), indent=4, cls=NpEncoder)
-
-        json.dump(Exact_Table, open(f'eval/tables/{cur_dataset}/{cur_model}/{cur_trace}-{cur_model}-'
-                                    f'{model_size}-exact_table.json', 'w'), indent=4, cls=NpEncoder)
-
-        self.conf['p4 config']                         = {}
-        self.conf['p4 config']["model"]                = "if"
-        self.conf['p4 config']["number of features"]   = num_features
-        self.conf['p4 config']["number of classes"]    = num_classes
-        self.conf['p4 config']["number of trees"]      = num_trees
-        self.conf['p4 config']['table name']           = f'{cur_trace}-{cur_model}-{model_size}-lpm_table.json'
-        self.conf['p4 config']["decision table size"]  = len(LPM_Table['decision'].keys())
-        self.conf['p4 config']["code table size"]      = []
-        for tree in range(num_trees):
-            self.conf['p4 config']["code table size"] += [len(LPM_Table['tree ' + str(tree)].keys())]
-        self.conf['p4 config']["default vote"]         = default_vote
-        self.conf['p4 config']["default label"]        = default_class
-        self.conf['p4 config']["width of feature"]     = feat_width
-        self.conf['p4 config']["width of code"]        = code_width_tree_feature
-        self.conf['p4 config']["used columns"]         = []
-        for i in range(num_features):
-            self.conf['p4 config']["used columns"]    += [len(LPM_Table['feature ' + str(i)].keys())]
-        self.conf['p4 config']["width of probability"] = 7
-        self.conf['p4 config']["width of result"]      = 8
-        self.conf['p4 config']["standard headers"]     = ["ethernet", "Planter", "arp", "ipv4",
-                                                          "tcp", "udp", "vlan_tag"]
-        self.conf['test config']                       = {}
-        self.conf['test config']['type of test']       = 'classification'
-
-        json.dump(self.conf, open(self.conf_path, 'w'), indent=4, cls=NpEncoder)
-
-    def train_pred(self, test_x):
-        for i, f in enumerate(len(test_x.columns)):
-            test_x.rename(columns={f: "f" + str(i)}, inplace=True)
-
-        y_pred_test         = self.clf.predict(test_x)
+        y_pred_test         = self.clf.predict(df_test_x)
 
         sklearn_y_pred      = copy.deepcopy(y_pred_test)
-        sklearn_y_scores    = (-1.0) * self.clf.decision_function(test_x)
+        sklearn_y_scores    = (-1.0) * self.clf.decision_function(df_test_x)
 
         for i in range(len(y_pred_test)):
             if y_pred_test[i] == -1:
