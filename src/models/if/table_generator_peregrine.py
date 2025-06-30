@@ -11,8 +11,6 @@ import copy
 import re
 import gc
 
-REUSE_TABLES = False
-SKLEARN_ONLY = True
 
 class IF:
     def __init__(self, conf):
